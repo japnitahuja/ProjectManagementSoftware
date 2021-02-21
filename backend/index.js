@@ -11,6 +11,7 @@ const authenticate = require('./middleware/authenticate');
 app.use(cors());
 app.use(express.json());
 app.use(require('./routes/auth/auth'));
+app.use(require('./routes/user/index'));
 
 mongoose.connect(process.env.MONGOURI, {
     useNewUrlParser: true,
