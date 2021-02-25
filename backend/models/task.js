@@ -26,18 +26,18 @@ const taskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  steps: [{
-      step: { 
-          type: mongoose.Schema.Types.ObjectId, 
-          ref: "Step" 
-        },
-    }],
-  purchaseOrders:[{
-      purchaseOrder:{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "purchaseOrder" 
-      }
-  }],
+  steps: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Step",
+    },
+  ],
+  purchaseOrders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "purchaseOrder",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

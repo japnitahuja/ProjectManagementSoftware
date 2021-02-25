@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:false,
     },
+    role:{
+        type: String,
+        enum: ['PROJECT_OWNER', 'TRADE_PARTNER', 'TASK_OWNER', 'ADMIN']
+    },
     phoneNumber:{
         type:Number,
         required:[true, 'Please fill a valid phone number!'],
@@ -29,6 +33,14 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    isProjectOwnerApproved:{
+        type: Boolean,
+        default: false
+    },
+    isProjectOwnerDeclined:{
+        type: Boolean,
+        default: false
     },
     createdAt: {type: Date, default: Date.now}
 })

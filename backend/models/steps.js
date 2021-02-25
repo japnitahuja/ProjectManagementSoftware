@@ -7,6 +7,12 @@ const stepSchema = new mongoose.Schema({
     isStepDone:{
         type: Boolean,
         default: false
+    },
+    questionStatement:{
+        type: String
+    },
+    questionsType:{
+        type: String
     }
 })
 mongoose.model('Step', stepSchema)

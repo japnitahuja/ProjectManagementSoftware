@@ -8,16 +8,22 @@ const purchaseOrderSchema = new mongoose.Schema({
         type:Number,
         required: [true, 'Please enter the total order amount']
     },
+    purchasedItem:{
+        type: String,
+        required: [true, 'Please enter the item purchased']
+    },
     totalPaidAmount:{
         type:Number,
         required: [true, 'Please enter the total paid amount']
     },
     purchasedItems:[{
-        item:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "purchaseOrderItem"
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "purchaseOrderItem"
     }],
+    user:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
     
     
 })
