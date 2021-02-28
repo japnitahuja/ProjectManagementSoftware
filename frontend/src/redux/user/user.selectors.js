@@ -9,6 +9,11 @@ export const selectSignUpStart = createSelector(
   (currentUser) => currentUser.signUpStart
 );
 
+export const selectUserId = createSelector(
+  [selectCurrentUser],
+  (currentUser) => currentUser._id
+);
+
 export const selectSignUpSuccessful = createSelector(
   [selectCurrentUser],
   (currentUser) => currentUser.signUpSuccessful

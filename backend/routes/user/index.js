@@ -34,16 +34,24 @@ router.get("/all-projects", async (req, res) => {
 router.post("/create-project/:userId", async (req, res) => {
     const {projectName, projectStatus} = req.body
     if(!projectName || !projectStatus){
-        res.status(422).json({error:" Fill all the fields",done:false});
+        res.status(422).json({error:"Fill all the fields",done:false});
     }else{
         try {
             const project =  await Project.create({projectName, projectStatus})
             const user = await User.findOne({_id: req.params.userId})
-            user.projects.push(project._id).save()
+            user.projects.push(project._id)
+            user.save(function(err){
+                if(err){
+                    console.log(err)
+                    return
+                }else{
+                    console.log("task added to project")
+                }
+            })
             res.status(200).json({message:'Project Created', done:true});
         } catch (error) {
+            console.log(error);
             res.status(422).json({error: error, done:false});
-            
         }
     }
 })

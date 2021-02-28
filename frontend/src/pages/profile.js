@@ -1,36 +1,97 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
-import { signOut } from '../redux/user/user.actions'
-import { selectCurrentUserFirstName } from '../redux/user/user.selectors'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { createProjectStart } from "../redux/project/project.actions";
+import { signOut } from "../redux/user/user.actions";
+import { selectCurrentUserFirstName } from "../redux/user/user.selectors";
 
- class ProfilePage extends Component {
+class ProfilePage extends Component {
+  constructor() {
+    super();
+    this.state = {
+      projectDetails: {
+        projectName: "",
+        projectStatus: "",
+      },
+    };
+  }
 
-    signOut = () => {
-        const {history, signOut} = this.props
-        signOut()
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        history.push('/login')
-    }
-    
-    render() {
-        const {name} = this.props
-        return (
-            <div>
-                <h1>hi {name}!</h1>
-                <button onClick={this.signOut}>Sign out</button>
-            </div>
-        )
-    }
+  signOut = () => {
+    const { history, signOut } = this.props;
+    signOut();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    history.push("/login");
+  };
+
+  handleOnChange = (e) => {
+    const { name, value } = e.target;
+    let project = this.state.projectDetails;
+    project[name] = value;
+
+    this.setState({ projectDetails: project });
+  };
+
+  createProject = (e) => {
+    e.preventDefault();
+    let projectDetails = this.state.projectDetails;
+    this.props.createProject(projectDetails);
+  };
+
+  render() {
+    const { name } = this.props;
+    return (
+      <div>
+        <h1>hi {name}!</h1>
+        <form
+          style={{ display: "flex", flexDirection: "column" }}
+          onChange={(e) => this.handleOnChange(e)}
+          onSubmit={this.createProject}
+        >
+          <div>
+            <label htmlFor="projectName"> Project Name: </label>
+            <input
+              type="text"
+              value={this.state.projectDetails.projectName}
+              name="projectName"
+              id="projectName"
+              onChange={(e) => this.handleOnChange(e)}
+              required/>
+          </div>
+          <div>
+            <label htmlFor="projectStatus"> Project Status: </label>
+            <select
+              value={this.state.projectDetails.projectStatus}
+              name="projectStatus"
+              id="projectStatus"
+              onChange={(e) => this.handleOnChange(e)}
+              required
+            >
+              <option value="">Please choose an option</option>
+              <option value="ACTIVE">Active</option>
+              <option value="PLANNED">Planned</option>
+              <option value="COMPELTED">Completed</option>
+            </select>
+          </div>
+
+          <div>
+            <input type="submit" value="Create Project" />
+          </div>
+        </form>
+
+        <button onClick={this.signOut}>Sign out</button>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = createStructuredSelector({
-    name: selectCurrentUserFirstName
-})
+  name: selectCurrentUserFirstName,
+});
 
 const mapDispatchToProps = (dispatch) => ({
-    signOut: () => dispatch(signOut()),
-  });
+  signOut: () => dispatch(signOut()),
+  createProject: (projectDetails) => dispatch(createProjectStart(projectDetails)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage)
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

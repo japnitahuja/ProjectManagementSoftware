@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   username: null,
   _id: null,
   signUpStart: false,
-  signUpSuccesful: false,
+  signUpSuccessful: false,
   signUpFail: false,
   signInStart: false,
   signInSuccessful: false,
@@ -25,14 +25,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         signUpStart: true,
         signUpFail: false,
-        signUpSuccesful: false,
+        signUpSuccessful: false,
         errorMessage: null,
       };
     case UserActionTypes.SIGN_UP_SUCCESS:
       return {
         ...state,
         signUpStart: false,
-        signUpSuccesful: true,
+        signUpSuccessful: true,
         signInSuccessful: true,
         firstName: action.payload.firstName,
         lastName: action.payload.lastName,
@@ -40,13 +40,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         email: action.payload.email,
         role: action.payload.role,
         username: action.payload.username,
+        _id:action.payload._id,
         message: "SIGNED IN SUCCESSFULLY!",
       };
     case UserActionTypes.TASK_OWNER_TRADE_PARTNER_SIGN_UP_SUCCESS:
       return {
         message: action.payload,
         signUpStart: false,
-        signUpSuccesful: true,
+        signUpSuccessful: true,
       };
     case UserActionTypes.SIGN_UP_FAILURE:
       return {
@@ -71,6 +72,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         email: action.payload.email,
         role: action.payload.role,
         username: action.payload.username,
+        _id:action.payload._id,
         message: "SIGNED IN SUCCESSFULLY!",
         errorMessage: null
       };
@@ -92,7 +94,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         username: null,
         _id: null,
         signUpStart: false,
-        signUpSuccesful: false,
+        signUpSuccessful: false,
         signUpFail: false,
         signInStart: false,
         signInSuccessful: false,
