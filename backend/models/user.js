@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    projects:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project"
+    }],
     createdAt: {type: Date, default: Date.now}
 })
 mongoose.model('User', userSchema)
