@@ -57,7 +57,7 @@ router.post("/create-task/:projectId", async (req, res) => {
             const task = await Task.create({taskName, taskStartDate, taskEndDate, taskOwner: userId})
             res.status(200).json({message: 'Task Created', done: true, task})
             console.log(task._id)
-            await project.tasks.push(task._id)
+            project.tasks.push(task._id)
             project.save(function(err){
                 if(err){
                     console.log(err)
@@ -126,7 +126,7 @@ router.get("/task/:taskId/step", async (req, res) => {
 //creating a purchase order
 router.post("/create-purchase-order/:taskId", async (req, res) => {
     const {orderFrom, totalOrderAmount, totalPaidAmount, userId, projectId} = req.body
-    if(!orderFrom || !totalOrderAmount ||!totalPaidAmount || !userId){
+    if(!orderFrom || !totalOrderAmount ||!totalPaidAmount || !userId || !projectId){
         res.status(422).json({error:"Fill all the fields",done:false})
     }else{
         try {
@@ -149,9 +149,9 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
 })
 
 //geting the purchase order for a task
-router.get("/task/:taskId/purchaseOrder", async (res, req) => {
+router.get("/task/:taskId/purchaseOrder", async (req, res) => {
     try {
-        let purchaseOrders = await Task.findOne({_id: req.params.taskId}).populate({
+        const purchaseOrders = await Task.find({_id: req.params.taskId}).populate({
             path: 'purchaseOrders'
         }).select('purchaseOrders')
         res.status(200).json({message: 'All purchase orders linked to the task', done: true, purchaseOrders})
@@ -160,14 +160,13 @@ router.get("/task/:taskId/purchaseOrder", async (res, req) => {
     }
 })
 
-//getting purchase order for a project
-router.get("/project/:projectId/purchaseOrders", async(res, req) => {
+//getting puchase orders for a project
+router.get("/project/:projectId/purchaseOrders", async (req, res) => {
     try {
         const purchaseOrder = await Project.findOne({_id: req.params.projectId}).populate({
-            path: 'purchaseOrders',
-            select: 'purchasedItem'
-        }).select('purchaseOrders') 
-        res.status(200).json({message: 'All purchase orders linked to the task', done: true, purchaseOrder})
+            path: 'purchaseOrders'
+        }).select('purchaseOrders')
+        res.status(200).json({message: 'All purchase orders linked to the project', done: true, purchaseOrder})
     } catch (error) {
         console.log(error)
     }
@@ -179,7 +178,6 @@ router.post("/creating-purchase-order-items/:purchaseOrderId", async (req, res) 
     if(!itemName || !itemNumber || !itemsShipped || !itemValue){
         res.status(422).json({error:"Fill all the fields",done:false})
     }else{
-
         try {
             let purchaseOrder = await PurchaseOrder.findOne({_id: req.params.purchaseOrderId})
             let purchaseOrderItem = await PurchaseOrderItem.create({itemName, itemNumber, itemsShipped, itemValue})

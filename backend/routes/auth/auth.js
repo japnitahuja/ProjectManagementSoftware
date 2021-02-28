@@ -26,14 +26,14 @@ router.post("/login", async (req, res) => {
                     const {username,email,_id,firstName,lastName,phoneNumber,role, isProjectOwnerApproved, isProjectOwnerDeclined}=savedUser;
                     if(role === 'TASK_OWNER' || role === 'TRADE_PARTNER'){
                         if(isProjectOwnerApproved){
-                            res.json({message:"Signed IN", token, user:{username,email,_id,firstName,lastName,phoneNumber,role}, done:true})
+                            res.json({message:"Signed In", token, user:{username,email,_id,firstName,lastName,phoneNumber,role}, done:true})
                         }else if(isProjectOwnerDeclined){
                             res.status(200).json({message: 'Your request has been rejected by the project owner', done: true})
                         }else{
                             res.status(200).json({message: 'Your application is under process!', done: true})
                         }
                     }else{
-                        res.json({message:"Signed IN", token, user:{username,email,_id,firstName,lastName,phoneNumber,role}, done:true})
+                        res.json({message:"Signed In", token, user:{username,email,_id,firstName,lastName,phoneNumber,role}, done:true})
                     }
                 }else{
                     res.status(422).json({error:"Password or Email is incorrect",done:false}) 
@@ -46,7 +46,7 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/signup", async (req, res) => {
-    const {username, email, password, firstName, lastName, phoneNumber, role, projectId} = req.body;
+    const {username, email, password, firstName, lastName, phoneNumber, role} = req.body;
     if(!email || !password || !username || !firstName || !lastName || !phoneNumber || !role){
         res.status(422).json({error:"Please add all the details",done:false})
     }else{
@@ -63,10 +63,10 @@ router.post("/signup", async (req, res) => {
                     const token = jwt.sign({_id: newUser._id}, jwt_secret)
                     res.json({message: "User created and signed in!",token, user: {username, email, password, firstName, lastName, phoneNumber, role}, done: true})
                     }else{
-                        const project = Project.findOne({_id: projectId})
+                       // const project = Project.findOne({_id: projectId})
                         const hashedPassword = await bcrypt.hash(password, 12)
                         const newUser = await User.create({email, password:hashedPassword, role, firstName, lastName, phoneNumber, username})
-                        project.requestsToJoin.push(newUser._id)
+                        //project.requestsToJoin.push(newUser._id)
                         res.json({message: 'Your request has been sent to project owner to aprove!', done: true})
                     }
                 } catch (error) {

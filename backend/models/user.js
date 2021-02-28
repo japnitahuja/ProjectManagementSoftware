@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    requestsToJoin:[
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
     isProjectOwnerDeclined:{
         type: Boolean,
         default: false

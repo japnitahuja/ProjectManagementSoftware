@@ -14,7 +14,22 @@ export const selectSignUpSuccessful = createSelector(
   (currentUser) => currentUser.signUpSuccessful
 );
 
+export const selectCurrentUserFirstName = createSelector(
+  [selectCurrentUser],
+  (currentUser) => currentUser.firstName
+);
+
+export const selectCurrentUserLastName = createSelector(
+  [selectCurrentUser],
+  (currentUser) => currentUser.lastName
+);
+
 export const selectSignUpFail = createSelector(
   [selectCurrentUser],
   (currentUser) => currentUser.signUpFail
 );
+
+export const selectSignInSignUpMessage = createSelector(
+  [selectCurrentUser],
+  (currentUser) => currentUser.message
+)

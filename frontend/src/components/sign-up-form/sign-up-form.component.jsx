@@ -1,8 +1,9 @@
 import React from "react";
 import {signUpStart} from "../../redux/user/user.actions";
-import {selectSignUpFail, selectSignUpStart, selectSignUpSuccessful} from "../../redux/user/user.selectors";
+import {selectSignInSignUpMessage, selectSignUpFail, selectSignUpStart, selectSignUpSuccessful} from "../../redux/user/user.selectors";
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Link } from "react-router-dom";
 
 class SignUpForm extends React.Component {
   constructor() {
@@ -55,14 +56,22 @@ class SignUpForm extends React.Component {
           confirmPassword: '',
         });
       }
+      const {signUpSuccessful, history} = this.props
+      if(signUpSuccessful){
+        history.push('/login')
+      } 
 
       
 
   }
 
   render() {
+    const {message} = this.props
     return (
       <div style={{ margin: "10px" }}>
+        {
+          message ? <div>{message}</div> : null
+        }
         <form
           style={{ display: "flex", flexDirection: "column" }}
           onChange={(e) => this.handleOnChange(e)}
@@ -179,7 +188,8 @@ class SignUpForm extends React.Component {
 const mapStateToProps = createStructuredSelector({
   signUpStart: selectSignUpStart,
   signUpSuccessful: selectSignUpSuccessful,
-  signUpFail: selectSignUpFail
+  signUpFail: selectSignUpFail,
+  message: selectSignInSignUpMessage
 });
 
 const mapDispatchToProps = (dispatch) => ({
