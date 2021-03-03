@@ -6,6 +6,7 @@ import profile from './pages/profile';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { selectCurrentUser, selectCurrentUserFirstName } from './redux/user/user.selectors';
+import Projects from './pages/projects';
 
 
 function App(props) {
@@ -16,6 +17,7 @@ function App(props) {
           props.currentUser ? (<Redirect to='/profile' />): (<SignInAndSignUpPage />)
         } />
         <Route path='/profile' exact component={profile}/>
+        <Route path='/projects' exact component={Projects} />
         
       </Switch>
     </BrowserRouter>

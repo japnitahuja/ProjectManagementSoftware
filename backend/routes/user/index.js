@@ -21,12 +21,15 @@ const Step = mongoose.model("Step")
 //TASK_ID: 6034cd87d06e2a4938562971
 
 //all projects list
-router.get("/all-projects", async (req, res) => {
+router.get("/all-projects/:userId", async (req, res) => {
   try {
-    const projects = await Project.find({});
+    const projects = await User.findOne({_id: req.params.userId}).populate({
+        path: 'projects'
+    }).select('projects')
     res.status(200).json({ done: true, projects });
   } catch (error) {
     console.log(error);
+    res.status(422).json({ done: false, error: error });
   }
 });
 
