@@ -93,7 +93,24 @@ router.get("/project/:projectId/task", async (req, res) => {
         let tasks = await Project.findOne({_id: req.params.projectId}).populate({
             path: 'tasks'
         }).select('tasks')
-        
+        let individualTasks = tasks.tasks
+        for(var task of individualTasks){
+            let stepsArr = task.steps
+            let completedArr = []
+            let totalSteps = []
+            for(let step of stepsArr){
+                let steps = await Step.findOne({_id: step.toString()})
+                console.log(steps)
+                if(steps.isStepDone === true){
+                    completedArr.push('done')
+                }
+                totalSteps.push('step')
+            }
+            let percentage = completionRatio*100
+            task.totalSteps = totalSteps.length
+            task.completedSteps = completedArr.length
+            task.completionPercentage = percentage
+        }
         res.status(200).json({message: 'List of tasks of the project', done: true, tasks})
     } catch (error) {
         console.log(error)

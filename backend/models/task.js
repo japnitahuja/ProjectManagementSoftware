@@ -19,12 +19,19 @@ const taskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  taskPercentCompleted: {
-    type: Number,
-  },
+
   taskOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+  },
+  totalSteps: {
+    type: Number
+  },
+  completedSteps: {
+    type: Number
+  },
+  completionPercentage: {
+    type: Number
   },
   steps: [
     {
