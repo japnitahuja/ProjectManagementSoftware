@@ -61,7 +61,8 @@ router.post("/signup", async (req, res) => {
                     if(role ==='PROJECT_OWNER'){
                     const newUser = await User.create({email, password:hashedPassword, role, firstName, lastName, phoneNumber, username})
                     const token = jwt.sign({_id: newUser._id}, jwt_secret)
-                    res.json({message: "User created and signed in!",token, user: {username, email, password, firstName, lastName, phoneNumber, role}, done: true})
+                    const _id = newUser._id;
+                    res.json({message: "User created and signed in!",token, user: {username, email, password, firstName, lastName, phoneNumber, role, _id}, done: true})
                     }else{
                        // const project = Project.findOne({_id: projectId})
                         const hashedPassword = await bcrypt.hash(password, 12)

@@ -2,11 +2,12 @@ import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.page';
-import profile from './pages/profile';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { selectCurrentUser, selectCurrentUserFirstName } from './redux/user/user.selectors';
-import Projects from './pages/projects';
+import AllProjects from './pages/all-projects/all-projects';
+import Project from './pages/project/project.page';
+
 
 
 function App(props) {
@@ -14,10 +15,10 @@ function App(props) {
     <BrowserRouter>
       <Switch>
         <Route path='/login' exact render = {() => 
-          props.currentUser ? (<Redirect to='/profile' />): (<SignInAndSignUpPage />)
+          props.currentUser ? (<Redirect to='/all-projects' />): (<SignInAndSignUpPage />)
         } />
-        <Route path='/profile' exact component={profile}/>
-        <Route path='/projects' exact component={Projects} />
+        <Route path='/all-projects' exact component={AllProjects} />
+        <Route path='/project/:projectId' exact component={Project}/>
         
       </Switch>
     </BrowserRouter>

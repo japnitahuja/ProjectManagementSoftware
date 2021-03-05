@@ -1,4 +1,4 @@
-import { ProjectActionTypes } from "./all-project.types";
+import { ProjectActionTypes } from "./all-projects.types";
 
 const INITIAL_STATE = {
   createProjectStart: false,
