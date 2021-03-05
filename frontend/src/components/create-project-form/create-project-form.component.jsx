@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { createProjectStart, fetchProjectsStart } from "../redux/project/project.actions";
-import { selectUserProjects } from "../redux/project/project.selector";
-import { signOut } from "../redux/user/user.actions";
-import { selectCurrentUserFirstName } from "../redux/user/user.selectors";
+import { createProjectStart} from "../../redux/all-projects/all-projects.actions";
+import { signOut } from "../../redux/user/user.actions";
+import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 
-class ProfilePage extends Component {
+class CreateProjectForm extends Component {
   constructor() {
     super();
     this.state = {
@@ -17,13 +16,7 @@ class ProfilePage extends Component {
     };
   }
 
-  signOut = () => {
-    const { history, signOut } = this.props;
-    signOut();
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    history.push("/login");
-  };
+ 
 
   handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -74,34 +67,29 @@ class ProfilePage extends Component {
               <option value="">Please choose an option</option>
               <option value="ACTIVE">Active</option>
               <option value="PLANNED">Planned</option>
-              <option value="COMPELTED">Completed</option>
+              <option value="COMPLETED">Completed</option>
             </select>
           </div>
 
           <div>
             <input type="submit" value="Create Project" />
-            {
-      projects ? console.log(projects) : null
-    }
           </div>
         </form>
 
-        <button onClick={this.signOut}>Sign out</button>
-        <button onClick={this.getProjects}>Projects</button>
+        
+
       </div>
     );
   }
 }
 
 const mapStateToProps = createStructuredSelector({
-  name: selectCurrentUserFirstName,
-  projects: selectUserProjects
+  name: selectCurrentUserFirstName
 });
 
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
-  createProject: (projectDetails) => dispatch(createProjectStart(projectDetails)),
-  fetchProjects : () => dispatch(fetchProjectsStart())
+  createProject: (projectDetails) => dispatch(createProjectStart(projectDetails))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm);

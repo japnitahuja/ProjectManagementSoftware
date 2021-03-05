@@ -1,4 +1,4 @@
-import { ProjectActionTypes } from "./all-project.types"
+import { ProjectActionTypes } from "./all-projects.types"
 
 export const createProjectStart = (projectDetails) => ({
     type: ProjectActionTypes.CREATE_PROJECT_START,
@@ -6,7 +6,7 @@ export const createProjectStart = (projectDetails) => ({
 })
 
 export const createProjectSucessful = () => ({
-    type: ProjectActionTypes.CREATE_PROJECT_SUCCESS,
+    type: ProjectActionTypes.CREATE_PROJECT_SUCCESS
 })
 
 export const createProjectFail = (errorMessage) => ({
