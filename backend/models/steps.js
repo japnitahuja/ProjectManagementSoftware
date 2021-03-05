@@ -11,8 +11,19 @@ const stepSchema = new mongoose.Schema({
     questionStatement:{
         type: String
     },
-    questionsType:{
+    questionType:{
         type: String
-    }
+    },
+    isQuestionAnswered:{
+        type: Boolean,
+        default: false
+    },
+    stepQuestionResponse:{
+        type: String
+    },
+    relatedTask:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
+    }]
 })
 mongoose.model('Step', stepSchema)

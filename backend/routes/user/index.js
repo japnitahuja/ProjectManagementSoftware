@@ -93,41 +93,25 @@ router.get("/project/:projectId/task", async (req, res) => {
         let tasks = await Project.findOne({_id: req.params.projectId}).populate({
             path: 'tasks'
         }).select('tasks')
-        let individualTasks = tasks.tasks
-        for(var task of individualTasks){
-            let stepsArr = task.steps
-            let completedArr = []
-            let totalSteps = []
-            for(let step of stepsArr){
-                let steps = await Step.findOne({_id: step.toString()})
-                console.log(steps)
-                if(steps.isStepDone === true){
-                    completedArr.push('done')
-                }
-                totalSteps.push('step')
-            }
-            let percentage = completionRatio*100
-            task.totalSteps = totalSteps.length
-            task.completedSteps = completedArr.length
-            task.completionPercentage = percentage
-        }
         res.status(200).json({message: 'List of tasks of the project', done: true, tasks})
     } catch (error) {
         console.log(error)
+
     }
 })
 
 //create a step
 router.post("/create-step/:taskId", async (req, res) => {
-    const {stepName} = req.body
+    const {stepName, questionStatement, questionType} = req.body
     if(!stepName){
         res.status(422).json({error:" fill all the fields",done:false})
     }else{
     try {
         const task = await Task.findOne({_id: req.params.taskId})
-        const step = await Step.create({stepName})
+        const step = await Step.create({stepName, relatedTask: req.params.taskId, questionStatement: questionStatement, questionType: questionType})
         res.status(200).json({done: true, message: "Step for the task created", step})
         task.steps.push(step._id)
+        task.totalSteps += 1
         task.save(function(err){
             if(err){
                 console.log(err)
@@ -226,6 +210,65 @@ router.post("/creating-purchase-order-items/:purchaseOrderId", async (req, res) 
     }
 })
 
+//completing a task
+router.post("/complete-task/:taskId", async (req, res) => {
+    try {
+        const task = await Task.findOne({_id: req.params.taskId})
+        if(task.completionPercentage === 100){
+            task.isTaskDone = true
+            task.save()
+            res.status(200).json({message: 'Task Completed', done: true})
+        }else{
+            res.status(200).json({error: 'Complete all the steps first!', done: false})
+        }
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+//completing a step
+router.post("/complete-step/:stepId", async(req, res) => {
+    try {
+        const step = await Step.findOne({_id: req.params.stepId})
+        if(step.questionStatement && step.isQuestionAnswered === false){
+            res.status(200).json({error: 'Answer the step question first', done: false})
+            return
+        }
+        const taskId = await step.relatedTask[0].toString()
+        const task = await Task.findOne({_id: taskId})
+        step.isStepDone = true
+        step.save()
+        res.status(200).json({message: 'Step Done!', done: true})
+        task.completedSteps = await task.completedSteps + 1
+        task.completionPercentage = task.completedSteps/task.totalSteps*100
+        task.save(function(err){
+            if(err){
+                console.log(err)
+            }
+        })  
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+//completing step question
+router.post("/complete-step-question/:stepId", async(req, res) => {
+    const {stepQuestionResponse} = req.body
+    try {
+        const step = await Step.findOne({_id: req.params.stepId})
+        if(step.questionStatement){
+            step.isQuestionAnswered = true
+        step.stepQuestionResponse = stepQuestionResponse
+        step.save()
+        res.status(200).json({message: 'Question Answered', done: true})
+        }else{
+            res.status(200).json({error: 'There is no question', done: false})
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 
 module.exports = router
