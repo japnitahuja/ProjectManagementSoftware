@@ -60,22 +60,6 @@ const stepReducer = (state = INITIAL_STATE, action) => {
             fetchStepFailure: true,
             errorMessage: action.payload
           }
-        case StepActionTypes.COMPLETE_STEP_QUESTION_START:
-          return{
-            isStepQuestionBeingAnswered: true
-          }
-        case StepActionTypes.COMPLETE_STEP_QUESTION_SUCCESS:
-          return{
-            isStepQuestionBeingAnswered: false,
-            completionMessage: action.payload,
-            isStepQuestionAnswered: true
-          }
-        case StepActionTypes.COMPLETE_STEP_QUESTION_FAILURE:
-          return{
-            isStepQuestionBeingAnswered: false,
-            isStepQuestionAnswered: false,
-            completionMessage: action.payload
-          }
     default:
       return state;
   }

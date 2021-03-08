@@ -7,6 +7,7 @@ import { selectUserSteps } from '../../redux/all-steps/all-steps.selector';
 import StepList from '../../components/steps-list/steps-list.component'
 import CreatePurchaseOrderForm from '../../components/create-purchase-order/create-purchase-order.component'
 import PurchaseOrderList from '../../components/purchase-orders-list/purchase-orders-list.component'
+import { selectCurrentTaskPurchaseOrders } from '../../redux/current-task/current-task.selectors';
 class PurchaseOrder extends Component {
     componentDidMount(){
         const taskId = this.props.match.params.taskId
@@ -21,7 +22,7 @@ class PurchaseOrder extends Component {
         
         return (
              <div style={{margin:"10px"}}>
-                <h1> All STEPS </h1>
+                <h1>All PURCHASE ORDERS</h1>
                 {/* <TaskList tasks = {tasks}/> */}
                 <PurchaseOrderList purchaseOrders = {purchaseOrders} />
             </div>
@@ -30,7 +31,7 @@ class PurchaseOrder extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    purchaseOrders: selectUserSteps
+    purchaseOrders: selectCurrentTaskPurchaseOrders
   });
   
   const mapDispatchToProps = (dispatch) => ({

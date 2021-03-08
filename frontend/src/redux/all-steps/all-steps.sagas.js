@@ -39,24 +39,6 @@ export function* fetchSteps({payload}){
   }
 }
 
-export function* completeStepQuestion({payload}){
-  const stepId = payload
-  try {
-    let stepQuestionCompletion = yield fetch(`http://127.0.0.1:5000/complete-step-question/${stepId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    stepQuestionCompletion = stepQuestionCompletion.json()
-    stepQuestionCompletion.done ? 
-    yield put(completeStepQuestionSuccess(stepQuestionCompletion.message)):
-    yield put(completeStepQuestionFailure(stepQuestionCompletion.message))
-  } catch (error) {
-    yield put(completeStepQuestionFailure(error))
-  }
-}
-
 
 export function* onStepCreateStart(){
   yield takeLatest(StepActionTypes.CREATE_STEP_START, createStep)
@@ -66,14 +48,9 @@ export function* onStepFetchStart(){
   yield takeLatest(StepActionTypes.FETCH_STEPS_START, fetchSteps)
 }
 
-export function* onStepQuestionCompletionStart(){
-  yield takeLatest(StepActionTypes.COMPLETE_STEP_QUESTION_START, completeStepQuestion)
-}
-
 export function* stepSagas() {
   yield all([
     call(onStepCreateStart),
     call(onStepFetchStart),
-    call(onStepQuestionCompletionStart)
   ]);
 }

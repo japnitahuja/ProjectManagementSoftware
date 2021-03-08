@@ -36,17 +36,3 @@ export const fetchStepsFailure = (error) => ({
   payload: error,
 });
 
-export const completeStepQuestionStart = (stepId) => ({
-    type: StepActionTypes.COMPLETE_STEP_QUESTION_START,
-    payload: stepId
-})
-
-export const completeStepQuestionSuccess = (message) => ({
-    type: StepActionTypes.COMPLETE_STEP_QUESTION_SUCCESS,
-    payload: message
-})
-
-export const completeStepQuestionFailure = (error) => ({
-    type: StepActionTypes.COMPLETE_STEP_QUESTION_FAILURE,
-    payload: error
-})

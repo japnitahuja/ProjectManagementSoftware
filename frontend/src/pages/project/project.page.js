@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
-import { fetchTasksStart } from '../../redux/all-tasks/all-tasks.actions';
 import { selectUserTasks } from '../../redux/all-tasks/all-tasks.selectors';
 import TaskList from '../../components/tasks-list/tasks-list.component';
 import CreateTaskForm from '../../components/create-task-form/create-task-form.component';
+import { fetchCurrentProjectStart } from '../../redux/current-project/current-project.actions';
+import { selectCurrentProjectName, selectCurrentProjectStatus, selectCurrentProjectTasks } from '../../redux/current-project/current-project.selectors';
 
 class Project extends Component {
     componentDidMount(){
@@ -13,13 +14,14 @@ class Project extends Component {
     }
     
     render() {
-        const {tasks} = this.props;
+        const {tasks, projectName, projectStatus} = this.props;
         console.log('project page')
         console.log(tasks)
         
         return (
              <div style={{margin:"10px"}}>
-                <h1> All Tasks </h1>
+                 <h1>{projectName} {projectStatus}</h1>
+                <h2> All Tasks </h2>
                 <TaskList tasks = {tasks}/>
                 <CreateTaskForm projectId = {this.props.match.params.projectId} />
                 
@@ -30,11 +32,13 @@ class Project extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    tasks: selectUserTasks
+    projectName: selectCurrentProjectName,
+    projectStatus: selectCurrentProjectStatus,
+    tasks: selectCurrentProjectTasks
   });
   
   const mapDispatchToProps = (dispatch) => ({
-    fetchTasks : (projectId) => dispatch(fetchTasksStart(projectId))
+    fetchTasks : (projectId) => dispatch(fetchCurrentProjectStart(projectId))
   });
   
   export default connect(mapStateToProps, mapDispatchToProps)(Project);

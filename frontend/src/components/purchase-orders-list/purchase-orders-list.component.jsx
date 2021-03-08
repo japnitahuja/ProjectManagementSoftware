@@ -2,9 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
-import { completeStepQuestionStart } from "../../redux/all-steps/all-steps.actions";
-import { selectStepQuestionAnsweredConfirmationMessage } from "../../redux/all-steps/all-steps.selector";
-import ConformationMesage from "../conformation-message/comformation-message.component";
 
 class PurchaseOrderList extends React.Component {
     
@@ -39,11 +36,9 @@ class PurchaseOrderList extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  stepQuestionConfirmation: selectStepQuestionAnsweredConfirmationMessage,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  completeStepQuestion: (stepId) => dispatch(completeStepQuestionStart(stepId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PurchaseOrderList);

@@ -6,7 +6,9 @@ import { TaskActionTypes } from "./all-tasks.types";
 export function* createTask({payload}){
   try {
     let data = payload;
-    let resp = yield fetch(`http://127.0.0.1:5000/create-task/${data.taskId}`, {
+    let userId = yield select(selectUserId)
+    data['userId'] = userId
+    let resp = yield fetch(`http://127.0.0.1:5000/create-task/${data.projectId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

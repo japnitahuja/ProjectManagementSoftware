@@ -8,6 +8,7 @@ import { selectCurrentUser, selectCurrentUserFirstName } from './redux/user/user
 import AllProjects from './pages/all-projects/all-projects';
 import Project from './pages/project/project.page';
 import Task from './pages/task/task.page';
+import Step from './pages/step/step.page'
 import PurchaseOrder from './pages/purchase-order/purchase-order.page'
 
 
@@ -21,7 +22,8 @@ function App(props) {
         <Route path='/all-projects' exact component={AllProjects} />
         <Route path='/project/:projectId' exact component={Project}/>
         <Route path='/task/:taskId' exact component={Task} />
-        <Route path='/purchaseOrder/:purchaseOrderId' exact component={PurchaseOrder} />
+        <Route path='/step/:stepId' exact component={Step} />
+        <Route path='/purchaseOrder/:taskId' exact component={PurchaseOrder} />
       </Switch>
     </BrowserRouter>
     
