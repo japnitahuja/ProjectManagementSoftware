@@ -33,6 +33,18 @@ router.get("/all-projects/:userId", async (req, res) => {
   }
 });
 
+//getting a particular project
+router.get('/project/:projectId', async (req, res) => {
+    try {
+        const project = await Project.findOne({_id: req.params.projectId}).populate({
+            path: 'tasks'
+        })
+        res.status(200).json({done: true, message: 'project is fetched', project})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 //create a new project
 router.post("/create-project/:userId", async (req, res) => {
     const {projectName, projectStatus} = req.body
@@ -141,21 +153,21 @@ router.get("/task/:taskId/step", async (req, res) => {
 //creating a purchase order
 router.post("/create-purchase-order/:taskId", async (req, res) => {
     const {orderFrom, totalOrderAmount, totalPaidAmount, userId, projectId} = req.body
-    if(!orderFrom || !totalOrderAmount ||!totalPaidAmount || !userId || !projectId){
+    if(!orderFrom || !totalOrderAmount ||!totalPaidAmount || !userId){
         res.status(422).json({error:"Fill all the fields",done:false})
     }else{
         try {
             let task = await Task.findOne({_id: req.params.taskId})
-            let project = await Project.find({_id: projectId})
+            // let project = await Project.find({_id: projectId})
             let purchaseOrder = await PurchaseOrder.create({orderFrom, totalOrderAmount, totalPaidAmount, user: userId})
             task.purchaseOrders.push(purchaseOrder._id)
-            project.purchaseOrders.push(purchaseOrder._id)
-            task.save(function(err){
-                if(err){
-                    console.log(err)
-                    return
-                }
-            })
+            // project.purchaseOrders.push(purchaseOrder._id)
+            // task.save(function(err){
+            //     if(err){
+            //         console.log(err)
+            //         return
+            //     }
+            // })
             res.status(200).json({message: 'Purchase order created and linked to the task', done: true, purchaseOrder})
         } catch (error) {
             console.log(error)

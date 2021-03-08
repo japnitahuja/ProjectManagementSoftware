@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import { selectCurrentUser, selectCurrentUserFirstName } from './redux/user/user.selectors';
 import AllProjects from './pages/all-projects/all-projects';
 import Project from './pages/project/project.page';
-
+import Task from './pages/task/task.page';
+import PurchaseOrder from './pages/purchase-order/purchase-order.page'
 
 
 function App(props) {
@@ -19,7 +20,8 @@ function App(props) {
         } />
         <Route path='/all-projects' exact component={AllProjects} />
         <Route path='/project/:projectId' exact component={Project}/>
-        
+        <Route path='/task/:taskId' exact component={Task} />
+        <Route path='/purchaseOrder/:purchaseOrderId' exact component={PurchaseOrder} />
       </Switch>
     </BrowserRouter>
     

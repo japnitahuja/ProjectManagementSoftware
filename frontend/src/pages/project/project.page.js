@@ -16,11 +16,14 @@ class Project extends Component {
         const {tasks} = this.props;
         console.log('project page')
         console.log(tasks)
+        
         return (
-            <div style={{margin:"10px"}}>
+             <div style={{margin:"10px"}}>
                 <h1> All Tasks </h1>
                 <TaskList tasks = {tasks}/>
-                <CreateTaskForm projectId = {this.props.match.params.projectId}/>
+                <CreateTaskForm projectId = {this.props.match.params.projectId} />
+                
+
             </div>
         )
     }
