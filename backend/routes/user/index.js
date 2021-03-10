@@ -240,7 +240,7 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
         .json({
           message: "Purchase order created and linked to the task",
           done: true,
-          purchaseOrder,
+          
         });
     } catch (error) {
       console.log(error);

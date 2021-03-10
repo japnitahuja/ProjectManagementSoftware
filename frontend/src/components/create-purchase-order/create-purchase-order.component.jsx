@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { createProjectStart} from "../../redux/all-projects/all-projects.actions";
-import { signOut } from "../../redux/user/user.actions";
-import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
-
+import { createPurchaseOrderStart } from "../../redux/current-purchase-order/current-purchase-order.actions";
+import {selectCurrentProjectId} from '../../redux/current-project/current-project.selectors'
 class CreatePurchaseOrderForm extends Component {
   constructor(props) {
     super(props);
@@ -13,7 +11,9 @@ class CreatePurchaseOrderForm extends Component {
         orderFrom: "",
         totalOrderAmount: "",
         totalPaidAmount: '',
-        taskId: this.props.taskId
+        taskId: this.props.taskId,
+        projectId: this.props.projectId
+
       },
     };
   }
@@ -25,13 +25,13 @@ class CreatePurchaseOrderForm extends Component {
     let PurchaseOrder = this.state.purchaseOrderDetails;
     PurchaseOrder[name] = value;
 
-    this.setState({ purchaseOrderDetails: PurchaseOrder });
+    this.setState({ purchaseOrderDetails: PurchaseOrder }, () => console.log(this.state));
   };
 
   createPurchaseOrder = (e) => {
     e.preventDefault();
     let purchaseOrderDetails = this.state.purchaseOrderDetails;
-    this.props.createProject(purchaseOrderDetails);
+    this.props.createPurchaseOrder(purchaseOrderDetails);
   };
 
   
@@ -77,7 +77,7 @@ class CreatePurchaseOrderForm extends Component {
           </div>
 
           <div>
-            <input type="submit" value="Create Project" />
+            <input type="submit" value="Create Purchase Order" />
           </div>
         </form>
 
@@ -89,12 +89,11 @@ class CreatePurchaseOrderForm extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-
+  projectId: selectCurrentProjectId
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  signOut: () => dispatch(signOut()),
-  createProject: (purchaseOrderDetails) => dispatch(createProjectStart(purchaseOrderDetails))
+  createPurchaseOrder: (purchaseOrderDetails) => dispatch(createPurchaseOrderStart(purchaseOrderDetails))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePurchaseOrderForm);

@@ -25,6 +25,7 @@ class PurchaseOrder extends Component {
                 <h1>All PURCHASE ORDERS</h1>
                 {/* <TaskList tasks = {tasks}/> */}
                 <PurchaseOrderList purchaseOrders = {purchaseOrders} />
+                <CreatePurchaseOrderForm taskId = {this.props.match.params.taskId} />
             </div>
         )
     }
