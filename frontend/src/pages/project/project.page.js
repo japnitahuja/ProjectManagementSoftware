@@ -35,10 +35,10 @@ const mapStateToProps = createStructuredSelector({
     projectName: selectCurrentProjectName,
     projectStatus: selectCurrentProjectStatus,
     tasks: selectCurrentProjectTasks
-  });
+});
   
-  const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch) => ({
     fetchTasks : (projectId) => dispatch(fetchCurrentProjectStart(projectId))
-  });
+});
   
   export default connect(mapStateToProps, mapDispatchToProps)(Project);

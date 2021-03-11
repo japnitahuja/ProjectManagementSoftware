@@ -31,7 +31,7 @@ class Task extends Component {
         return (
              <div style={{margin:"10px"}}>
                  <h1>{taskName}</h1>
-                 <Link to={`/purchaseOrder/:${taskId}`}><button>PURCHASE ORDERS</button></Link>
+                 <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
                  <h3>{taskCompletionMessage}</h3>
                  {
                      isTaskDone ? <div>TASK IS DONE!</div> : <button onClick={this.completeTask}>COMPLETE TASK</button> 

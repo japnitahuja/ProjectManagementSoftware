@@ -16,7 +16,12 @@ const persistConfig = {
     whitelist: [
       'user',
       'project',
-      'task'
+      'task',
+      'step',
+      'currentProject',
+      'currentTask',
+      'currentStep',
+      'currentPurchaseOrder'
     ],
   };
 

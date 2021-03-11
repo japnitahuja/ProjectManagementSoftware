@@ -214,8 +214,9 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
     totalPaidAmount,
     userId,
     projectId,
-  } = req.body;
-  if (!orderFrom || !totalOrderAmount || !totalPaidAmount || !userId || !projectId) {
+    purchasedItem
+  } = req.body; 
+  if (!orderFrom || !totalOrderAmount || !purchasedItem || !totalPaidAmount || !userId || !projectId) {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
     try {
@@ -226,15 +227,22 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
         totalOrderAmount,
         totalPaidAmount,
         user: userId,
+        purchasedItem
       });
       task.purchaseOrders.push(purchaseOrder._id);
-      project.purchaseOrders.push(purchaseOrder._id)
       task.save(function(err){
-          if(err){
-              console.log(err)
-              return
-          }
-      })
+        if(err){
+            console.log(err)
+            return
+        }
+    })
+    //   project.purchaseOrders.push(purchaseOrder._id)
+    //   project.save(function(err){
+    //     if(err){
+    //         console.log(err)
+    //         return
+    //     }
+    // })
       res
         .status(200)
         .json({
@@ -290,7 +298,7 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 
 //creating purchase order items
 router.post(
-  "/creating-purchase-order-items/:purchaseOrderId",
+  "/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
     const { itemName, itemNumber, itemsShipped, itemValue } = req.body;
     if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
@@ -318,7 +326,7 @@ router.post(
           .json({
             message: "Purchase order items created and linked to the order",
             done: true,
-            purchaseOrderItem,
+            
           });
       } catch (error) {
         console.log(error);
@@ -326,6 +334,18 @@ router.post(
     }
   }
 );
+
+//geting purchase order
+router.get('/purchaseOrder/:purchaseOrderId', async(req, res) => {
+  try {
+    const PO = await PurchaseOrder.findOne({_id: req.params.purchaseOrderId}).populate({
+      path: 'purchasedItems'
+    })
+    res.status(200).json({message: 'PO Fetched', done:true, PO})
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 //completing a task
 router.post("/complete-task/:taskId", async (req, res) => {
@@ -391,5 +411,39 @@ router.post("/complete-step-question/:stepId", async (req, res) => {
     console.log(error);
   }
 });
+
+//creating a template
+router.post('/test-template', async(req, res) => {
+  const taskNames = [' test template task 1', ' test template task 2', 'test template task 3']
+  const {projectName, projectStatus, userId} = req.body
+  try {
+    const project = await Project.create({
+      projectName, projectStatus
+    })
+    const user = await User.findOne({_id: userId})
+    user.projects.push(project._id)
+    user.save(function(err){console.log(err)})
+
+    taskNames.forEach(async (taskName) => {
+      try {
+        const task = await Task.create({taskName, taskStartDate: '02-02-2001', taskEndDate: '03-03-2001', taskOwner: userId})
+        console.log(task._id)
+        project.tasks.push(task._id)
+      } catch (error){
+        console.log(error)
+      }
+    })
+
+    project.save(function(err){
+      console.log('project save')
+      if(err){
+        console.log(err)
+      }
+    })
+    res.status(200).json({done: true, project})
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 module.exports = router;

@@ -12,8 +12,7 @@ class CreatePurchaseOrderForm extends Component {
         totalOrderAmount: "",
         totalPaidAmount: '',
         taskId: this.props.taskId,
-        projectId: this.props.projectId
-
+        purchasedItem: ''
       },
     };
   }
@@ -45,6 +44,16 @@ class CreatePurchaseOrderForm extends Component {
           onChange={(e) => this.handleOnChange(e)}
           onSubmit={this.createPurchaseOrder}
         >
+          <div>
+            <label htmlFor="purchasedItem"> Purchased Item: </label>
+            <input
+              type="text"
+              value={this.state.purchaseOrderDetails.purchasedItem}
+              name="purchasedItem"
+              id="purchasedItem"
+              onChange={(e) => this.handleOnChange(e)}
+              required/>
+          </div>
           <div>
             <label htmlFor="orderFrom"> Order From: </label>
             <input

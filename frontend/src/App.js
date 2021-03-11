@@ -10,6 +10,7 @@ import Project from './pages/project/project.page';
 import Task from './pages/task/task.page';
 import Step from './pages/step/step.page'
 import PurchaseOrder from './pages/purchase-order/purchase-order.page'
+import IndividualPurchaseOrder from './pages/individual-purchase-order/individual-purchase-order.page';
 
 
 function App(props) {
@@ -23,7 +24,8 @@ function App(props) {
         <Route path='/project/:projectId' exact component={Project}/>
         <Route path='/task/:taskId' exact component={Task} />
         <Route path='/step/:stepId' exact component={Step} />
-        <Route path='/purchaseOrder/:taskId' exact component={PurchaseOrder} />
+        <Route path='/purchaseOrders/:taskId' exact component={PurchaseOrder} /> 
+        <Route path='/purchaseOrder/:POid' exact component={IndividualPurchaseOrder} />
       </Switch>
     </BrowserRouter>
     

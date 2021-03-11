@@ -14,16 +14,16 @@ class PurchaseOrderList extends React.Component {
     return (
       <div>
         {purchaseOrders.map(
-          ({ orderFrom, totalOrderAmount, totalPaidAmount, _id }) => {
-              console.log(_id)
+          ({ orderFrom, totalOrderAmount, totalPaidAmount, purchasedItem, _id }) => {
             return (
               <div
                 key={_id}
                 style={{ padding: "10px", border: "1px solid black" }}
               >
                 <Link to={`/purchaseOrder/${_id}`}>
-                  <h3>Order from: {orderFrom}</h3>
-                </Link><br/>
+                  <h3>Purchased Item: {purchasedItem}</h3>
+                </Link>
+                Order from: {orderFrom}<br/>
                 Total Order Amount: {totalOrderAmount}<br/>
                 Total Paid Amount: {totalPaidAmount}
               </div>
