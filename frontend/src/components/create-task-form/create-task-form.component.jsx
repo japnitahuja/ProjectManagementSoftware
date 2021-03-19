@@ -36,7 +36,7 @@ class CreateTaskForm extends Component {
     return (
       <div>
         <form
-          style={{ display: "flex", flexDirection: "column" }}
+          style={{ display: "flex", flexDirection: "column", margin:"20px" }}
           onChange={(e) => this.handleOnChange(e)}
           onSubmit={this.createTask}
         >

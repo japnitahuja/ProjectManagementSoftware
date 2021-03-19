@@ -7,6 +7,7 @@ import { selectUserProjects } from "../../redux/all-projects/all-projects.select
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 import CreateProjectForm from "../../components/create-project-form/create-project-form.component"
+import { ProjectNav } from "../../components/project-nav/project-nav.component";
 
 
  class AllProjects extends Component {
@@ -26,8 +27,8 @@ import CreateProjectForm from "../../components/create-project-form/create-proje
         const {projects} = this.props
         
         return (
-            <div style={{margin:'10px'}}>
-                <h2>All Projects</h2>
+            <div>
+                <ProjectNav title = "Projects" />
                 <ProjectList projects={projects}/>
                 <CreateProjectForm/>
                 <button onClick={this.signOut}>Sign out</button>
