@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect'
 import { completeStepQuestionStart, completeStepStart } from '../../redux/current-step/current-step.actions'
 import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
+import { selectCurrentTaskId } from '../../redux/current-task/current-task.selectors';
 
  class Step extends Component {
     componentDidMount(){
@@ -22,8 +23,10 @@ import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentS
     }
 
     completeStep = () => {
-        const {stepId, completeStep} = this.props
-        completeStep(stepId)
+        const {stepId, completeStep, taskId} = this.props
+        const data = {stepId, taskId}
+        console.log(data)
+        completeStep(data)
     }
     render() {
         const {stepName, stepQuestion, isStepQuestionAnswered, stepCompletionMessage, isStepDone} = this.props
@@ -64,14 +67,15 @@ const mapStateToProps = createStructuredSelector({
     stepId: selectCurrentStepId,
     questionCompletion: selectCurrentStepQuestionAnswerConfirmation,
     stepCompletionMessage: selectCurrentStepCompletionMessage,
-    isStepDone: selectCurrentStepIsDone
+    isStepDone: selectCurrentStepIsDone,
+    taskId: selectCurrentTaskId
 
 });
   
   const mapDispatchToProps = (dispatch) => ({
     fetchCurrentStep : (stepId) => dispatch(fetchCurrentStepStart(stepId)),
     completeStepQuestion: (stepId) => dispatch(completeStepQuestionStart(stepId)),
-    completeStep: (stepId) => dispatch(completeStepStart(stepId))
+    completeStep: (data) => dispatch(completeStepStart(data))
   });
   
   export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Step));

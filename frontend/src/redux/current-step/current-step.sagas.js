@@ -1,5 +1,7 @@
 import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { selectCurrentTaskId } from "../current-task/current-task.selectors";
 import {completeStepQuestionSuccess, fetchCurrentStepFailure, fetchCurrentStepSuccess, completeStepQuestionFailure, completeStepSuccess, completeStepFailure } from "./current-step.actions";
+import { selectCurrentStepId } from "./current-step.selectors";
 import { CurrentStepActionTypes } from "./current-step.types";
 
 export function* fetchCurrentStep({payload}){
@@ -37,13 +39,15 @@ export function* completeStepQuestion({payload}){
 }
 
 export function* completeStep({payload}){
-  const stepId = payload
+  let data = payload
+  const stepId = data.stepId
   try {
     let stepCompletion = yield fetch(`http://127.0.0.1:5000/complete-step/${stepId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(data)
     })
     stepCompletion = yield stepCompletion.json()
     stepCompletion.done ? 

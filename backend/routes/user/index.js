@@ -21,9 +21,9 @@ const Step = mongoose.model("Step");
 //TASK_ID: 6034cd87d06e2a4938562971
 
 //all projects list
-router.get("/all-projects/:userId", async (req, res) => {
+router.route("/all-projects/:userId").get(async (req, res) => {
   try {
-    const projects = await User.findOne({ _id: req.params.userId })
+    var projects = await User.findOne({ _id: req.params.userId })
       .populate({
         path: "projects",
       })
@@ -36,30 +36,59 @@ router.get("/all-projects/:userId", async (req, res) => {
 });
 
 //getting a particular project
-router.get("/project/:projectId", async (req, res) => {
-  try {
-    const project = await Project.findOne({
-      _id: req.params.projectId,
-    }).populate({
-      path: "tasks",
-    });
-    res
-      .status(200)
-      .json({ done: true, message: "project is fetched", project });
-  } catch (error) {
-    console.log(error);
-  }
-});
+router
+  .route("/project/:projectId")
+  .get(async (req, res) => {
+    try {
+      var project = await Project.findOne({
+        _id: req.params.projectId,
+      }).populate({
+        path: "tasks",
+      });
+      res
+        .status(200)
+        .json({ done: true, message: "project is fetched", project });
+    } catch (error) {
+      console.log(error);
+    }
+  })
+  //deleting a particular project without the ppurchase orders and the purchase order items
+  .delete(async (req, res) => {
+    try {
+      var project = await Project.findOne({ _id: req.params.projectId });
+      var tasks = await project.tasks.map((task) => {
+        return task;
+      });
+      console.log(tasks, 'list of tasks')
+      for (var task of tasks) {
+        console.log(task)
+        var individualTask = await Task.findOne({ _id: task })
+        console.log(individualTask, 'individual tasks')
+        console.log(individualTask.steps, 'steps for the task')
+        for (var step of individualTask.steps) {
+          console.log(step);
+          var steps = await Step.findOneAndDelete({ _id: step });
+        }
+        var taskToDelete = await Task.findOneAndDelete({ _id: task });
+      }
+      var projectToDelete = await Project.findOneAndDelete({
+        _id: req.params.projectId,
+      });
+      res.json({ done: true, message: "project deleted", project });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
 //create a new project
 router.post("/create-project/:userId", async (req, res) => {
-  const { projectName, projectStatus } = req.body;
+  var { projectName, projectStatus } = req.body;
   if (!projectName || !projectStatus) {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
     try {
-      const project = await Project.create({ projectName, projectStatus });
-      const user = await User.findOne({ _id: req.params.userId });
+      var project = await Project.create({ projectName, projectStatus });
+      var user = await User.findOne({ _id: req.params.userId });
       user.projects.push(project._id);
       user.save(function (err) {
         if (err) {
@@ -79,14 +108,13 @@ router.post("/create-project/:userId", async (req, res) => {
 
 //create a new task
 router.post("/create-task/:projectId", async (req, res) => {
-  const { taskName, taskStartDate, taskEndDate, userId } = req.body;
+  var { taskName, taskStartDate, taskEndDate, userId } = req.body;
   if (!taskName || !taskStartDate || !taskEndDate || !userId) {
     res.status(422).json({ error: " fill all the fields", done: false });
   } else {
     try {
-      const project = await Project.findOne({ _id: req.params.projectId });
-      console.log(project);
-      const task = await Task.create({
+      var project = await Project.findOne({ _id: req.params.projectId });
+      var task = await Task.create({
         taskName,
         taskStartDate,
         taskEndDate,
@@ -126,34 +154,61 @@ router.get("/project/:projectId/task", async (req, res) => {
 });
 
 //get a prticular task
-router.get("/task/:taskId", async (req, res) => {
-  try {
-    const task = await Task.findOne({ _id: req.params.taskId }).populate([
-      {
-        path: "steps",
-      },
-      {
-          path: 'purchaseOrders',
-          populate: {path: 'purchasedItems'}
+router
+  .route("/task/:taskId")
+  .get(async (req, res) => {
+    try {
+      var task = await Task.findOne({ _id: req.params.taskId }).populate([
+        {
+          path: "steps",
+        },
+        {
+          path: "purchaseOrders",
+          populate: { path: "purchasedItems" },
+        },
+      ]);
+      res.status(200).json({ done: true, message: "task is fetched", task });
+    } catch (error) {
+      console.log(error);
+    }
+  })
+  //deleting a particular task and the steps related to it
+  .delete(async (req, res) => {
+    try {
+      var { projectId } = req.body;
+      var task = await Task.findOne({ _id: req.params.taskId });
+      console.log(task.steps);
+      for (var step of task.steps) {
+        var stepsToDelete = await Step.findOneAndDelete({ _id: step });
       }
-    ]);
-    res
-      .status(200)
-      .json({ done: true, message: "task is fetched", task });
-  } catch (error) {
-    console.log(error);
-  }
-});
+      for (var po of task.purchaseOrders) {
+        var purchaseOrder = await PurchaseOrder.findOneAndDelete({ _id: po });
+      }
+      task.delete();
+      var project = await Project.findOne({ _id: projectId });
+      let tasks = await project.tasks;
+      updatedTasks = await tasks.indexOf(req.params.taskId);
+      if (updatedTasks > -1) {
+        tasks.splice(updatedTasks, 1);
+      }
+      console.log('array after the deleted task', tasks);
+      project.tasks = await tasks;
+      project.save();
+      res.status(200).json({ done: true });
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
 //create a step
 router.post("/create-step/:taskId", async (req, res) => {
-  const { stepName, questionStatement, questionType } = req.body;
+  var { stepName, questionStatement, questionType } = req.body;
   if (!stepName) {
     res.status(422).json({ error: " fill all the fields", done: false });
   } else {
     try {
-      const task = await Task.findOne({ _id: req.params.taskId });
-      const step = await Step.create({
+      var task = await Task.findOne({ _id: req.params.taskId });
+      var step = await Step.create({
         stepName,
         relatedTask: req.params.taskId,
         questionStatement: questionStatement,
@@ -163,7 +218,9 @@ router.post("/create-step/:taskId", async (req, res) => {
         .status(200)
         .json({ done: true, message: "Step for the task created", step });
       task.steps.push(step._id);
-      task.totalSteps += 1;
+      task.totalSteps = (await task.totalSteps) + 1;
+      task.completionPercentage =
+        ((await task.completedSteps) / task.totalSteps) * 100;
       task.save(function (err) {
         if (err) {
           console.log(err);
@@ -194,62 +251,89 @@ router.get("/task/:taskId/step", async (req, res) => {
   }
 });
 
-//get a particular step 
-router.get("/step/:stepId", async (req, res) => {
-  try {
-    const step = await Step.findOne({ _id: req.params.stepId})
-    res
-      .status(200)
-      .json({ done: true, message: "task is fetched", step });
-  } catch (error) {
-    console.log(error);
-  }
-});
+//get a particular step
+router
+  .route("/step/:stepId")
+  .get(async (req, res) => {
+    try {
+      var step = await Step.findOne({ _id: req.params.stepId });
+      res.status(200).json({ done: true, message: "task is fetched", step });
+    } catch (error) {
+      console.log(error);
+    }
+  })
+  //delete a particular step
+  .delete(async (req, res) => {
+    try {
+      const {taskId} = req.body
+      var step = await Step.findByIdAndDelete({ _id: req.params.stepId });
+      var task = await Task.findOne({ _id: taskId });
+      let allSteps = await task.steps;
+      updatedSteps = await allSteps.indexOf(req.params.stepId);
+      if (updatedSteps > -1) {
+        allSteps.splice(updatedSteps, 1);
+      }
+      console.log('steps after deleting', allSteps)
+      task.steps = await allSteps
+      task.totalSteps = (await task.totalSteps) - 1;
+      step.isStepDone ? (task.completedSteps = task.completedSteps - 1) : null;
+      task.completionPercentage =
+        ((await task.completedSteps) / task.totalSteps) * 100;
+      task.save();
+      res.json({ message: "step deleted", done: true }).status(200);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
 //creating a purchase order
 router.post("/create-purchase-order/:taskId", async (req, res) => {
-  const {
+  var {
     orderFrom,
     totalOrderAmount,
     totalPaidAmount,
     userId,
     projectId,
-    purchasedItem
-  } = req.body; 
-  if (!orderFrom || !totalOrderAmount || !purchasedItem || !totalPaidAmount || !userId || !projectId) {
+    purchasedItem,
+  } = req.body;
+  if (
+    !orderFrom ||
+    !totalOrderAmount ||
+    !purchasedItem ||
+    !totalPaidAmount ||
+    !userId ||
+    !projectId
+  ) {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
     try {
       let task = await Task.findOne({ _id: req.params.taskId });
-      let project = await Project.find({_id: projectId})
+      let project = await Project.find({ _id: projectId });
       let purchaseOrder = await PurchaseOrder.create({
         orderFrom,
         totalOrderAmount,
         totalPaidAmount,
         user: userId,
-        purchasedItem
+        purchasedItem,
       });
       task.purchaseOrders.push(purchaseOrder._id);
-      task.save(function(err){
-        if(err){
-            console.log(err)
-            return
+      task.save(function (err) {
+        if (err) {
+          console.log(err);
+          return;
         }
-    })
-    //   project.purchaseOrders.push(purchaseOrder._id)
-    //   project.save(function(err){
-    //     if(err){
-    //         console.log(err)
-    //         return
-    //     }
-    // })
-      res
-        .status(200)
-        .json({
-          message: "Purchase order created and linked to the task",
-          done: true,
-          
-        });
+      });
+      //   project.purchaseOrders.push(purchaseOrder._id)
+      //   project.save(function(err){
+      //     if(err){
+      //         console.log(err)
+      //         return
+      //     }
+      // })
+      res.status(200).json({
+        message: "Purchase order created and linked to the task",
+        done: true,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -259,18 +343,16 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
 //geting the purchase order for a task
 router.get("/task/:taskId/purchaseOrder", async (req, res) => {
   try {
-    const purchaseOrders = await Task.find({ _id: req.params.taskId })
+    var purchaseOrders = await Task.find({ _id: req.params.taskId })
       .populate({
         path: "purchaseOrders",
       })
       .select("purchaseOrders");
-    res
-      .status(200)
-      .json({
-        message: "All purchase orders linked to the task",
-        done: true,
-        purchaseOrders,
-      });
+    res.status(200).json({
+      message: "All purchase orders linked to the task",
+      done: true,
+      purchaseOrders,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -279,18 +361,16 @@ router.get("/task/:taskId/purchaseOrder", async (req, res) => {
 //getting puchase orders for a project
 router.get("/project/:projectId/purchaseOrders", async (req, res) => {
   try {
-    const purchaseOrder = await Project.findOne({ _id: req.params.projectId })
+    var purchaseOrder = await Project.findOne({ _id: req.params.projectId })
       .populate({
         path: "purchaseOrders",
       })
       .select("purchaseOrders");
-    res
-      .status(200)
-      .json({
-        message: "All purchase orders linked to the project",
-        done: true,
-        purchaseOrder,
-      });
+    res.status(200).json({
+      message: "All purchase orders linked to the project",
+      done: true,
+      purchaseOrder,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -300,7 +380,7 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 router.post(
   "/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
-    const { itemName, itemNumber, itemsShipped, itemValue } = req.body;
+    var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
     if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
       res.status(422).json({ error: "Fill all the fields", done: false });
     } else {
@@ -321,13 +401,10 @@ router.post(
             return;
           }
         });
-        res
-          .status(200)
-          .json({
-            message: "Purchase order items created and linked to the order",
-            done: true,
-            
-          });
+        res.status(200).json({
+          message: "Purchase order items created and linked to the order",
+          done: true,
+        });
       } catch (error) {
         console.log(error);
       }
@@ -336,21 +413,23 @@ router.post(
 );
 
 //geting purchase order
-router.get('/purchaseOrder/:purchaseOrderId', async(req, res) => {
+router.get("/purchaseOrder/:purchaseOrderId", async (req, res) => {
   try {
-    const PO = await PurchaseOrder.findOne({_id: req.params.purchaseOrderId}).populate({
-      path: 'purchasedItems'
-    })
-    res.status(200).json({message: 'PO Fetched', done:true, PO})
+    var PO = await PurchaseOrder.findOne({
+      _id: req.params.purchaseOrderId,
+    }).populate({
+      path: "purchasedItems",
+    });
+    res.status(200).json({ message: "PO Fetched", done: true, PO });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 //completing a task
 router.post("/complete-task/:taskId", async (req, res) => {
   try {
-    const task = await Task.findOne({ _id: req.params.taskId });
+    var task = await Task.findOne({ _id: req.params.taskId });
     if (task.completionPercentage === 100) {
       task.isTaskDone = true;
       task.save();
@@ -368,20 +447,22 @@ router.post("/complete-task/:taskId", async (req, res) => {
 //completing a step
 router.post("/complete-step/:stepId", async (req, res) => {
   try {
-    const step = await Step.findOne({ _id: req.params.stepId });
+    const {taskId} = req.body
+    var step = await Step.findOne({ _id: req.params.stepId });
     if (step.questionStatement && step.isQuestionAnswered === false) {
       res
         .status(200)
         .json({ error: "Answer the step question first", done: false });
       return;
     }
-    const taskId = await step.relatedTask[0].toString();
-    const task = await Task.findOne({ _id: taskId });
+    //var taskId = await step.relatedTask[0].toString();
+    var task = await Task.findOne({ _id: taskId });
     step.isStepDone = true;
     step.save();
     res.status(200).json({ message: "Step Done!", done: true });
-    task.completedSteps = await task.completedSteps + 1;
-    task.completionPercentage = await task.completedSteps / task.totalSteps * 100;
+    task.completedSteps = (await task.completedSteps) + 1;
+    task.completionPercentage =
+      ((await task.completedSteps) / task.totalSteps) * 100;
     task.save(function (err) {
       if (err) {
         console.log(err);
@@ -395,12 +476,12 @@ router.post("/complete-step/:stepId", async (req, res) => {
 //completing step question
 router.post("/complete-step-question/:stepId", async (req, res) => {
   try {
-    const step = await Step.findOne({ _id: req.params.stepId });
+    var step = await Step.findOne({ _id: req.params.stepId });
     if (step.questionStatement) {
       step.isQuestionAnswered = true;
-      step.save(function(err){
-        if(err){
-          console.log(err)
+      step.save(function (err) {
+        if (err) {
+          console.log(err);
         }
       });
       res.status(200).json({ message: "Question Answered", done: true });
@@ -413,37 +494,160 @@ router.post("/complete-step-question/:stepId", async (req, res) => {
 });
 
 //creating a template
-router.post('/test-template', async(req, res) => {
-  const taskNames = [' test template task 1', ' test template task 2', 'test template task 3']
-  const {projectName, projectStatus, userId} = req.body
+router.post("/test-template", async (req, res) => {
+  var testTemplate = [
+    {
+      taskName: " Template task 1",
+      steps: [
+        {
+          stepName: "Template task 1 step 1",
+          stepQuestion: "Template task 1 step 1 question 1",
+          questionType: 'yes/no'
+        },
+        {
+          stepName: "template task 1 step 2",
+          stepQuestion: "template task 1 question 2",
+        },
+      ],
+      purchaseOrders: [
+        {
+          orderFrom: "template task 1 PO1",
+          totalOrderAmount: 100,
+          totalPaidAmount: 50,
+          purchasedItem: "template task 1 item",
+          purchasedItems: [
+            {
+              itemName: "template task 1 item 1",
+              itemNumber: 10,
+              itemsShipped: 5,
+              itemValue: 50,
+            },
+            {
+              itemName: "template task 1 item 2",
+              itemNumber: 10,
+              itemsShipped: 5,
+              itemValue: 50,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      taskName: "template task 2",
+      steps: [],
+      purchaseOrders: [],
+    },
+    {
+      taskName: "template task 3",
+      steps: [
+        {
+          stepName: "template task 3 step 1",
+        },
+      ],
+      purchaseOrders: [
+        {
+          orderFrom: "template task 3 PO1",
+          totalOrderAmount: 100,
+          totalPaidAmount: 50,
+          purchasedItem: "template task 3 item",
+        },
+      ],
+    },
+  ];
+  var { projectName, projectStatus, userId } = req.body;
   try {
-    const project = await Project.create({
-      projectName, projectStatus
-    })
-    const user = await User.findOne({_id: userId})
-    user.projects.push(project._id)
-    user.save(function(err){console.log(err)})
+    var project = await Project.create({
+      projectName,
+      projectStatus,
+    });
+    var user = await User.findOne({ _id: userId });
+    user.projects.push(project._id);
+    user.save(function (err) {
+      console.log(err, 'user save err');
+    });
 
-    taskNames.forEach(async (taskName) => {
+    for (var tasks of testTemplate) {
       try {
-        const task = await Task.create({taskName, taskStartDate: '02-02-2001', taskEndDate: '03-03-2001', taskOwner: userId})
-        console.log(task._id)
-        project.tasks.push(task._id)
-      } catch (error){
-        console.log(error)
+        var task = await Task.create({
+          taskName: tasks.taskName,
+          taskStartDate: "02-02-2001",
+          taskEndDate: "03-03-2001",
+          taskOwner: userId,
+        });
+        console.log('task id of', `${tasks.taskName}`, task._id);
+        project.tasks.push(task._id);
+        //creating steps
+        for (var steps of tasks.steps) {
+          try {
+            var step = await Step.create({
+              stepName: steps.stepName,
+              questionStatement: steps.stepQuestion,
+              questionType: steps.questionType
+            })
+            console.log('step id of', `${steps.stepName}`, step._id)
+            task.totalSteps = await task.totalSteps + 1
+            task.steps.push(step._id)
+          } catch (error) {
+            console.log(error)
+          }
+        }
+        //creating purchase orders 
+        for (var POs of tasks.purchaseOrders){
+          try {
+            var purchaseOrder = await PurchaseOrder.create({
+              orderFrom: POs.orderFrom,
+              totalOrderAmount: POs.totalOrderAmount,
+              totalPaidAmount: POs.totalPaidAmount,
+              purchasedItem: POs.purchasedItem
+            })
+            console.log('PO id of', `${POs.purchasedItem}`, purchaseOrder._id)
+            task.purchaseOrders.push(purchaseOrder._id)
+            project.purchaseOrders.push(purchaseOrder._id)
+            if(POs.purchasedItems){
+            for (var POitem of POs.purchasedItems) {
+              try {
+                var purchasedItems = await PurchaseOrderItem.create({
+                  itemName: POitem.itemName,
+                  itemNumber: POitem.itemNumber,
+                  itemsShipped: POitem.itemsShipped,
+                  itemValue: POitem.itemValue
+                })
+                console.log('PO item id of', `${purchasedItems._id}`, purchasedItems._id)
+                purchaseOrder.purchasedItems.push(purchasedItems._id)
+                
+              } catch (error) {
+                console.log(error)
+              }
+            }
+          }
+            purchaseOrder.save()
+          } catch (error) {
+            console.log(error)
+          }       
+          
+        }
+      } catch (error) {
+        console.log(error);
       }
-    })
-
-    project.save(function(err){
-      console.log('project save')
-      if(err){
-        console.log(err)
+      task.save(
+        function (err) {
+          console.log("task save");
+          if (err) {
+            console.log(err);
+          }
+        }
+      )
+    }
+    project.save(function (err) {
+      console.log("project save");
+      if (err) {
+        console.log(err);
       }
-    })
-    res.status(200).json({done: true, project})
+    });
+    res.status(200).json({ done: true, project, task, step, purchaseOrder });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 module.exports = router;
