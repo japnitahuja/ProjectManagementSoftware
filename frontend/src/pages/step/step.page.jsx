@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect'
+import StepNavBar from '../../components/step-navbar/step-navbar.component';
+import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
 import { completeStepQuestionStart, completeStepStart } from '../../redux/current-step/current-step.actions'
 import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
@@ -23,13 +25,14 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
     }
 
     completeStep = () => {
-        const {stepId, completeStep, taskId} = this.props
+        const {stepId, completeStep, taskId, history} = this.props
         const data = {stepId, taskId}
         console.log(data)
         completeStep(data)
+        
     }
     render() {
-        const {stepName, stepQuestion, isStepQuestionAnswered, stepCompletionMessage, isStepDone} = this.props
+        const {taskId, stepName, stepQuestion, isStepQuestionAnswered, stepCompletionMessage, isStepDone} = this.props
 
         console.log(stepCompletionMessage)
         if(stepCompletionMessage){
@@ -37,8 +40,11 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
         }
         return (
             <div style={{ padding: "10px", border: "1px solid black" }}>
-                <h2>Step Name: {stepName}</h2>
-                <h3>{stepCompletionMessage}</h3>
+                <StepPageTaskNav />
+                <StepNavBar />
+                <div>Step: </div>
+                <h2>{stepName}</h2>
+                
                 
                 {
                     stepQuestion?
@@ -52,9 +58,9 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
                     : null
                 }
                 {
-                    isStepDone ? <div>STEP COMPLETED</div> : <button onClick={this.completeStep}>COMPLETE STEP</button>
+                    isStepDone ? <div>STEP COMPLETED</div> : <button onClick={this.completeStep}><Link to={`/task/${taskId}`}>COMPLETE STEP</Link></button>
                 }
-                
+                <h3>{stepCompletionMessage}</h3>
             </div>
         )
     }

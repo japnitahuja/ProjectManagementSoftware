@@ -31,6 +31,7 @@ class CreateStepForm extends Component {
     const {createStep} = this.props;
     createStep(stepDetails)
     console.log(stepDetails)
+    window.location.reload()
   };
 
   render() {

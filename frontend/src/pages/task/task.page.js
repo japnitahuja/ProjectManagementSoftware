@@ -9,6 +9,8 @@ import CreatePurchaseOrderForm from '../../components/create-purchase-order/crea
 import { completeCurrentTaskStart, fetchCurrentTaskStart } from '../../redux/current-task/current-task.actions';
 import { selectCurrentTaskCompletionMessage, selectCurrentTaskIsDone, selectCurrentTaskName, selectCurrentTaskSteps } from '../../redux/current-task/current-task.selectors';
 import { Link } from 'react-router-dom';
+import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
+import StepNavBar from '../../components/step-navbar/step-navbar.component';
 
 class Task extends Component {
     componentDidMount(){
@@ -20,6 +22,7 @@ class Task extends Component {
     completeTask = () => {
         const taskId = this.props.match.params.taskId
         this.props.completeTask(taskId)
+        
     }
 
     render() {
@@ -29,17 +32,20 @@ class Task extends Component {
         const taskId = this.props.match.params.taskId
         console.log(taskId)
         return (
-             <div style={{margin:"10px"}}>
-                 <h1>{taskName}</h1>
+            <div style={{margin:"10px"}}>
+                <StepPageTaskNav />
+                <StepNavBar />
                  <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
                  <h3>{taskCompletionMessage}</h3>
-                 {
-                     isTaskDone ? <div>TASK IS DONE!</div> : <button onClick={this.completeTask}>COMPLETE TASK</button> 
-                 }
 
-                <h2> All STEPS </h2>
+                <div>Steps</div>
                 {/* <TaskList tasks = {tasks}/> */}
                 <StepList steps = {steps} />
+                 {
+                     isTaskDone ? 
+                     <div>TASK IS DONE!</div> : 
+                     <button onClick={this.completeTask} style={{margin: '5px'}}>COMPLETE TASK</button> 
+                 }
                 <CreateStepForm taskId = {this.props.match.params.taskId} />
             </div>
         )

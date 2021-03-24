@@ -41,13 +41,15 @@ const currentPurchaseOrderReducer = (state = INITIAL_STATE, action) => {
       };
     case CurrentPurchaseOrderActionTypes.FETCH_CURRENT_PURCHASE_ORDER_SUCCESS:
       const {
-        purchasedItems,
         _id,
         orderFrom,
         totalOrderAmount,
         totalPaidAmount,
         purchasedItem,
       } = action.payload;
+      if(action.payload.purchasedItems){
+        const {purchasedItems} = action.payload
+      }
       return {
         isCurrentPurchaseOrderBeingFetched: false,
         currentPurchaseOrderFrom: orderFrom,
@@ -55,7 +57,7 @@ const currentPurchaseOrderReducer = (state = INITIAL_STATE, action) => {
         currentPurchaseOrderItem: purchasedItem,
         currentPurchaseOrderPaidAmount: totalPaidAmount,
         currentPurchaseOrderTotalAmount: totalOrderAmount,
-        currentPurchaseOrderPurchasedItems: purchasedItems,
+        currentPurchaseOrderPurchasedItems: action.payload.purchasedItems,
       };
     case CurrentPurchaseOrderActionTypes.FETCH_CURRENT_PURCHASE_ORDER_FAILURE:
       return {

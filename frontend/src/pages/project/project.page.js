@@ -7,6 +7,7 @@ import CreateTaskForm from '../../components/create-task-form/create-task-form.c
 import { fetchCurrentProjectStart } from '../../redux/current-project/current-project.actions';
 import { selectCurrentProjectName, selectCurrentProjectStatus, selectCurrentProjectTasks } from '../../redux/current-project/current-project.selectors';
 import {TaskNav} from "../../components/task-nav/task-nav.component"
+import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component';
 class Project extends Component {
     componentDidMount(){
         const projectId = this.props.match.params.projectId;
@@ -23,6 +24,7 @@ class Project extends Component {
                 <TaskNav title = {projectName}/>
                 <TaskList tasks = {tasks}/>
                 <CreateTaskForm projectId = {this.props.match.params.projectId}/>
+                <LowerNavBar />
             </div>
         )
     }

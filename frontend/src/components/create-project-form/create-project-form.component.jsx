@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { createProjectStart} from "../../redux/all-projects/all-projects.actions";
+import { createProjectStart, fetchProjectsStart} from "../../redux/all-projects/all-projects.actions";
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 
@@ -30,6 +30,8 @@ class CreateProjectForm extends Component {
     e.preventDefault();
     let projectDetails = this.state.projectDetails;
     this.props.createProject(projectDetails);
+    this.props.fetchProjects()
+    
   };
 
   
@@ -89,7 +91,8 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
-  createProject: (projectDetails) => dispatch(createProjectStart(projectDetails))
+  createProject: (projectDetails) => dispatch(createProjectStart(projectDetails)),
+  fetchProjects: () => dispatch(fetchProjectsStart())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm);

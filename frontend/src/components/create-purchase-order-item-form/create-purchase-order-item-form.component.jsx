@@ -26,10 +26,11 @@ class POitemForm extends Component {
     console.log(this.props.poId)
   };
 
-  createTask = (e) => {
+  createPurchaseOrder = (e) => {
     let POitem = this.state.POitem;
     POitem['poId'] = this.props.poId
     this.props.createPOitem(POitem);
+    window.location.reload()
   };
 
   render() {
@@ -38,7 +39,7 @@ class POitemForm extends Component {
         <form
           style={{ display: "flex", flexDirection: "column" }}
           onChange={(e) => this.handleOnChange(e)}
-          onSubmit={this.createTask}
+          onSubmit={this.createPurchaseOrder}
         >
           <div>
             <label htmlFor="itemName"> Item Name: </label>

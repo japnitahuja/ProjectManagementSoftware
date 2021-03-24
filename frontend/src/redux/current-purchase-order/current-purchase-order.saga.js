@@ -3,7 +3,7 @@ import { selectCurrentProjectId } from "../current-project/current-project.selec
 import { fetchCurrentTaskStart } from "../current-task/current-task.actions";
 import { fetchCurrentTask } from "../current-task/current-task.sagas";
 import { selectUserId } from "../user/user.selectors";
-import {createPoitemFailure, createPoitemSuccess, createPurchaseOrderFailure, createPurchaseOrderSuccess, fetchCurrentPurchaseOrderFailure, fetchCurrentPurchaseOrderSuccess} from './current-purchase-order.actions'
+import {createPoitemFailure, createPoitemSuccess, createPurchaseOrderFailure, createPurchaseOrderSuccess, fetchCurrentPurchaseOrderFailure, fetchCurrentPurchaseOrderStart, fetchCurrentPurchaseOrderSuccess} from './current-purchase-order.actions'
 import { selectCurrentPOId } from "./current-purchase-order.selector";
 import { CurrentPurchaseOrderActionTypes } from "./current-purchase-order.types";
 
@@ -28,7 +28,7 @@ export function* createPurchaseOrderStart({payload}){
       purchaseOrderCreation.done ? 
       yield put(createPurchaseOrderSuccess(purchaseOrderCreation.message)):
       yield put(createPurchaseOrderFailure('ERROR'))
-      yield put(fetchCurrentTaskStart(taskId))
+      // yield put(fetchCurrentPurchaseOrderStart(taskId))
   } catch (error) {
       console.log(error)
   }

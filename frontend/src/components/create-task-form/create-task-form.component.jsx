@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createTaskStart} from "../../redux/all-tasks/all-tasks.actions";
+import { fetchCurrentProjectStart } from "../../redux/current-project/current-project.actions";
 import { signOut } from "../../redux/user/user.actions";
 
 
@@ -29,6 +30,7 @@ class CreateTaskForm extends Component {
     e.preventDefault();
     let taskDetails = this.state.taskDetails;
     this.props.createTask(taskDetails);
+    window.location.reload()
   };
 
   render() {
@@ -86,7 +88,8 @@ class CreateTaskForm extends Component {
 
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
-  createTask: (taskDetails) => dispatch(createTaskStart(taskDetails))
+  createTask: (taskDetails) => dispatch(createTaskStart(taskDetails)),
+  fetchTasks: (projectId) => dispatch(fetchCurrentProjectStart(projectId))
 });
 
 export default connect(null, mapDispatchToProps)(CreateTaskForm);

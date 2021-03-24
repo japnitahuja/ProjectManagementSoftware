@@ -21,7 +21,6 @@ import { ProjectNav } from "../../components/project-nav/project-nav.component";
         signOut();
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        localStorage.removeItem('persist:root')
         history.push("/login");
       };
     render() {

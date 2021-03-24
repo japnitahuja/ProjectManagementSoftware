@@ -31,6 +31,7 @@ class CreatePurchaseOrderForm extends Component {
     e.preventDefault();
     let purchaseOrderDetails = this.state.purchaseOrderDetails;
     this.props.createPurchaseOrder(purchaseOrderDetails);
+    window.location.reload()
   };
 
   

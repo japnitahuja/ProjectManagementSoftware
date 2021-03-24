@@ -8,10 +8,12 @@ import StepList from '../../components/steps-list/steps-list.component'
 import CreatePurchaseOrderForm from '../../components/create-purchase-order/create-purchase-order.component'
 import PurchaseOrderList from '../../components/purchase-orders-list/purchase-orders-list.component'
 import { selectCurrentTaskPurchaseOrders } from '../../redux/current-task/current-task.selectors';
+import { fetchCurrentPurchaseOrderStart } from '../../redux/current-purchase-order/current-purchase-order.actions';
+import { fetchCurrentTaskStart } from '../../redux/current-task/current-task.actions';
 class PurchaseOrder extends Component {
     componentDidMount(){
         const taskId = this.props.match.params.taskId
-       this.props.fetchSteps(taskId)
+       this.props.fetchTask(taskId)
        console.log(taskId)
     }
     
@@ -36,7 +38,8 @@ const mapStateToProps = createStructuredSelector({
   });
   
   const mapDispatchToProps = (dispatch) => ({
-    fetchSteps : (taskId) => dispatch(fetchStepsStart(taskId))
+    fetchSteps : (taskId) => dispatch(fetchStepsStart(taskId)),
+    fetchTask: (taskId) => dispatch(fetchCurrentTaskStart(taskId))
   });
   
   export default connect(mapStateToProps, mapDispatchToProps)(PurchaseOrder);
