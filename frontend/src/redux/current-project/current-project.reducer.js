@@ -37,6 +37,16 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
        isCurrentProjectFetching: false,
        errorMessage: action.payload
       };
+    
+    case CurrentProjectActionTypes.DELETE_CURRENT_TASK_IN_REDUCER:
+      console.log(state)
+      let updatedTasks = state.currentProjectTasks.filter(task => task._id != action.payload)
+      console.log('current project reducer', updatedTasks)
+      console.log(action.payload)
+      return {
+        ...state,
+       currentProjectTasks: updatedTasks
+      };
     default:
     return state;
   }

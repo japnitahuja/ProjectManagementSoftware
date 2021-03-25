@@ -15,3 +15,8 @@ export const fetchCurrentProjectFailure = (error) => ({
     payload: error
 })
 
+export const deleteCurrentTaskInReducer = (taskId) => ({
+    type: CurrentProjectActionTypes.DELETE_CURRENT_TASK_IN_REDUCER,
+    payload: taskId
+})
+

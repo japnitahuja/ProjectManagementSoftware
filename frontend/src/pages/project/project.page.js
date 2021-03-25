@@ -9,9 +9,9 @@ import { selectCurrentProjectName, selectCurrentProjectStatus, selectCurrentProj
 import {TaskNav} from "../../components/task-nav/task-nav.component"
 import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component';
 class Project extends Component {
-    componentDidMount(){
+    async componentDidMount(){
         const projectId = this.props.match.params.projectId;
-        this.props.fetchTasks(projectId);
+        await this.props.fetchTasks(projectId);
     }
     
     render() {
@@ -23,7 +23,7 @@ class Project extends Component {
              <div>
                 <TaskNav title = {projectName}/>
                 <TaskList tasks = {tasks}/>
-                <LowerNavBar />
+                <LowerNavBar  />
                 <CreateTaskForm projectId = {this.props.match.params.projectId}/>
                 
             </div>

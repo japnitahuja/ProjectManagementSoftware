@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { deleteCurrentTaskInReducer } from "../current-project/current-project.actions";
 import { selectCurrentProjectId } from "../current-project/current-project.selectors";
 import { completeCurrentTaskFailure, completeCurrentTaskSuccess, fetchCurrentTaskFailure, fetchCurrentTaskSuccess, deleteCurrentTaskSuccess, deleteCurrentTaskFailure } from "./current-task.actions";
 import { CurrentTaskActionTypes } from "./current-task.types";
@@ -39,21 +40,27 @@ export function* completeTask({payload}){
 export function* deleteTask({payload}){
   try{
     let taskId = payload;
-    let projectId = yield select(selectCurrentProjectId);
-    projectId = {projectId: projectId}
-    console.log(projectId)
-    let taskDeletion = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectId),
+    yield put(deleteCurrentTaskInReducer(taskId));
+    // let projectId = yield select(selectCurrentProjectId);
+    // projectId = {projectId: projectId}
+    // console.log(projectId)
+    // let taskDeletion = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
+    //   method: "DELETE",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(projectId),
 
-    })
-    taskDeletion = yield taskDeletion.json()
-    taskDeletion.done?
-    yield put(deleteCurrentTaskSuccess(taskDeletion.message)):
-    yield put(deleteCurrentTaskFailure(taskDeletion.error))
+    // })
+    // taskDeletion = yield taskDeletion.json()
+    // if(taskDeletion.done){
+    //   yield put(deleteCurrentTaskSuccess(taskDeletion.message));
+      
+    // }
+    // else{
+    //   yield put(deleteCurrentTaskFailure(taskDeletion.error))
+    // }
+    
   } catch (error) {
     console.log(error)
     yield put(deleteCurrentTaskFailure(error))
