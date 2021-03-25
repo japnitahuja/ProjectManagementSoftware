@@ -181,8 +181,9 @@ router
   .delete(async (req, res) => {
     try {
       var { projectId } = req.body;
+      console.log(projectId, req.params.taskId );
       var task = await Task.findOne({ _id: req.params.taskId });
-      console.log(task.steps);
+      console.log(task);
       for (var step of task.steps) {
         var stepsToDelete = await Step.findOneAndDelete({ _id: step });
       }
@@ -190,6 +191,7 @@ router
         var purchaseOrder = await PurchaseOrder.findOneAndDelete({ _id: po });
       }
       task.delete();
+      
       var project = await Project.findOne({ _id: projectId });
       let tasks = await project.tasks;
       updatedTasks = await tasks.indexOf(req.params.taskId);

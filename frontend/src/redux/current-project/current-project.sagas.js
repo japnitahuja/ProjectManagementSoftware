@@ -6,7 +6,6 @@ import { selectUserId } from "../user/user.selectors"
 export function* fetchCurrentProject({payload}){
   try {
       const projectId = payload
-      console.log(projectId)
     let currentProject = yield fetch(`http://127.0.0.1:5000/project/${projectId}`)
     currentProject = yield currentProject.json()
     console.log(currentProject)

@@ -3,13 +3,14 @@ import styled from "styled-components";
 
 export const NavBar = styled.div`
  @media screen and (min-width: 320px) {
-    width:100vw;
+    width:100%;
     height:40px;
     font-family: 'Roboto', sans-serif;
     display:flex;
     flex-direction:row;
     align-items: center;
     justify-content: space-between;
+    background-color:white;
   }
 `;
 

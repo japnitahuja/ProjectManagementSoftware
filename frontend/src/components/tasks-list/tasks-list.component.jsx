@@ -1,6 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import { TaskItem } from "../task-item/task-item.component";
+import TaskItem from "../task-item/task-item.component";
 
 
 export default function TaskList({tasks}) {

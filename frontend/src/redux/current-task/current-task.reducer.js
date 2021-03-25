@@ -16,7 +16,9 @@ const INITIAL_STATE = {
   currentTaskMessage: null,
   errorMessage: null,
   currentTaskCompletionMessage: null,
-  isCurrentTaskCompleting: null
+  isCurrentTaskCompleting: null,
+  isCurrentTaskDeleting:false, 
+  currentTaskDeletingMessage: null
 };
 
 const currentTaskReducer = (state = INITIAL_STATE, action) => {
@@ -70,6 +72,24 @@ const currentTaskReducer = (state = INITIAL_STATE, action) => {
         currentTaskCompletionMessage: action.payload,
         isCurrentTaskCompleting: false
       }
+      case CurrentTaskActionTypes.DELETE_CURRENT_TASK_START:
+        return{
+          ...state,
+          isCurrentTaskDeleting: true,
+          currentTaskDeletionMessage: null
+        }
+      case CurrentTaskActionTypes.DELETE_CURRENT_TASK_SUCCESS:
+        return{
+          ...state,
+          isCurrentTaskDeleting: false,
+          currentTaskDeletionMessage: action.payload
+        }
+      case CurrentTaskActionTypes.DELETE_CURRENT_TASK_FAILURE:
+        return{
+          ...state,
+          isCurrentTaskDeleting: false,
+          currentTaskDeletionMessage: action.payload,
+        }
     default:
     return state;
   }

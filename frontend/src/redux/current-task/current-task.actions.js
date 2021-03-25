@@ -30,5 +30,22 @@ export const completeCurrentTaskFailure = (error) => ({
     payload: error
 })
 
+export const deleteCurrentTaskStart = (taskId) => ({
+    type: CurrentTaskActionTypes.DELETE_CURRENT_TASK_START,
+    payload: taskId
+})
+
+export const deleteCurrentTaskSuccess = (message) => ({
+    type: CurrentTaskActionTypes.DELETE_CURRENT_TASK_SUCCESS,
+    payload: message
+})
+
+export const deleteCurrentTaskFailure = (error) => ({
+    type: CurrentTaskActionTypes.DELETE_CURRENT_TASK_FAILURE,
+    payload: error
+})
+
+
+
 
 

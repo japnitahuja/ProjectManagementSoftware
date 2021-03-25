@@ -23,8 +23,9 @@ class Project extends Component {
              <div>
                 <TaskNav title = {projectName}/>
                 <TaskList tasks = {tasks}/>
-                <CreateTaskForm projectId = {this.props.match.params.projectId}/>
                 <LowerNavBar />
+                <CreateTaskForm projectId = {this.props.match.params.projectId}/>
+                
             </div>
         )
     }

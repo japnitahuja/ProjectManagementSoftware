@@ -6,8 +6,11 @@ export const LowerNav = styled.div`
     justify-content: space-around;
     flex-direction: row;
     box-shadow: 3px 0 0 0 #777;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    box-sizing: border-box;
+    padding-bottom:10px;
 
 `;
 
@@ -25,6 +28,6 @@ export const LowerNavImage = styled.img`
 
 
 export const LowerNavText = styled.div`
- color: grey;
- font-size: 0.8rem;
+    color: grey;
+    font-size: 0.8rem;
 `;

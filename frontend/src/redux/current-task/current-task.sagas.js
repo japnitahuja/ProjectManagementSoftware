@@ -1,6 +1,6 @@
 import { all, call, put, takeLatest, select} from "redux-saga/effects";
-import { selectUserId } from "../user/user.selectors"
-import { completeCurrentTaskFailure, completeCurrentTaskSuccess, fetchCurrentTaskFailure, fetchCurrentTaskSuccess } from "./current-task.actions";
+import { selectCurrentProjectId } from "../current-project/current-project.selectors";
+import { completeCurrentTaskFailure, completeCurrentTaskSuccess, fetchCurrentTaskFailure, fetchCurrentTaskSuccess, deleteCurrentTaskSuccess, deleteCurrentTaskFailure } from "./current-task.actions";
 import { CurrentTaskActionTypes } from "./current-task.types";
 
 export function* fetchCurrentTask({payload}){
@@ -36,6 +36,33 @@ export function* completeTask({payload}){
   }
 }
 
+export function* deleteTask({payload}){
+  try{
+    let taskId = payload;
+    let projectId = yield select(selectCurrentProjectId);
+    projectId = {projectId: projectId}
+    console.log(projectId)
+    let taskDeletion = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectId),
+
+    })
+    taskDeletion = yield taskDeletion.json()
+    taskDeletion.done?
+    yield put(deleteCurrentTaskSuccess(taskDeletion.message)):
+    yield put(deleteCurrentTaskFailure(taskDeletion.error))
+  } catch (error) {
+    console.log(error)
+    yield put(deleteCurrentTaskFailure(error))
+  }
+
+  }
+
+
+
 export function* onCurrentTaskFetchStart(){
   yield takeLatest(CurrentTaskActionTypes.FETCH_CURRENT_TASK_START , fetchCurrentTask)
 }
@@ -44,9 +71,14 @@ export function* onTaskCompletionStart(){
   yield takeLatest(CurrentTaskActionTypes.COMPLETE_CURRENT_TASK_START, completeTask)
 }
 
+export function* onDeleteTaskStart(){
+  yield takeLatest(CurrentTaskActionTypes.DELETE_CURRENT_TASK_START, deleteTask)
+}
+
 export function* currentTaskSagas() {
   yield all([
     call(onCurrentTaskFetchStart),
-    call(onTaskCompletionStart)
+    call(onTaskCompletionStart),
+    call(onDeleteTaskStart)
   ]);
 }
