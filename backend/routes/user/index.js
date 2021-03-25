@@ -42,9 +42,14 @@ router
     try {
       var project = await Project.findOne({
         _id: req.params.projectId,
-      }).populate({
+      }).populate([
+      {
         path: "tasks",
-      });
+      },
+      {
+        path: "purchaseOrders",
+        populate: { path: "purchasedItems" },
+      }]);
       res
         .status(200)
         .json({ done: true, message: "project is fetched", project });
@@ -308,7 +313,7 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
   } else {
     try {
       let task = await Task.findOne({ _id: req.params.taskId });
-      let project = await Project.find({ _id: projectId });
+      let project = await Project.findOne({ _id: projectId });
       let purchaseOrder = await PurchaseOrder.create({
         orderFrom,
         totalOrderAmount,
@@ -323,13 +328,14 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
           return;
         }
       });
-      //   project.purchaseOrders.push(purchaseOrder._id)
-      //   project.save(function(err){
-      //     if(err){
-      //         console.log(err)
-      //         return
-      //     }
-      // })
+      console.log('project po', project)
+        project.purchaseOrders.push(purchaseOrder._id)
+        project.save(function(err){
+          if(err){
+              console.log(err)
+              return
+          }
+      })
       res.status(200).json({
         message: "Purchase order created and linked to the task",
         done: true,

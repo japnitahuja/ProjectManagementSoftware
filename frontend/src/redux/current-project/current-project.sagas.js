@@ -9,6 +9,7 @@ export function* fetchCurrentProject({payload}){
       console.log(projectId)
     let currentProject = yield fetch(`http://127.0.0.1:5000/project/${projectId}`)
     currentProject = yield currentProject.json()
+    console.log(currentProject)
     currentProject.done
     ? yield put(fetchCurrentProjectSuccess(currentProject.project))
     : yield put(fetchCurrentProjectFailure('CURRENT PROJECCT FETTCHING FAILED'))

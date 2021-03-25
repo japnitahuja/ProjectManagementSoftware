@@ -23,3 +23,8 @@ export const selectCurrentProjectStatus = createSelector(
     [selectCurrentProjectDetails],
     (currentProject) => currentProject.currentProjectTasks
   );
+
+  export const selectCurrentProjectPurchaseOrders = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectPurchaseOrders
+  )
