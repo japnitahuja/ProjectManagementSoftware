@@ -17,9 +17,9 @@ export function* createTask({payload}){
     });
 
     resp = yield resp.json()
+    console.log(resp)
     if(resp.done){
         yield put(createTaskSucessful(resp.message));
-        yield put(fetchTasksStart(data.projectId));
     }else{
       yield put(createTaskFail(resp.error))
     }

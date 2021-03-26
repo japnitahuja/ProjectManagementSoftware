@@ -25,6 +25,8 @@ class Task extends Component {
         
     }
 
+    
+
     render() {
         const {steps, taskName, isTaskDone, taskCompletionMessage} = this.props;
         console.log('task page')

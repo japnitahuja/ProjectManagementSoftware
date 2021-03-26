@@ -9,10 +9,17 @@ import { selectCurrentProjectName, selectCurrentProjectStatus, selectCurrentProj
 import {TaskNav} from "../../components/task-nav/task-nav.component"
 import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component';
 class Project extends Component {
-    async componentDidMount(){
+    componentDidMount(){
         const projectId = this.props.match.params.projectId;
-        await this.props.fetchTasks(projectId);
+        this.props.fetchProjects(projectId);
     }
+
+    // componentDidUpdate(){
+    //     const projectId = this.props.match.params.projectId;
+    //     this.props.fetchProjects(projectId);
+    //     console.log('component did update has been called')
+    // }
+    
     
     render() {
         const {tasks, projectName, projectStatus} = this.props;
@@ -38,7 +45,7 @@ const mapStateToProps = createStructuredSelector({
 });
   
 const mapDispatchToProps = (dispatch) => ({
-    fetchTasks : (projectId) => dispatch(fetchCurrentProjectStart(projectId))
+    fetchProjects : (projectId) => dispatch(fetchCurrentProjectStart(projectId))
 });
   
   export default connect(mapStateToProps, mapDispatchToProps)(Project);

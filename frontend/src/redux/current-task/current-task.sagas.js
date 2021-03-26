@@ -41,25 +41,25 @@ export function* deleteTask({payload}){
   try{
     let taskId = payload;
     yield put(deleteCurrentTaskInReducer(taskId));
-    // let projectId = yield select(selectCurrentProjectId);
-    // projectId = {projectId: projectId}
-    // console.log(projectId)
-    // let taskDeletion = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
-    //   method: "DELETE",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(projectId),
+    let projectId = yield select(selectCurrentProjectId);
+    projectId = {projectId: projectId}
+    console.log(projectId)
+    let taskDeletion = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(projectId),
 
-    // })
-    // taskDeletion = yield taskDeletion.json()
-    // if(taskDeletion.done){
-    //   yield put(deleteCurrentTaskSuccess(taskDeletion.message));
+    })
+    taskDeletion = yield taskDeletion.json()
+    if(taskDeletion.done){
+      yield put(deleteCurrentTaskSuccess(taskDeletion.message));
       
-    // }
-    // else{
-    //   yield put(deleteCurrentTaskFailure(taskDeletion.error))
-    // }
+    }
+    else{
+      yield put(deleteCurrentTaskFailure(taskDeletion.error))
+    }
     
   } catch (error) {
     console.log(error)

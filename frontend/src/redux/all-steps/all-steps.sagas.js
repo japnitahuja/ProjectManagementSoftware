@@ -18,8 +18,9 @@ export function* createStep({payload}){
     resp = yield resp.json()
     if(resp.done){
         yield put(createStepSucessful(resp.message));
+        }
         yield put(fetchStepsStart(taskId))
-    }
+    
   } catch (error) {
     console.log(error)
     yield put(createStepFail(error))

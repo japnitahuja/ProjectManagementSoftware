@@ -30,7 +30,9 @@ class CreateTaskForm extends Component {
     e.preventDefault();
     let taskDetails = this.state.taskDetails;
     this.props.createTask(taskDetails);
-    window.location.reload()
+    // window.location.reload()
+    let projectId = this.state.taskDetails.projectId
+    this.props.fetchProject(projectId)
   };
 
   render() {
@@ -89,7 +91,7 @@ class CreateTaskForm extends Component {
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
   createTask: (taskDetails) => dispatch(createTaskStart(taskDetails)),
-  fetchTasks: (projectId) => dispatch(fetchCurrentProjectStart(projectId))
+  fetchProject: (projectId) => dispatch(fetchCurrentProjectStart(projectId))
 });
 
 export default connect(null, mapDispatchToProps)(CreateTaskForm);

@@ -24,11 +24,12 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
         window.location.reload()
     }
 
-    completeStep = () => {
+    completeStep = async() => {
         const {stepId, completeStep, taskId, history} = this.props
         const data = {stepId, taskId}
         console.log(data)
-        completeStep(data)
+        await completeStep(data)
+        history.push(`/task/${taskId}`)
         
     }
     render() {
@@ -58,7 +59,7 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
                     : null
                 }
                 {
-                    isStepDone ? <div>STEP COMPLETED</div> : <button onClick={this.completeStep}><Link to={`/task/${taskId}`}>COMPLETE STEP</Link></button>
+                    isStepDone ? <div>STEP COMPLETED</div> : <button onClick={this.completeStep}>COMPLETE STEP</button>
                 }
                 <h3>{stepCompletionMessage}</h3>
             </div>
