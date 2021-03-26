@@ -26,10 +26,10 @@ class CreateTaskForm extends Component {
     this.setState({ taskDetails: task });
   };
 
-  createTask = (e) => {
+  createTask = async (e) => {
     e.preventDefault();
     let taskDetails = this.state.taskDetails;
-    this.props.createTask(taskDetails);
+    await this.props.createTask(taskDetails);
     // window.location.reload()
     let projectId = this.state.taskDetails.projectId
     this.props.fetchProject(projectId)

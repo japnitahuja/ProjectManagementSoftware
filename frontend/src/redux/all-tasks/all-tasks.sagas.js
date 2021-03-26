@@ -2,11 +2,15 @@ import { all, call, put, takeLatest, select} from "redux-saga/effects";
 import { selectUserId } from "../user/user.selectors";
 import { createTaskSucessful, createTaskFail, fetchTasksStart, fetchTasksFailure, fetchTasksSuccess } from "./all-tasks.actions";
 import { TaskActionTypes } from "./all-tasks.types";
+import {selectCurrentProjectId, selectCurrentProjectTasks} from '../current-project/current-project.selectors'
+import { fetchCurrentProjectStart } from "../current-project/current-project.actions";
 
 export function* createTask({payload}){
   try {
     let data = payload;
     let userId = yield select(selectUserId)
+    let projectTasks = yield select(selectCurrentProjectTasks)
+    let projectId = yield select(selectCurrentProjectId)
     data['userId'] = userId
     let resp = yield fetch(`http://127.0.0.1:5000/create-task/${data.projectId}`, {
       method: "POST",
@@ -23,6 +27,7 @@ export function* createTask({payload}){
     }else{
       yield put(createTaskFail(resp.error))
     }
+    yield put(fetchCurrentProjectStart(projectId))
   } catch (error) {
     console.log(error)
   }

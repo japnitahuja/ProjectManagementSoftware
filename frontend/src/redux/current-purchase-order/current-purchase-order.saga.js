@@ -28,7 +28,7 @@ export function* createPurchaseOrderStart({payload}){
       purchaseOrderCreation.done ? 
       yield put(createPurchaseOrderSuccess(purchaseOrderCreation.message)):
       yield put(createPurchaseOrderFailure('ERROR'))
-      // yield put(fetchCurrentPurchaseOrderStart(taskId))
+      yield put(fetchCurrentTaskStart(taskId))
   } catch (error) {
       console.log(error)
   }
@@ -63,6 +63,7 @@ export function* createPOitem({payload}){
       POitem.done ? 
       yield put(createPoitemSuccess(POitem.message)):
       yield put(createPoitemFailure('ERROR'))
+      yield put(fetchCurrentPurchaseOrderStart(POid))
     } catch (error) {
         console.log(error)
     }

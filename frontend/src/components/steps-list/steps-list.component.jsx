@@ -5,6 +5,7 @@ import { createStructuredSelector } from "reselect";
 import { completeStepQuestionStart } from "../../redux/current-step/current-step.actions";
 import { selectStepQuestionAnsweredConfirmationMessage } from "../../redux/all-steps/all-steps.selector";
 import ConformationMesage from "../conformation-message/comformation-message.component";
+import { BigText, Circle, SmallText } from "../task-item/task-item.styles";
 
 class StepList extends React.Component {
   completeStepQuestion = (e) => {
@@ -29,17 +30,16 @@ class StepList extends React.Component {
             _id,
             isStepDone,
             isQuestionAnswered,
-            index,
-          }) => {
+          }, index) => {
             console.log(_id);
             return (
               <div
                 key={_id}
                 style={{ padding: "10px", border: "1px solid black" }}
               >
-                <Link to={`/step/${_id}`}>
-                  <div>STEP: {index}</div>
-                  <h2>{stepName}</h2>
+                <Link to={`/step/${_id}`} style={{textDecoration:'none'}}>
+                  <SmallText>STEP - {index+1}</SmallText>
+                  <BigText><Circle />{stepName}</BigText>
                 </Link>
 
                 {questionStatement ? (

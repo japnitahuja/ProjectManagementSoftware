@@ -134,7 +134,6 @@ router.post("/create-task/:projectId", async (req, res) => {
         taskEndDate,
         taskOwner: userId,
       });
-      res.status(200).json({ message: "Task Created", done: true, task });
       console.log(task._id);
       await project.tasks.push(task._id);
       project.save(function (err) {
@@ -145,6 +144,7 @@ router.post("/create-task/:projectId", async (req, res) => {
           console.log("task added to project");
         }
       });
+      res.status(200).json({ message: "Task Created", done: true, task });
     } catch (error) {
       console.log(error);
     }
@@ -230,9 +230,9 @@ router.post("/create-step/:taskId", async (req, res) => {
         questionType: questionType,
       });
       await task.steps.push(step._id);
-      task.totalSteps = (task.totalSteps) + 1;
+      task.totalSteps = await task.totalSteps + 1;
       task.completionPercentage =
-        ((await task.completedSteps) / task.totalSteps) * 100;
+        await task.completedSteps / task.totalSteps * 100;
       task.save(function (err) {
         if (err) {
           console.log(err);

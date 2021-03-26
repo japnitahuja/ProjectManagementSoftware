@@ -7,6 +7,7 @@ export const createTaskStart = (taskDetails) => ({
 
 export const createTaskSucessful = () => ({
     type: TaskActionTypes.CREATE_TASK_SUCCESS,
+    
 })
 
 export const createTaskFail = (errorMessage) => ({
