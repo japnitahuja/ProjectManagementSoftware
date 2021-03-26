@@ -13,7 +13,7 @@ export default function TaskList({tasks}) {
         {tasks.map(({ taskName, taskStartDate, taskEndDate, completedSteps, totalSteps, completionPercentage, _id, isTaskDone },index) => {
           const taskDetails = {taskName, taskStartDate, taskEndDate, completedSteps, totalSteps, completionPercentage, _id, isTaskDone, index};
           return (  
-            <div>
+            <div  key={_id}>
               <TaskItem taskDetails= {taskDetails}/>
             </div>
           );
