@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
 import { selectUserId } from "../user/user.selectors";
 import { createTaskSucessful, createTaskFail, fetchTasksStart, fetchTasksFailure, fetchTasksSuccess } from "./all-tasks.actions";
 import { TaskActionTypes } from "./all-tasks.types";
@@ -27,6 +27,7 @@ export function* createTask({payload}){
     }else{
       yield put(createTaskFail(resp.error))
     }
+    yield delay(500)
     yield put(fetchCurrentProjectStart(projectId))
   } catch (error) {
     console.log(error)

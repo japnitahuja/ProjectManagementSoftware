@@ -46,7 +46,6 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
                 <div>Step: </div>
                 <h2>{stepName}</h2>
                 
-                
                 {
                     stepQuestion?
                     <div>

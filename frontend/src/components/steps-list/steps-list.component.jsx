@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
-import { completeStepQuestionStart } from "../../redux/current-step/current-step.actions";
+import { completeStepQuestionStart, deleteCurrentStepStart } from "../../redux/current-step/current-step.actions";
 import { selectStepQuestionAnsweredConfirmationMessage } from "../../redux/all-steps/all-steps.selector";
 import ConformationMesage from "../conformation-message/comformation-message.component";
 import { BigText, Circle, SmallText } from "../task-item/task-item.styles";
@@ -15,6 +15,12 @@ class StepList extends React.Component {
     completeStepQuestion(stepId);
     window.location.reload();
   };
+  deleteStep(e){
+    let stepId = e.target.id
+    console.log(stepId)
+    const {deleteStep} = this.props
+    deleteStep(stepId)
+}
   render() {
     let steps = this.props.steps;
     console.log(steps);
@@ -41,7 +47,7 @@ class StepList extends React.Component {
                   <SmallText>STEP - {index+1}</SmallText>
                   <BigText><Circle />{stepName}</BigText>
                 </Link>
-
+                <button id={_id} onClick={(e)=>this.deleteStep(e)}>Delete</button>
                 {questionStatement ? (
                   <>
                     {isQuestionAnswered ? (
@@ -63,6 +69,7 @@ const mapStateToProps = createStructuredSelector({});
 
 const mapDispatchToProps = (dispatch) => ({
   completeStepQuestion: (stepId) => dispatch(completeStepQuestionStart(stepId)),
+  deleteStep: (stepId) => dispatch(deleteCurrentStepStart(stepId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StepList);

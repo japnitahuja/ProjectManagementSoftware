@@ -1,6 +1,6 @@
 import { all, call, put, takeLatest, select} from "redux-saga/effects";
 import { selectCurrentTaskId } from "../current-task/current-task.selectors";
-import {completeStepQuestionSuccess, fetchCurrentStepFailure, fetchCurrentStepSuccess, completeStepQuestionFailure, completeStepSuccess, completeStepFailure } from "./current-step.actions";
+import {completeStepQuestionSuccess, fetchCurrentStepFailure, fetchCurrentStepSuccess, completeStepQuestionFailure, completeStepSuccess, completeStepFailure, deleteCurrentStepSuccess, deleteCurrentStepFailure } from "./current-step.actions";
 import { selectCurrentStepId } from "./current-step.selectors";
 import { CurrentStepActionTypes } from "./current-step.types";
 
@@ -59,6 +59,31 @@ export function* completeStep({payload}){
   }
 }
 
+export function* deleteStep({ payload }) {
+  try {
+    let stepId = payload;
+    let taskId = yield select(selectCurrentTaskId)
+    taskId = { taskId: taskId };
+    console.log(taskId);
+    let stepDeleteion = yield fetch(`http://127.0.0.1:5000/step/${stepId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskId),
+    });
+    stepDeleteion = yield stepDeleteion.json();
+    if (stepDeleteion.done) {
+      yield put(deleteCurrentStepSuccess(stepDeleteion.message));
+    } else {
+      yield put(deleteCurrentStepFailure(stepDeleteion.error));
+    }
+  } catch (error) {
+    console.log(error);
+    yield put(deleteCurrentStepFailure(error));
+  }
+}
+
 export function* onStepQuestionCompletionStart(){
   yield takeLatest(CurrentStepActionTypes.COMPLETE_STEP_QUESTION_START, completeStepQuestion)
 }
@@ -71,10 +96,15 @@ export function* onCurrentStepFetchStart(){
   yield takeLatest(CurrentStepActionTypes.FETCH_CURRENT_STEP_START , fetchCurrentStep)
 }
 
+export function* deleteCurrentStep(){
+  yield takeLatest(CurrentStepActionTypes.DELETE_CURRENT_STEP_START , deleteStep)
+}
+
 export function* currentStepSagas() {
   yield all([
     call(onCurrentStepFetchStart),
     call(onStepQuestionCompletionStart),
-    call(onStepCompletionStart)
+    call(onStepCompletionStart),
+    call(deleteCurrentStep)
   ]);
 }

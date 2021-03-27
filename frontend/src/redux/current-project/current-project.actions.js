@@ -20,3 +20,17 @@ export const deleteCurrentTaskInReducer = (taskId) => ({
     payload: taskId
 })
 
+export const deleteCurrentProjectStart = (projectId) => ({
+    type: CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_START,
+    payload: projectId
+})
+
+export const deleteCurrentProjectSuccess = (message) => ({
+    type: CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_SUCCESS,
+    payload: message
+})
+
+export const deleteCurrentProjectFailure = (message) => ({
+    type: CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_FAILURE,
+    payload: message
+})

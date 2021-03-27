@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
 import { fetchCurrentTaskStart } from "../current-task/current-task.actions";
 import { completeStepQuestionFailure, completeStepQuestionSuccess, createStepFail, createStepSucessful, fetchStepsFailure, fetchStepsStart, fetchStepsSuccess } from "./all-steps.actions";
 import { StepActionTypes } from "./all-steps.types";
@@ -18,9 +18,10 @@ export function* createStep({payload}){
 
     resp = yield resp.json()
     if(resp.done){
-        yield put(createStepSucessful(resp.message));
-        }
-        yield put(fetchCurrentTaskStart(taskId))
+      yield put(createStepSucessful(resp.message));
+    }
+    yield delay(500)
+    yield put(fetchCurrentTaskStart(taskId))
     
   } catch (error) {
     console.log(error)

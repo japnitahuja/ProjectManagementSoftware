@@ -56,6 +56,12 @@ const projectReducer = (state = INITIAL_STATE, action) => {
             fetchProjectFailure: true,
             errorMessage: action.payload
           }
+      case ProjectActionTypes.DELETE_PROJECT:
+        let updatedProjects = state.projects.filter(project => project._id != action.payload)
+        return{
+          ...state,
+          projects: updatedProjects
+        }
     default:
       return state;
   }

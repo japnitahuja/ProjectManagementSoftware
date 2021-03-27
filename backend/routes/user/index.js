@@ -58,7 +58,7 @@ router
       console.log(error);
     }
   })
-  //deleting a particular project without the ppurchase orders and the purchase order items
+  //deleting a particular project
   .delete(async (req, res) => {
     const { userId } = req.body;
     console.log(userId);
@@ -68,6 +68,18 @@ router
       var tasks = await project.tasks.map((task) => {
         return task;
       });
+      var POs = await project.purchaseOrders.map((PO) => {
+        return PO
+      })
+      for (var PO of POs){
+        console.log('purchase order id', PO)
+        let purchaseOrder = await PurchaseOrder.findOne({_id: PO})
+        let POitems = await purchaseOrder.purchasedItems.map((POitem) => {
+          PurchaseOrderItem.findOneAndDelete({_id: POitem})
+          console.log('purchase order item id', POitem)
+        })
+        purchaseOrder.findOneAndDelete({id: PO})
+      }
       console.log(tasks, "list of tasks");
       for (var task of tasks) {
         console.log(task);
@@ -83,13 +95,13 @@ router
       var projectToDelete = await Project.findOneAndDelete({
         _id: req.params.projectId,
       });
-      // let UserProjects = await user.projects;
-      // let updatedProjects = await UserProjects.indexOf(req.params.projectId)
-      // if(updatedProjects > -1){
-      //   UserProjects.splice(updatedProjects, 1)
-      // }
-      // user.projects = await UserProjects
-      // user.save()
+      let UserProjects = await user.projects;
+      console.log('user projects before delete', UserProjects)
+      let projectId = await UserProjects.indexOf(req.params.projectId)
+      let updatedProjects = await UserProjects.filter((v, i) => i !== projectId)
+      console.log('user projects after delete', updatedProjects)
+      user.projects = await updatedProjects
+      user.save()
       res.json({ done: true, message: "project deleted", project });
     } catch (error) {
       console.log(error);

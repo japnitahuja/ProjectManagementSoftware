@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
 import { selectCurrentProjectId } from "../current-project/current-project.selectors";
 import { fetchCurrentTaskStart } from "../current-task/current-task.actions";
 import { fetchCurrentTask } from "../current-task/current-task.sagas";
@@ -28,6 +28,7 @@ export function* createPurchaseOrderStart({payload}){
       purchaseOrderCreation.done ? 
       yield put(createPurchaseOrderSuccess(purchaseOrderCreation.message)):
       yield put(createPurchaseOrderFailure('ERROR'))
+      yield delay(500)
       yield put(fetchCurrentTaskStart(taskId))
   } catch (error) {
       console.log(error)
@@ -63,6 +64,7 @@ export function* createPOitem({payload}){
       POitem.done ? 
       yield put(createPoitemSuccess(POitem.message)):
       yield put(createPoitemFailure('ERROR'))
+      yield delay(500)
       yield put(fetchCurrentPurchaseOrderStart(POid))
     } catch (error) {
         console.log(error)

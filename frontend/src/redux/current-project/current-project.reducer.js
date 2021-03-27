@@ -8,7 +8,10 @@ const INITIAL_STATE = {
   currentProjectPurchaseOrders: null,
   currentProjectTasks: null,
   currentProjectMessage: null,
-  errorMessage: null
+  errorMessage: null,
+  isCurrentProjectDeleting: false,
+  deletionMessage: null,
+  deletionError: null
 };
 
 const currentProjectReducer = (state = INITIAL_STATE, action) => {
@@ -47,6 +50,20 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         ...state,
        currentProjectTasks: updatedTasks
       };
+    case CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_START:
+      return{
+        isCurrentProjectDeleting: true
+      }
+    case CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_SUCCESS:
+      return{
+        isCurrentProjectDeleting: false,
+        deletionMessage: action.payload
+      }
+    case CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_FAILURE:
+      return{
+        isCurrentProjectDeleting: false,
+        deletionError: action.payload
+      }
     default:
     return state;
   }

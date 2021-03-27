@@ -14,6 +14,8 @@ const INITIAL_STATE = {
   questionCompletionMessage: null,
   isStepBeingCompleted: null,
   stepCompletionMessage: null,
+  isStepBeingDeleted: false,
+  stepDeletionMessage: null
 };
 
 const currentStepReducer = (state = INITIAL_STATE, action) => {
@@ -85,6 +87,23 @@ const currentStepReducer = (state = INITIAL_STATE, action) => {
         isStepBeingCompleted: false,
         stepCompletionMessage: action.payload,
       };
+    case CurrentStepActionTypes.DELETE_CURRENT_STEP_START:
+      return{
+        ...state,
+        isStepBeingDeleted: true,
+      }
+    case CurrentStepActionTypes.DELETE_CURRENT_STEP_SUCCESS:
+      return{
+        ...state,
+        isStepBeingDeleted: false,
+        stepDeletionMessage: action.payload
+      }
+    case CurrentStepActionTypes.DELETE_CURRENT_STEP_FAILURE:
+      return{
+        ...state,
+        isStepBeingDeleted: false,
+        stepDeletionMessage: action.payload
+      }
     default:
       return state;
   }

@@ -29,3 +29,8 @@ export const fetchProjectsFailure = (error) => ({
     payload: error
 })
 
+export const deleteProject = (projectId) => ({
+    type: ProjectActionTypes.DELETE_PROJECT,
+    payload: projectId
+})
+

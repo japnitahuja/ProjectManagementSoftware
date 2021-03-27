@@ -44,3 +44,19 @@ export const completeStepFailure = (error) => ({
     type: CurrentStepActionTypes.COMPLETE_STEP_FAILURE,
     payload: error
 })
+
+export const deleteCurrentStepStart = (stepId) => ({
+    type: CurrentStepActionTypes.DELETE_CURRENT_STEP_START,
+    payload: stepId
+})
+
+export const deleteCurrentStepSuccess = (message) => ({
+    type: CurrentStepActionTypes.DELETE_CURRENT_STEP_SUCCESS,
+    payload: message
+})
+
+export const deleteCurrentStepFailure = (error) => ({
+    type: CurrentStepActionTypes.DELETE_CURRENT_STEP_FAILURE,
+    payload: error
+})
+

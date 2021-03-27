@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
 import { createProjectSucessful, createProjectFail, fetchProjectsStart, fetchProjectsFailure, fetchProjectsSuccess } from "./all-projects.actions";
 import { ProjectActionTypes } from "./all-projects.types";
 import { selectUserId } from "../user/user.selectors"
@@ -19,11 +19,12 @@ export function* createProject({payload}){
 
     resp = yield resp.json()
     if(resp.done){
-        yield put(createProjectSucessful(resp.message));
-        yield put(fetchProjectsStart());
+      yield put(createProjectSucessful(resp.message));
     }else{
       yield put(createProjectFail(resp.error))
     }
+    yield delay(500)
+    yield put(fetchProjectsStart());
   } catch (error) {
     console.log(error)
   }

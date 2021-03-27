@@ -31,8 +31,8 @@ class CreateTaskForm extends Component {
     let taskDetails = this.state.taskDetails;
     await this.props.createTask(taskDetails);
     // window.location.reload()
-    let projectId = this.state.taskDetails.projectId
-    this.props.fetchProject(projectId)
+    // let projectId = this.state.taskDetails.projectId
+    // this.props.fetchProject(projectId)
   };
 
   render() {
