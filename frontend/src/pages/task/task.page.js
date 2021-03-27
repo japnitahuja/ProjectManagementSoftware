@@ -11,6 +11,8 @@ import { selectCurrentTaskCompletionMessage, selectCurrentTaskIsDone, selectCurr
 import { Link } from 'react-router-dom';
 import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
 import StepNavBar from '../../components/step-navbar/step-navbar.component';
+import StepListContainer from '../../components/steps-list/steps-list.container';
+import CreateStepFormContainer from '../../components/create-step-form/create-step-form.container';
 
 class Task extends Component {
     componentDidMount(){
@@ -42,7 +44,7 @@ class Task extends Component {
 
                 <div>Steps</div>
                 {/* <TaskList tasks = {tasks}/> */}
-                <StepList steps = {steps} />
+                <StepListContainer steps = {steps} />
                  {
                      isTaskDone ? 
                      <div>TASK IS DONE!</div> : 

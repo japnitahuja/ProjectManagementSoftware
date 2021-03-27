@@ -30,7 +30,6 @@ class CreateProjectForm extends Component {
     e.preventDefault();
     let projectDetails = this.state.projectDetails;
     this.props.createProject(projectDetails);
-    this.props.fetchProjects()
   };
 
   

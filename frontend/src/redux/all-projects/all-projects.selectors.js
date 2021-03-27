@@ -13,3 +13,8 @@ export const selectUserProjects = createSelector(
   [selectProjectDetails],
   (project) => project.projects
 )
+
+export const selectAreProjectsFetching = createSelector(
+  [selectProjectDetails],
+  (project) => project.fetchProjectStart
+)

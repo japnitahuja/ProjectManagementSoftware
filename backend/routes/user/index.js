@@ -78,21 +78,22 @@ router
           PurchaseOrderItem.findOneAndDelete({_id: POitem})
           console.log('purchase order item id', POitem)
         })
-        purchaseOrder.findOneAndDelete({id: PO})
+        PurchaseOrder.findOneAndDelete({id: PO})
       }
       console.log(tasks, "list of tasks");
       for (var task of tasks) {
         console.log(task);
         var individualTask = await Task.findOne({ _id: task });
         console.log(individualTask, "individual tasks");
+        if(individualTask){
         console.log(individualTask.steps, "steps for the task");
         for (var step of individualTask.steps) {
           console.log(step);
           var steps = await Step.findOneAndDelete({ _id: step });
         }
         var taskToDelete = await Task.findOneAndDelete({ _id: task });
-      }
-      var projectToDelete = await Project.findOneAndDelete({
+      }}
+      var projectToDelete = await Project.findOneAndDelete({  
         _id: req.params.projectId,
       });
       let UserProjects = await user.projects;

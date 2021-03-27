@@ -23,3 +23,8 @@ export const selectStepQuestionAnsweredConfirmationMessage = createSelector(
   [selectStepDetails],
   (step) => step.completionMessage
 )
+
+export const selectIsStepBeingCreated = createSelector(
+  [selectStepDetails],
+  (step) => step.createStepStart
+)

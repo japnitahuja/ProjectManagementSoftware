@@ -90,6 +90,12 @@ const currentTaskReducer = (state = INITIAL_STATE, action) => {
           isCurrentTaskDeleting: false,
           currentTaskDeletionMessage: action.payload,
         }
+      case CurrentTaskActionTypes.DELETE_STEP:
+        let updatedSteps = state.currentTaskSteps.filter(step => step._id != action.payload)
+        return{
+          ...state,
+          currentTaskSteps: updatedSteps
+        }
     default:
     return state;
   }

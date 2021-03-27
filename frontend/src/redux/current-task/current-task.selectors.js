@@ -68,3 +68,9 @@ export const selectCurrentTaskMessage = createSelector(
   [selectCurrentTaskDetails],
   (currentTask) => currentTask.currentTaskMessage
 );
+
+export const selectIsCurrentTaskFetching = createSelector(
+  [selectCurrentTaskDetails],
+  (currentTask) => currentTask.isCurrentTaskFetching
+);
+

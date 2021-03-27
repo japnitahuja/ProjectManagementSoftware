@@ -8,6 +8,7 @@ import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 import CreateProjectForm from "../../components/create-project-form/create-project-form.component"
 import { ProjectNav } from "../../components/project-nav/project-nav.component";
+import ProjectListContainer from "../../components/projects-list/projects-list.container";
 
 
  class AllProjects extends Component {
@@ -29,7 +30,7 @@ import { ProjectNav } from "../../components/project-nav/project-nav.component";
         return (
             <div>
                 <ProjectNav title = "Projects" />
-                <ProjectList projects={projects}/>
+                <ProjectListContainer projects={projects}/>
                 <CreateProjectForm/>
                 <button onClick={this.signOut}>Sign out</button>
             </div>

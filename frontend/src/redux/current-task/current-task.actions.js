@@ -45,6 +45,13 @@ export const deleteCurrentTaskFailure = (error) => ({
     payload: error
 })
 
+export const deleteStepFromReducer = (stepId) => ({
+    type: CurrentTaskActionTypes.DELETE_STEP,
+    payload: stepId
+})
+
+
+
 
 
 

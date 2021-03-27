@@ -3,6 +3,7 @@ import { selectCurrentTaskId } from "../current-task/current-task.selectors";
 import {completeStepQuestionSuccess, fetchCurrentStepFailure, fetchCurrentStepSuccess, completeStepQuestionFailure, completeStepSuccess, completeStepFailure, deleteCurrentStepSuccess, deleteCurrentStepFailure } from "./current-step.actions";
 import { selectCurrentStepId } from "./current-step.selectors";
 import { CurrentStepActionTypes } from "./current-step.types";
+import {deleteStepFromReducer} from '../current-task/current-task.actions'
 
 export function* fetchCurrentStep({payload}){
   try {
@@ -63,6 +64,7 @@ export function* deleteStep({ payload }) {
   try {
     let stepId = payload;
     let taskId = yield select(selectCurrentTaskId)
+    yield put(deleteStepFromReducer(stepId))
     taskId = { taskId: taskId };
     console.log(taskId);
     let stepDeleteion = yield fetch(`http://127.0.0.1:5000/step/${stepId}`, {
