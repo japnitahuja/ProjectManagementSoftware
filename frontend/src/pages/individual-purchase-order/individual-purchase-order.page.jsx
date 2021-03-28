@@ -6,6 +6,7 @@ import IndividualPurchaseOrderComponent from "../../components/individual-purcha
 import POitemForm from '../../components/create-purchase-order-item-form/create-purchase-order-item-form.component'
 import POItemNav from '../../components/PO-item-nav/PO-item-nav.component';
 import POItemMenu from '../../components/PO-item-menu/PO-item-menu.component';
+import IndividualPurchaseOrderContainer from '../../components/individual-purchase-order/individual-purchase-order.container';
 class IndividualPurchaseOrder extends Component {
 
     componentDidMount(){
@@ -17,7 +18,7 @@ class IndividualPurchaseOrder extends Component {
             <div>
                 <POItemNav />
                 <POItemMenu />
-                <IndividualPurchaseOrderComponent />
+                <IndividualPurchaseOrderContainer />
                 <POitemForm />
             </div>
         )

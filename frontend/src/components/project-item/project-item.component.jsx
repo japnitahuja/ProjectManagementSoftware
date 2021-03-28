@@ -19,6 +19,7 @@ class ProjectItem extends Component {
         console.log("delete button", this.state.id);
         let projectId = this.state.id
         this.props.deleteProject(projectId);
+        window.location.reload()
     }
     render() {
         const {id, projectName} = this.state

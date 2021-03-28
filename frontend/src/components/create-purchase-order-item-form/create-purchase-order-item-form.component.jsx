@@ -30,7 +30,6 @@ class POitemForm extends Component {
     let POitem = this.state.POitem;
     POitem['poId'] = this.props.poId
     this.props.createPOitem(POitem);
-    window.location.reload()
   };
 
   render() {
