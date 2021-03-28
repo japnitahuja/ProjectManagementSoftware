@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 
-export const DeleteButton = styled.button`
+export const LongButton = styled.button`
     text-decoration: none;
     border: none;
-    height: 15px;
-    font-size: 10px;
-    background-color:#FF5243;
+    width:80%;
+    font-size: 15px;
+    height:35px;
     color:white;
     box-sizing:border-box;
     border-radius:2px;
-    margin: 2px 0px;
+    padding:7px;
+    margin:5px 0px;
 
 `

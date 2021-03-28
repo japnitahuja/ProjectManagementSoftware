@@ -9,6 +9,7 @@ import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 import CreateProjectForm from "../../components/create-project-form/create-project-form.component"
 import { ProjectNav } from "../../components/project-nav/project-nav.component";
 import ProjectListContainer from "../../components/projects-list/projects-list.container";
+import { GenericButton } from "../../components/generic-button/generic-button.styles";
 
 
  class AllProjects extends Component {
@@ -32,7 +33,7 @@ import ProjectListContainer from "../../components/projects-list/projects-list.c
                 <ProjectNav title = "Projects" />
                 <ProjectListContainer projects={projects}/>
                 <CreateProjectForm/>
-                <button onClick={this.signOut}>Sign out</button>
+                <GenericButton onClick={this.signOut}>Sign out</GenericButton>
             </div>
         )
     }

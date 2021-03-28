@@ -13,6 +13,7 @@ import { completeStepQuestionStart, completeStepStart } from '../../redux/curren
 import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
 import { selectCurrentTaskId } from '../../redux/current-task/current-task.selectors';
+import { LongButton } from '../../components/long-button/long-button.styles';
 
 class Task extends Component {
     componentDidMount(){
@@ -42,14 +43,19 @@ class Task extends Component {
                 {/* <TaskList tasks = {tasks}/> */}
                 <StepListContainer steps = {steps} />
                 <br></br>
-                 <h3>{taskCompletionMessage}</h3>
-                <CreateStepForm taskId = {this.props.match.params.taskId} />
-                <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
+                <center>
                 {
                      isTaskDone ? 
                      null : 
-                     <button onClick={this.completeTask}>COMPLETE TASK</button> 
+                     <LongButton style={{backgroundColor: "#41BD64"}} onClick={this.completeTask}>COMPLETE TASK</LongButton> 
                  }
+
+                </center>
+                
+                 <h3>{taskCompletionMessage}</h3>
+                <CreateStepForm taskId = {this.props.match.params.taskId} />
+                <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
+                
             </div>
         )
     }

@@ -39,7 +39,7 @@ class CreatePurchaseOrderForm extends Component {
   render() {
     
     return (
-      <div>
+      <div style={{padding:"10px"}}>
         <form
           style={{ display: "flex", flexDirection: "column" }}
           onChange={(e) => this.handleOnChange(e)}

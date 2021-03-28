@@ -5,6 +5,7 @@ import { createProjectStart, fetchProjectsStart} from "../../redux/all-projects/
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 
+
 class CreateProjectForm extends Component {
   constructor() {
     super();
@@ -38,8 +39,8 @@ class CreateProjectForm extends Component {
     const { name, projects } = this.props;
     
     return (
-      <div>
-        <h1>hi {name}!</h1>
+      <div style={{padding:"10px"}}>
+        <h1>Hi {name}!</h1>
         <form
           style={{ display: "flex", flexDirection: "column" }}
           onChange={(e) => this.handleOnChange(e)}

@@ -30,14 +30,14 @@ class ProjectItem extends Component {
                 <Link to={`/project/${id}`} style={{textDecoration:'none'}}>
                     <BigText>{projectName}</BigText>
                     <SmallText>TownHome</SmallText>
-                    </Link>
-                    <DeleteButton onClick={(e)=>this.deleteProject(e)}>DELETE</DeleteButton>
+                </Link>
                 </LeftDiv>
                 <RightDiv>
                 <Link to={`/project/${id}`} style={{textDecoration:'none'}}>
                     <BigText>$5000</BigText>
                     <SmallText>Remodel</SmallText>  
-                    </Link>
+                </Link>
+                <DeleteButton onClick={(e)=>this.deleteProject(e)}>DELETE</DeleteButton>
                 </RightDiv>
                 
                 
