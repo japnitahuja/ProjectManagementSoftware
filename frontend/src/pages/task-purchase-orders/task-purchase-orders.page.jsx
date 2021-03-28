@@ -10,6 +10,8 @@ import PurchaseOrderList from '../../components/purchase-orders-list/purchase-or
 import { selectCurrentTaskPurchaseOrders } from '../../redux/current-task/current-task.selectors';
 import { fetchCurrentPurchaseOrderStart } from '../../redux/current-purchase-order/current-purchase-order.actions';
 import { fetchCurrentTaskStart } from '../../redux/current-task/current-task.actions';
+import { selectCurrentProjectName } from '../../redux/current-project/current-project.selectors';
+import { TaskNav } from '../../components/task-nav/task-nav.component';
 class PurchaseOrder extends Component {
     componentDidMount(){
         const taskId = this.props.match.params.taskId
@@ -18,14 +20,13 @@ class PurchaseOrder extends Component {
     }
     
     render() {
-        const {purchaseOrders} = this.props;
+        const {purchaseOrders, projectName} = this.props;
         console.log('task page')
         console.log(purchaseOrders)
         
         return (
-             <div style={{margin:"10px"}}>
-                <h1>All PURCHASE ORDERS</h1>
-                {/* <TaskList tasks = {tasks}/> */}
+             <div>
+                <TaskNav title = {projectName}/>
                 <PurchaseOrderList purchaseOrders = {purchaseOrders} />
                 <CreatePurchaseOrderForm taskId = {this.props.match.params.taskId} />
             </div>
@@ -34,7 +35,8 @@ class PurchaseOrder extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    purchaseOrders: selectCurrentTaskPurchaseOrders
+    purchaseOrders: selectCurrentTaskPurchaseOrders,
+    projectName: selectCurrentProjectName
   });
   
   const mapDispatchToProps = (dispatch) => ({

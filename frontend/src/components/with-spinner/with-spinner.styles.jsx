@@ -14,7 +14,7 @@ export const SpinnerContainer = styled.div`
   height: 50px;
   /* border: 3px solid rgba(195, 195, 195, 0.6); */
   /* border: 3px solid rgb(253, 165, 0); */
-  border: 3px solid #ffff;
+  border: 3px solid #f7f7f7;
   border-radius: 50%;
   /* border-top-color: #636767; */
   border-top-color: #000000;

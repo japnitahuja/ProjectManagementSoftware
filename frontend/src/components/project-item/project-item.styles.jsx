@@ -23,7 +23,7 @@ export const RightDiv = styled.div`
     @media screen and (min-width: 320px) {
     width:30%;
     display:flex;
-    flex-direction:column;
+    flex-direction:column; 
     align-items:flex-end;
   }
 `
@@ -32,7 +32,7 @@ export const BigText = styled.p`
     margin:0;
     font-size:15px;
     color: #606060;
-    font-weight:bold;
+    font-weight: bold;
     
   }
 `

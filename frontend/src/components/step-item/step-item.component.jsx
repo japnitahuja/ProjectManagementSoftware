@@ -6,6 +6,7 @@ import { completeStepQuestionStart, completeStepStart, deleteCurrentStepStart, f
 import { selectCurrentProjectId } from '../../redux/current-project/current-project.selectors';
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
 import { selectCurrentTaskId } from '../../redux/current-task/current-task.selectors';
+import { CheckBox } from "../checkbox/Checkbox.styles";
 
 class StepItem extends Component{
     constructor(props){
@@ -74,8 +75,10 @@ class StepItem extends Component{
                 <PartitionDiv key={_id}>
                     <LeftDiv>
                             <RowContainer>
-                            <Circle /> 
-                            <SmallText>STEP - {index+1}</SmallText>
+                                {
+                                    isStepDone? <CheckBox>&#10003;</CheckBox> : <Circle/>
+                                }
+                            <SmallText>Step - {index+1}</SmallText>
                             </RowContainer>
                             
                             <BigText>{stepName}</BigText>

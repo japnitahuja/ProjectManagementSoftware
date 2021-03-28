@@ -244,8 +244,8 @@ router.post("/create-step/:taskId", async (req, res) => {
       });
       await task.steps.push(step._id);
       task.totalSteps = await task.totalSteps + 1;
-      task.completionPercentage =
-        await task.completedSteps / task.totalSteps * 100;
+      task.completionPercentage = await task.completedSteps / task.totalSteps * 100;
+      task.isTaskDone = await false;
       task.save(function (err) {
         if (err) {
           console.log(err);

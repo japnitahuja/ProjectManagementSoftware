@@ -4,6 +4,7 @@ import { ProjectDiv, LeftDiv, RightDiv, BigText, SmallText, Circle, ProgressBar,
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { deleteCurrentTaskStart } from "../../redux/current-task/current-task.actions";
+import { CheckBox } from "../checkbox/Checkbox.styles";
 
 class TaskItem extends Component{
     constructor(props){
@@ -20,7 +21,8 @@ class TaskItem extends Component{
     }
     
     render (){
-        const {_id, index, taskName, completionPercentage, completedSteps, totalSteps} = this.state.taskDetails;
+        const {_id, index, taskName, completionPercentage, completedSteps, totalSteps, isTaskDone} = this.state.taskDetails;
+        console.log(this.state.taskDetails)
         return (
             <ProjectDiv>
                 <LeftDiv>
@@ -34,11 +36,15 @@ class TaskItem extends Component{
                         <SmallText> {completedSteps}/{totalSteps} </SmallText>
                     </ProgressDiv>
                     </Link>
+                    <button onClick={(e)=>this.deleteTask(e)}>Delete</button>
                 </LeftDiv>
                 
                 <RightDiv>
-                    <Circle/>
-                    <button onClick={(e)=>this.deleteTask(e)}>Delete</button>
+                    {
+                        isTaskDone? <CheckBox>&#10003;</CheckBox> : <Circle/>
+                    }
+                    {/* <div style={{background: '#5887F9', color: 'white', padding: '2px', border}}>&#10003;</div> */}
+                    
                 </RightDiv>
             </ProjectDiv>
         

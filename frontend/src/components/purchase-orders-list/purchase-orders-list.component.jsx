@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
+import { BigText, SmallText } from "../project-item/project-item.styles";
+import { PODetailsDiv, PODiv, POName, PONameDiv, PONumber } from "./purchase-orders-list.styles";
 
 class PurchaseOrderList extends React.Component {
     
@@ -14,19 +16,21 @@ class PurchaseOrderList extends React.Component {
     return (
       <div>
         {purchaseOrders.map(
-          ({ orderFrom, totalOrderAmount, totalPaidAmount, purchasedItem, _id }) => {
+          ({ orderFrom, totalOrderAmount, totalPaidAmount, purchasedItem, _id }, index) => {
             return (
-              <div
+              <PODiv
                 key={_id}
-                style={{ padding: "10px", border: "1px solid black" }}
               >
-                <Link to={`/purchaseOrder/${_id}`}>
-                  <h3>Purchased Item: {purchasedItem}</h3>
+                <PONameDiv>
+                <Link to={`/purchaseOrder/${_id}`} style={{textDecoration: 'none'}}>
+                  <SmallText>PO #{index+1001}</SmallText>
+                  <BigText>{purchasedItem}</BigText>
                 </Link>
-                Order from: {orderFrom}<br/>
-                Total Order Amount: {totalOrderAmount}<br/>
-                Total Paid Amount: {totalPaidAmount}
-              </div>
+                </PONameDiv>
+                <PODetailsDiv>
+                  <BigText>Open</BigText>
+                </PODetailsDiv>
+              </PODiv>
             );
           }
         )}

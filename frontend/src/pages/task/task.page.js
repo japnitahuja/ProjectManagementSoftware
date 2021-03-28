@@ -24,7 +24,7 @@ class Task extends Component {
     completeTask = () => {
         const taskId = this.props.match.params.taskId
         this.props.completeTask(taskId)
-        
+        this.props.fetchSteps(taskId)
     }
 
     
@@ -47,7 +47,7 @@ class Task extends Component {
                 <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
                 {
                      isTaskDone ? 
-                     <div>TASK IS DONE!</div> : 
+                     null : 
                      <button onClick={this.completeTask}>COMPLETE TASK</button> 
                  }
             </div>
