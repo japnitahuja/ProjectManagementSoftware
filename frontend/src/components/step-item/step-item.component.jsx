@@ -44,6 +44,7 @@ class StepItem extends Component{
         const stepId = this.state.stepDetails._id
         const {deleteStep} = this.props
         deleteStep(stepId)
+        window.location.reload()
     }
 
     stepDetailsDiv = ({isStepDone,questionStatement,isQuestionAnswered, stepCompletionMessage}) => {

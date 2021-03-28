@@ -19,6 +19,7 @@ class TaskItem extends Component{
     deleteTask(e){
         console.log("delete button", this.state.taskDetails._id);
         this.props.deleteTask(this.state.taskDetails._id);
+        window.location.reload()
     }
     
     render (){
