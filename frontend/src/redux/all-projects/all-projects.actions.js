@@ -14,15 +14,31 @@ export const createProjectFail = (errorMessage) => ({
     payload: errorMessage
 })
 
-export const fetchProjectsStart = () => ({
+export const createProjectTemplateStart = (projectDetails) => ({
+    type: ProjectActionTypes.CREATE_PROJECT_TEMPLATE_START,
+    payload: projectDetails
+})
+
+export const createProjectTemplateSuccess = (project) => ({
+    type: ProjectActionTypes.CREATE_PROJECT_TEMPLATE_SUCCESS,
+    payload: project
+})
+
+export const createProjectTemplateFailure = (error) => ({
+    type: ProjectActionTypes.CREATE_PROJECT_TEMPLATE_FAILURE,
+    payload: error
+})
+
+export const fetchProjectsStart = (userId) => ({
     type: ProjectActionTypes.FETCH_PROJECTS_START,
-    
+    payload: userId
 })
 
 export const fetchProjectsSuccess = (projects) => ({
     type: ProjectActionTypes.FETCH_PROJECTS_SUCCESS,
     payload: projects
 })
+
 
 export const fetchProjectsFailure = (error) => ({
     type: ProjectActionTypes.FETCH_PROJECTS_FAILURE,

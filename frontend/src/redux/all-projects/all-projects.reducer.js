@@ -9,7 +9,9 @@ const INITIAL_STATE = {
   fetchProjectFailure: false,
   errorMessage: undefined,
   message: null,
-  projects: null
+  projects: null,
+  isProjectTemplateBeingCreated: null,
+
 };
 
 const projectReducer = (state = INITIAL_STATE, action) => {
@@ -61,6 +63,21 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         return{
           ...state,
           projects: updatedProjects
+        }
+      case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_START:
+        return{
+          ...state,
+          isProjectTemplateBeingCreated: true,
+        }
+      case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_SUCCESS:
+        return{
+          ...state,
+          isProjectTemplateBeingCreated: false,
+        }
+      case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_FAILURE:
+        return{
+          ...state,
+          isProjectTemplateBeingCreated: false,
         }
     default:
       return state;

@@ -460,8 +460,9 @@ router.get("/purchaseOrder/:purchaseOrderId", async (req, res) => {
 router.post("/complete-task/:taskId", async (req, res) => {
   try {
     var task = await Task.findOne({ _id: req.params.taskId });
-    if (task.completionPercentage === 100) {
+    if (task.completionPercentage === 100 || task.steps.length == 0) {
       task.isTaskDone = true;
+      task.completionPercentage === 100
       task.save();
       res.status(200).json({ message: "Task Completed", done: true });
     } else {
@@ -524,7 +525,7 @@ router.post("/complete-step-question/:stepId", async (req, res) => {
 });
 
 //creating a template
-router.post("/test-template", async (req, res) => {
+router.post("/test-template/:userId", async (req, res) => {
   var testTemplate = [
     {
       taskName: " Template task 1",
@@ -535,25 +536,25 @@ router.post("/test-template", async (req, res) => {
           questionType: "yes/no",
         },
         {
-          stepName: "template task 1 step 2",
+          stepName: "Template task 1 step 2",
           stepQuestion: "template task 1 question 2",
         },
       ],
       purchaseOrders: [
         {
-          orderFrom: "template task 1 PO1",
+          orderFrom: "Template task 1 PO1",
           totalOrderAmount: 100,
           totalPaidAmount: 50,
-          purchasedItem: "template task 1 item",
+          purchasedItem: "Template task 1 item",
           purchasedItems: [
             {
-              itemName: "template task 1 item 1",
+              itemName: "Template task 1 item 1",
               itemNumber: 10,
               itemsShipped: 5,
               itemValue: 50,
             },
             {
-              itemName: "template task 1 item 2",
+              itemName: "Template task 1 item 2",
               itemNumber: 10,
               itemsShipped: 5,
               itemValue: 50,
@@ -563,28 +564,29 @@ router.post("/test-template", async (req, res) => {
       ],
     },
     {
-      taskName: "template task 2",
+      taskName: "Template task 2",
       steps: [],
       purchaseOrders: [],
     },
     {
-      taskName: "template task 3",
+      taskName: "Template task 3",
       steps: [
         {
-          stepName: "template task 3 step 1",
+          stepName: "Template task 3 step 1",
         },
       ],
       purchaseOrders: [
         {
-          orderFrom: "template task 3 PO1",
+          orderFrom: "Template task 3 PO1",
           totalOrderAmount: 100,
           totalPaidAmount: 50,
-          purchasedItem: "template task 3 item",
+          purchasedItem: "Template task 3 item",
         },
       ],
     },
   ];
-  var { projectName, projectStatus, userId } = req.body;
+  var { projectName, projectStatus } = req.body;
+  var userId = req.params.userId;
   try {
     var project = await Project.create({
       projectName,

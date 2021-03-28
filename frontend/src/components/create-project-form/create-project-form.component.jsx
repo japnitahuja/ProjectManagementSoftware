@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { createProjectStart, fetchProjectsStart} from "../../redux/all-projects/all-projects.actions";
+import { createProjectStart, createProjectTemplateStart, fetchProjectsStart} from "../../redux/all-projects/all-projects.actions";
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 
@@ -33,6 +33,13 @@ class CreateProjectForm extends Component {
     this.props.createProject(projectDetails);
   };
 
+  createProjectTemplate = (e) => {
+    e.preventDefault()
+    let projectDetails = this.state.projectDetails;
+    console.log(projectDetails)
+    this.props.createProjectTemplate(projectDetails)
+  }
+
   
 
   render() {
@@ -44,7 +51,6 @@ class CreateProjectForm extends Component {
         <form
           style={{ display: "flex", flexDirection: "column" }}
           onChange={(e) => this.handleOnChange(e)}
-          onSubmit={this.createProject}
         >
           <div>
             <label htmlFor="projectName"> Project Name: </label>
@@ -73,7 +79,8 @@ class CreateProjectForm extends Component {
           </div>
 
           <div>
-            <input type="submit" value="Create Project" />
+            <button onClick={this.createProject}>Create Project</button>
+            <button onClick={this.createProjectTemplate}>Create Project Templates</button>
           </div>
         </form>
 
@@ -91,6 +98,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
   createProject: (projectDetails) => dispatch(createProjectStart(projectDetails)),
+  createProjectTemplate: (projectDetails) => dispatch(createProjectTemplateStart(projectDetails)),
   fetchProjects: () => dispatch(fetchProjectsStart())
 });
 
