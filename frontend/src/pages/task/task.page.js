@@ -8,6 +8,11 @@ import { Link } from 'react-router-dom';
 import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
 import StepNavBar from '../../components/step-navbar/step-navbar.component';
 import StepListContainer from '../../components/steps-list/steps-list.container';
+import {selectCurrentProjectId} from "../../redux/current-project/current-project.selectors";
+import { completeStepQuestionStart, completeStepStart } from '../../redux/current-step/current-step.actions'
+import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
+import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
+import { selectCurrentTaskId } from '../../redux/current-task/current-task.selectors';
 
 class Task extends Component {
     componentDidMount(){
@@ -25,27 +30,26 @@ class Task extends Component {
     
 
     render() {
-        const {steps, taskName, isTaskDone, taskCompletionMessage} = this.props;
+        const {steps,projectId, taskName, isTaskDone, taskCompletionMessage} = this.props;
         console.log('task page')
         console.log(steps)
         const taskId = this.props.match.params.taskId
         console.log(taskId)
         return (
-            <div style={{margin:"10px"}}>
-                <StepPageTaskNav />
+            <div>
+                <StepPageTaskNav projectId = {projectId}/>
                 <StepNavBar />
-                 <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
-                 <h3>{taskCompletionMessage}</h3>
-
-                <div>Steps</div>
                 {/* <TaskList tasks = {tasks}/> */}
                 <StepListContainer steps = {steps} />
-                 {
+                <br></br>
+                 <h3>{taskCompletionMessage}</h3>
+                <CreateStepForm taskId = {this.props.match.params.taskId} />
+                <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
+                {
                      isTaskDone ? 
                      <div>TASK IS DONE!</div> : 
-                     <button onClick={this.completeTask} style={{margin: '5px'}}>COMPLETE TASK</button> 
+                     <button onClick={this.completeTask}>COMPLETE TASK</button> 
                  }
-                <CreateStepForm taskId = {this.props.match.params.taskId} />
             </div>
         )
     }
@@ -56,12 +60,24 @@ const mapStateToProps = createStructuredSelector({
     taskName: selectCurrentTaskName,
     isTaskDone: selectCurrentTaskIsDone,
     taskCompletionMessage: selectCurrentTaskCompletionMessage,
+    projectId: selectCurrentProjectId,
+    stepName: selectCurrentStepName,
+    stepQuestion: selectCurrentStepQuestion,
+    isStepQuestionAnswered: selectCurrentStepQuestionAnswered,
+    stepId: selectCurrentStepId,
+    questionCompletion: selectCurrentStepQuestionAnswerConfirmation,
+    stepCompletionMessage: selectCurrentStepCompletionMessage,
+    isStepDone: selectCurrentStepIsDone,
+    taskId: selectCurrentTaskId
     
   });
   
   const mapDispatchToProps = (dispatch) => ({
     fetchSteps : (taskId) => dispatch(fetchCurrentTaskStart(taskId)),
-    completeTask: (taskId) => dispatch(completeCurrentTaskStart(taskId))
+    completeTask: (taskId) => dispatch(completeCurrentTaskStart(taskId)),
+    fetchCurrentStep : (stepId) => dispatch(fetchCurrentStepStart(stepId)),
+    completeStepQuestion: (stepId) => dispatch(completeStepQuestionStart(stepId)),
+    completeStep: (data) => dispatch(completeStepStart(data))
   });
   
   export default connect(mapStateToProps, mapDispatchToProps)(Task);

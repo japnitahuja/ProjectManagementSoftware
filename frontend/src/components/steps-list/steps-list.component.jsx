@@ -6,21 +6,9 @@ import { completeStepQuestionStart, deleteCurrentStepStart } from "../../redux/c
 import { selectStepQuestionAnsweredConfirmationMessage } from "../../redux/all-steps/all-steps.selector";
 import ConformationMesage from "../conformation-message/comformation-message.component";
 import { BigText, Circle, SmallText } from "../task-item/task-item.styles";
+import StepItem from "../step-item/step-item.component"
 
 class StepList extends React.Component {
-  completeStepQuestion = (e) => {
-    const { completeStepQuestion } = this.props;
-    const stepId = e.target.id;
-    console.log(stepId);
-    completeStepQuestion(stepId);
-    window.location.reload();
-  };
-  deleteStep(e){
-    let stepId = e.target.id
-    console.log(stepId)
-    const {deleteStep} = this.props
-    deleteStep(stepId)
-}
   render() {
     let steps = this.props.steps;
     console.log(steps);
@@ -30,33 +18,11 @@ class StepList extends React.Component {
     return (
       <div>
         {steps.map(
-          ({
-            stepName,
-            questionStatement,
-            _id,
-            isStepDone,
-            isQuestionAnswered,
-          }, index) => {
+          ({stepName,questionStatement,_id,isStepDone,isQuestionAnswered,}, index) => {
             console.log(_id);
+            const stepDetails = {stepName,questionStatement,_id,isStepDone,isQuestionAnswered, index}
             return (
-              <div
-                key={_id}
-                style={{ padding: "10px", border: "1px solid black" }}
-              >
-                <Link to={`/step/${_id}`} style={{textDecoration:'none'}}>
-                  <SmallText>STEP - {index+1}</SmallText>
-                  <BigText><Circle />{stepName}</BigText>
-                </Link>
-                <button id={_id} onClick={(e)=>this.deleteStep(e)}>Delete</button>
-                {questionStatement ? (
-                  <>
-                    {isQuestionAnswered ? (
-                      <div>Question has been answered</div>
-                    ) : null}
-                  </>
-                ) : null}
-                {isStepDone ? <div>Step Completed!</div> : null}
-              </div>
+              <StepItem key={_id} stepDetails = {stepDetails} />
             );
           }
         )}

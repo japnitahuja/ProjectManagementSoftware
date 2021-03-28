@@ -1,6 +1,6 @@
-import { all, call, put, takeLatest, select} from "redux-saga/effects";
+import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
 import { selectCurrentTaskId } from "../current-task/current-task.selectors";
-import {completeStepQuestionSuccess, fetchCurrentStepFailure, fetchCurrentStepSuccess, completeStepQuestionFailure, completeStepSuccess, completeStepFailure, deleteCurrentStepSuccess, deleteCurrentStepFailure } from "./current-step.actions";
+import {completeStepQuestionSuccess, fetchCurrentStepFailure, fetchCurrentStepSuccess, completeStepQuestionFailure, completeStepSuccess, completeStepFailure, deleteCurrentStepSuccess, deleteCurrentStepFailure, fetchCurrentStepStart } from "./current-step.actions";
 import { selectCurrentStepId } from "./current-step.selectors";
 import { CurrentStepActionTypes } from "./current-step.types";
 import {deleteStepFromReducer} from '../current-task/current-task.actions'
@@ -33,6 +33,8 @@ export function* completeStepQuestion({payload}){
     stepQuestionCompletion.done ? 
     yield put(completeStepQuestionSuccess(stepQuestionCompletion.message)):
     yield put(completeStepQuestionFailure(stepQuestionCompletion.error))
+    yield delay(500)
+    yield put(fetchCurrentStepStart(stepId))
   } catch (error) {
     yield put(completeStepQuestionFailure(error))
     console.log(error)

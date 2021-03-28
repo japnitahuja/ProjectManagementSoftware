@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter, Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect'
 import StepNavBar from '../../components/step-navbar/step-navbar.component';
 import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
+import { selectCurrentProjectId } from '../../redux/current-project/current-project.selectors';
 import { completeStepQuestionStart, completeStepStart } from '../../redux/current-step/current-step.actions'
 import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
@@ -33,17 +33,17 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
         
     }
     render() {
-        const {taskId, stepName, stepQuestion, isStepQuestionAnswered, stepCompletionMessage, isStepDone} = this.props
+        const {projectId, taskId, stepName, stepQuestion, isStepQuestionAnswered, stepCompletionMessage, isStepDone} = this.props
 
         console.log(stepCompletionMessage)
         if(stepCompletionMessage){
             console.log(stepCompletionMessage)
         }
         return (
-            <div style={{ padding: "10px", border: "1px solid black" }}>
-                <StepPageTaskNav />
+            <div>
+                <StepPageTaskNav projectId={projectId}/>
                 <StepNavBar />
-                <div>Step: </div>
+
                 <h2>{stepName}</h2>
                 
                 {
@@ -74,7 +74,8 @@ const mapStateToProps = createStructuredSelector({
     questionCompletion: selectCurrentStepQuestionAnswerConfirmation,
     stepCompletionMessage: selectCurrentStepCompletionMessage,
     isStepDone: selectCurrentStepIsDone,
-    taskId: selectCurrentTaskId
+    taskId: selectCurrentTaskId,
+    projectId: selectCurrentProjectId
 
 });
   

@@ -22,7 +22,7 @@ class TaskItem extends Component{
     render (){
         const {_id, index, taskName, completionPercentage, completedSteps, totalSteps} = this.state.taskDetails;
         return (
-            <ProjectDiv key={_id}>
+            <ProjectDiv>
                 <LeftDiv>
                 <Link to={`/task/${_id}`} style={{textDecoration:'none'}}> 
                     <SmallText>Task-{index + 1}</SmallText>
