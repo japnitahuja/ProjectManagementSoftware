@@ -32,7 +32,6 @@ import { GenericButton } from "../../components/generic-button/generic-button.st
             <div>
                 <ProjectNav title = "Projects" />
                 <ProjectListContainer projects={projects}/>
-                
                 <CreateProjectForm/>
                 <GenericButton onClick={this.signOut}>Sign out</GenericButton>
             </div>
