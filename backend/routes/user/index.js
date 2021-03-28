@@ -74,11 +74,13 @@ router
       for (var PO of POs){
         console.log('purchase order id', PO)
         let purchaseOrder = await PurchaseOrder.findOne({_id: PO})
+        if(purchaseOrder){
         let POitems = await purchaseOrder.purchasedItems.map((POitem) => {
           PurchaseOrderItem.findOneAndDelete({_id: POitem})
           console.log('purchase order item id', POitem)
         })
         PurchaseOrder.findOneAndDelete({id: PO})
+      }
       }
       console.log(tasks, "list of tasks");
       for (var task of tasks) {

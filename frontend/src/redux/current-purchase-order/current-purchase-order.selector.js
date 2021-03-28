@@ -32,3 +32,8 @@ export const selectCurrentPOPurchasedItems = createSelector(
     [selectCurrentPODetails],
     (PO) => PO.currentPurchaseOrderPurchasedItems
 )
+
+export const isCuurentPOBeingFetched = createSelector(
+    [selectCurrentPODetails],
+    (PO) => PO.isCurrentPurchaseOrderBeingFetched
+)

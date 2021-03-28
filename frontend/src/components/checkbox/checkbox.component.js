@@ -1,4 +1,4 @@
-import { CheckMark, CheckMarkCircle, CheckMarkKick, CheckMarkStem } from "./checkbox.styles"
+import { CheckMark, CheckMarkCircle, CheckMarkKick, CheckMarkStem } from "./Checkbox.styles"
 
 export const CheckBox = () => {
     return(
