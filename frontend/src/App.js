@@ -11,6 +11,7 @@ import Step from './pages/step/step.page'
 import PurchaseOrder from './pages/task-purchase-orders/task-purchase-orders.page'
 import IndividualPurchaseOrder from './pages/individual-purchase-order/individual-purchase-order.page';
 import projectPurchaseOrders from './pages/project-purchase-orders/project-purchase-orders';
+import projectSchedule from './pages/project-schedule/project-schedule';
 
 
 function App(props) {
@@ -26,7 +27,8 @@ function App(props) {
         <Route path='/step/:stepId' exact component={Step} />
         <Route path='/purchaseOrders/:taskId' exact component={PurchaseOrder} /> 
         <Route path='/purchaseOrder/:POid' exact component={IndividualPurchaseOrder} />
-        <Route path='/projectpurchaseorders/:projectId' exact component={projectPurchaseOrders}/>
+        <Route path='/projectPurchaseOrders/:projectId' exact component={projectPurchaseOrders}/>
+        <Route path='/schedule/:projectId' exact component={projectSchedule}/>
       </Switch>
     </BrowserRouter>
     

@@ -23,7 +23,7 @@ class LowerNavBar extends Component {
                 <LowerNavImageDiv>
                     <LowerNavImage />
                 </LowerNavImageDiv>
-                <Link to={`/projectpurchaseorders/${projectId}`}>
+                <Link to={`/projectPurchaseOrders/${projectId}`}>
                 <LowerNavText>POs</LowerNavText>
                 </Link>
             </LowerNavEntity>
@@ -43,7 +43,9 @@ class LowerNavBar extends Component {
                 <LowerNavImageDiv>
                     <LowerNavImage />
                 </LowerNavImageDiv>
-                <LowerNavText>SCHEDULE</LowerNavText>
+                <Link to={`/schedule/${projectId}`}>
+                    <LowerNavText>SCHEDULE</LowerNavText>
+                </Link>
             </LowerNavEntity>
         </LowerNav>
         )
