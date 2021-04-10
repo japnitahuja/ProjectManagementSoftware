@@ -5,13 +5,23 @@ const cors = require('cors');
 
 require('dotenv').config();
 require('./models/user');
+// require('./models/change_order')
+// require('./models/change_order_item')
 
-const User = mongoose.model('User');
+// const User = mongoose.model("User");
+// const Task = mongoose.model("Task");
+// const Project = mongoose.model("Project");
+// const PurchaseOrder = mongoose.model("purchaseOrder");
+// const PurchaseOrderItem = mongoose.model("purchaseOrderItem");
+// const Step = mongoose.model("Step");
+// const ChangeOrder = mongoose.model("changeOrder");
+// const ChangeOrderItem = mongoose.model("changeOrderItem");
 const authenticate = require('./middleware/authenticate');
 app.use(cors());
 app.use(express.json());
 app.use(require('./routes/auth/auth'));
 app.use(require('./routes/user/index'));
+
 
 mongoose.connect(process.env.MONGOURI, {
     useNewUrlParser: true,

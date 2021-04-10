@@ -19,6 +19,11 @@ export const selectCurrentTaskPurchaseOrders = createSelector(
   (currentTask) => currentTask.currentTaskPurchaseOrders
 );
 
+export const selectCurrentTaskChangeOrders = createSelector(
+  [selectCurrentTaskDetails],
+  (currentTask) => currentTask.currentTaskChangeOrders
+);
+
 export const selectCurrentTaskSteps = createSelector(
   [selectCurrentTaskDetails],
   (currentTask) => currentTask.currentTaskSteps

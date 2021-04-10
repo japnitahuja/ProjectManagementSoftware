@@ -47,6 +47,12 @@ const taskSchema = new mongoose.Schema({
       ref: "purchaseOrder",
     },
   ],
+  changeOrders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "changeOrder",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   currentProjectName: null,
   currentProjectStatus: null,
   currentProjectPurchaseOrders: null,
+  currentProjectChangeOrders: null,
   currentProjectTasks: null,
   currentProjectMessage: null,
   errorMessage: null,
@@ -22,7 +23,7 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         isCurrentProjectFetching: true
       };
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_SUCCESS:
-      const {tasks, purchaseOrders, _id, projectName, projectStatus} = action.payload
+      const {tasks, purchaseOrders, _id, projectName, projectStatus, changeOrders} = action.payload
       return {
         ...state,
         isCurrentProjectFetching: false,
@@ -30,6 +31,7 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         currentProjectName: projectName,
         currentProjectTasks: tasks,
         currentProjectPurchaseOrders: purchaseOrders,
+        currentProjectChangeOrders: changeOrders,
         currentProjectId: _id,
         currentProjectMessage: 'PROJECT FETCHED!'
       };

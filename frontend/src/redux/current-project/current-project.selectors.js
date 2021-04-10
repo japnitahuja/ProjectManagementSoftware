@@ -29,6 +29,11 @@ export const selectCurrentProjectStatus = createSelector(
     (currentProject) => currentProject.currentProjectPurchaseOrders
   )
 
+  export const selectCurrentProjectChangeOrders = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.selectCurrentProjectChangeOrders
+  )
+
   export const selectIsProjectFetching = createSelector(
     [selectCurrentProjectDetails],
     (currentProject) => currentProject.isCurrentProjectFetching

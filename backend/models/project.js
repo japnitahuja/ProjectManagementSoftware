@@ -21,6 +21,10 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "purchaseOrder"
     }],
+    changeOrders:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'changeOrder'
+    }],
     requestsToJoin:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"

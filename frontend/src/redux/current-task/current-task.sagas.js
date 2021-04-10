@@ -8,7 +8,10 @@ import {
   fetchCurrentTaskSuccess,
   deleteCurrentTaskSuccess,
   deleteCurrentTaskFailure,
+  updateCurrentTaskSuccess,
+  updateCurrentTaskFailure,
 } from "./current-task.actions";
+import { selectCurrentTaskId } from "./current-task.selectors";
 import { CurrentTaskActionTypes } from "./current-task.types";
 
 export function* fetchCurrentTask({ payload }) {
@@ -73,6 +76,29 @@ export function* deleteTask({ payload }) {
   }
 }
 
+export function* updateTask({ payload }) {
+  try {
+    let taskId = yield select(selectCurrentTaskId);
+    let data = payload
+    let taskUpdate = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    taskUpdate = yield taskUpdate.json();
+    if (taskUpdate.done) {
+      yield put(updateCurrentTaskSuccess(taskUpdate.message));
+    } else {
+      yield put(updateCurrentTaskFailure(taskUpdate.error));
+    }
+  } catch (error) {
+    console.log(error);
+    yield put(updateCurrentTaskFailure(error));
+  }
+}
+
 export function* onCurrentTaskFetchStart() {
   yield takeLatest(
     CurrentTaskActionTypes.FETCH_CURRENT_TASK_START,
@@ -94,10 +120,18 @@ export function* onDeleteTaskStart() {
   );
 }
 
+export function* onUpdateTaskStart() {
+  yield takeLatest(
+    CurrentTaskActionTypes.UPDATE_CURRENT_TASK_START,
+    updateTask
+  );
+}
+
 export function* currentTaskSagas() {
   yield all([
     call(onCurrentTaskFetchStart),
     call(onTaskCompletionStart),
     call(onDeleteTaskStart),
+    call(onUpdateTaskStart)
   ]);
 }

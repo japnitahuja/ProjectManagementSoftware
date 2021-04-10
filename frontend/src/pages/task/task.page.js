@@ -55,7 +55,7 @@ class Task extends Component {
                  <h3>{taskCompletionMessage}</h3>
                 <CreateStepForm taskId = {this.props.match.params.taskId} />
                 <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
-                
+                <Link to={`/changeOrders/${taskId}`}><button>CHANGE ORDERS</button></Link>
             </div>
         )
     }

@@ -8,6 +8,9 @@ require("../../models/steps");
 require("../../models/task");
 require("../../models/purchase_order");
 require("../../models/purchase_order_item");
+require("../../models/change_order")
+require("../../models/change_order_item")
+const nodemailer = require('nodemailer')
 
 const User = mongoose.model("User");
 const Task = mongoose.model("Task");
@@ -15,6 +18,9 @@ const Project = mongoose.model("Project");
 const PurchaseOrder = mongoose.model("purchaseOrder");
 const PurchaseOrderItem = mongoose.model("purchaseOrderItem");
 const Step = mongoose.model("Step");
+const ChangeOrder = mongoose.model("changeOrder");
+const ChangeOrderItem = mongoose.model("changeOrderItem");
+
 
 //USER_ID: "6034cb2baed4be0890904a06"
 //PROJECT_ID: "6034cceed06e2a4938562970"
@@ -50,6 +56,10 @@ router
           path: "purchaseOrders",
           populate: { path: "purchasedItems" },
         },
+        {
+          path: "changeOrders",
+          populate: {path: "purchasedItems"}
+        }
       ]);
       res
         .status(200)
@@ -195,6 +205,10 @@ router
           path: "purchaseOrders",
           populate: { path: "purchasedItems" },
         },
+        {
+          path: "changeOrders",
+          populate: {path: "purchasedItems"}
+        }
       ]);
       res.status(200).json({ done: true, message: "task is fetched", task });
     } catch (error) {
@@ -228,7 +242,18 @@ router
     } catch (error) {
       console.log(error);
     }
-  });
+  })
+  .put(async (req, res) => {
+    try {
+      const task = await Task.findByIdAndUpdate(req.params.taskId, {
+        $set: req.body
+      }, {new: true})
+      console.log('task updated', task)
+      res.status(200).json({message: 'task updated', done: true, task})
+    } catch (error) {
+      console.log(error)
+    }
+  })
 
 //create a step
 router.post("/create-step/:taskId", async (req, res) => {
@@ -313,7 +338,17 @@ router
     } catch (error) {
       console.log(error);
     }
-  });
+  })
+  .put(async (req, res) => {
+    try {
+      const step = await Step.findByIdAndUpdate(req.params.stepId, {
+        $set: req.body
+      }, {new: true})
+      res.status(200).json({message: 'task updated', done: true, step})
+    } catch (error) {
+      console.log(error)
+    }
+  })
 
 //creating a purchase order
 router.post("/create-purchase-order/:taskId", async (req, res) => {
@@ -456,13 +491,154 @@ router.get("/purchaseOrder/:purchaseOrderId", async (req, res) => {
   }
 });
 
+//creating a change order
+router.post("/create-change-order/:taskId", async (req, res) => {
+  var {
+    orderFrom,
+    totalOrderAmount,
+    totalPaidAmount,
+    userId,
+    projectId,
+    purchasedItem,
+  } = req.body;
+  if (
+    !orderFrom ||
+    !totalOrderAmount ||
+    !purchasedItem ||
+    !totalPaidAmount ||
+    !userId ||
+    !projectId
+  ) {
+    res.status(422).json({ error: "Fill all the fields", done: false });
+  } else {
+    try {
+      let task = await Task.findOne({ _id: req.params.taskId });
+      let project = await Project.findOne({ _id: projectId });
+      let changeOrder = await ChangeOrder.create({
+        orderFrom,
+        totalOrderAmount,
+        totalPaidAmount,
+        user: userId,
+        purchasedItem,
+      });
+      await task.changeOrders.push(changeOrder._id);
+      task.save(function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+      console.log("project co", project);
+      await project.changeOrders.push(changeOrder._id);
+      project.save(function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+      res.status(200).json({
+        message: "Change order created and linked to the task",
+        done: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+});
+
+//geting the change order for a task
+router.get("/task/:taskId/changeOrder", async (req, res) => {
+  try {
+    var changeOrders = await Task.find({ _id: req.params.taskId })
+      .populate({
+        path: "changeOrders",
+      })
+      .select("changeOrders");
+    res.status(200).json({
+      message: "All change orders linked to the task",
+      done: true,
+      changeOrders,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//getting change order for a project
+router.get("/project/:projectId/changeOrders", async (req, res) => {
+  try {
+    var changeOrder = await Project.findOne({ _id: req.params.projectId })
+      .populate({
+        path: "changeOrders",
+      })
+      .select("changeOrders");
+    res.status(200).json({
+      message: "All change orders linked to the project",
+      done: true,
+      changeOrder,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//creating change order items
+router.post(
+  "/create-change-order-items/:changeOrderId",
+  async (req, res) => {
+    var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
+    if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
+      res.status(422).json({ error: "Fill all the fields", done: false });
+    } else {
+      try {
+        let changeOrder = await ChangeOrder.findOne({
+          _id: req.params.changeOrderId,
+        });
+        let changeOrderItem = await ChangeOrderItem.create({
+          itemName,
+          itemNumber,
+          itemsShipped,
+          itemValue,
+        });
+        await changeOrder.purchasedItems.push(changeOrderItem._id);
+        changeOrder.save(function (err) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+        });
+        res.status(200).json({
+          message: "Change Order items created and linked to the order",
+          done: true,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+);
+
+//geting change order
+router.get("/changeOrder/:changeOrderId", async (req, res) => {
+  try {
+    var CO = await ChangeOrder.findOne({
+      _id: req.params.changeOrderId,
+    }).populate({
+      path: "purchasedItems",
+    });
+    res.status(200).json({ message: "CO Fetched", done: true, CO });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //completing a task
 router.post("/complete-task/:taskId", async (req, res) => {
   try {
     var task = await Task.findOne({ _id: req.params.taskId });
     if (task.completionPercentage === 100 || task.steps.length == 0) {
       task.isTaskDone = true;
-      task.completionPercentage === 100
+      task.completionPercentage === await 100
       task.save();
       res.status(200).json({ message: "Task Completed", done: true });
     } else {
@@ -681,5 +857,36 @@ router.post("/test-template/:userId", async (req, res) => {
     console.log(error);
   }
 });
+
+//send the request to trade partner 
+router.post('/invite-trade-partner', async (req, res) => {
+  try {
+    let mailTransporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+          user: 'johnbanana12345john@gmail.com',
+          pass: 'Banana@123'
+      }
+  });
+    
+  let mailDetails = {
+      from: 'johnbanana12345john@gmail.com',
+      to: 'krishnagopalkedia901@gmail.com',
+      subject: 'Test mail',
+      text: 'hi! this mail has come from node js.'
+  };
+    
+  mailTransporter.sendMail(mailDetails, function(err, data) {
+      if(err) {
+          console.log(err);
+      } else {
+          console.log('Email sent successfully');
+      }
+  });
+  res.status(200).json({done: true, message: 'mail sent'})
+  } catch (error) {
+    console.log(error)
+  }
+})
 
 module.exports = router;

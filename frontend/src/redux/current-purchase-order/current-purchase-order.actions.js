@@ -35,12 +35,12 @@ export const createPOitemStart = (payload) => ({
     payload: payload
 })
 
-export const createPoitemSuccess = (message) => ({
+export const createPOitemSuccess = (message) => ({
     type: CurrentPurchaseOrderActionTypes.CREATE_CURRENT_PO_ITEM_SUCCESS,
     payload: message
 })
 
-export const createPoitemFailure = (error) => ({
+export const createPOitemFailure = (error) => ({
     type: CurrentPurchaseOrderActionTypes.CREATE_CURRENT_PO_ITEM_FAILURE,
     payload: error
 })
