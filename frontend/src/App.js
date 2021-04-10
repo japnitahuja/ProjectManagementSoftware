@@ -13,6 +13,8 @@ import IndividualPurchaseOrder from './pages/individual-purchase-order/individua
 import projectPurchaseOrders from './pages/project-purchase-orders/project-purchase-orders';
 import ChangeOrder from './pages/task-change-orders/task-change-orders.page'
 import IndividualChangeOrder from './pages/individual-change-order/individual-change-order.page';
+import projectSchedule from './pages/project-schedule/project-schedule';
+
 
 function App(props) {
   return (
@@ -29,7 +31,8 @@ function App(props) {
         <Route path='/changeOrders/:taskId' exact component={ChangeOrder} /> 
         <Route path='/changeOrder/:COid' exact component={IndividualChangeOrder} />
         <Route path='/purchaseOrder/:POid' exact component={IndividualPurchaseOrder} />
-        <Route path='/projectpurchaseorders/:projectId' exact component={projectPurchaseOrders}/>
+        <Route path='/projectPurchaseOrders/:projectId' exact component={projectPurchaseOrders}/>
+        <Route path='/schedule/:projectId' exact component={projectSchedule}/>
       </Switch>
     </BrowserRouter>
     
