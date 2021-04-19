@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { deleteCurrentProjectStart } from '../../redux/current-project/current-project.actions';
 import { DeleteButton } from '../delete-button/delete-button.styles';
 import { ProjectDiv, LeftDiv, RightDiv, BigText, SmallText} from "./project-item.styles";
-
+import tick from '../../assets/tick.jpg'
 
 class ProjectItem extends Component {
     constructor(props){

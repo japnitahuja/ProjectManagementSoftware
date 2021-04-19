@@ -38,3 +38,9 @@ export const selectSignInSignUpMessage = createSelector(
   [selectCurrentUser],
   (currentUser) => currentUser.message
 )
+
+export const selectInviteUserMessage = createSelector(
+  [selectCurrentUser],
+  (currentUser) => currentUser.inviteUserMessage
+)
+

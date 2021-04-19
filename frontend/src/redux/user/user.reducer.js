@@ -16,6 +16,8 @@ const INITIAL_STATE = {
   signInFail: false,
   errorMessage: undefined,
   message: null,
+  inviteUserStart: false,
+  inviteUserMessage: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -102,6 +104,24 @@ const userReducer = (state = INITIAL_STATE, action) => {
         errorMessage: undefined,
         message: null,
       };
+    case UserActionTypes.INVITE_USER_START:
+      return{
+        ...state,
+        inviteUserStart: true,
+        inviteUserMessage: null
+      }
+    case UserActionTypes.INVITE_USER_SUCCESS:
+      return{
+        ...state,
+        inviteUserStart: false,
+        inviteUserMessage: action.payload
+      }
+    case UserActionTypes.INVITE_USER_FAILURE:
+      return{
+        ...state,
+        inviteUserStart: false,
+        inviteUserMessage: action.payload
+      }
     default:
       return state;
   }

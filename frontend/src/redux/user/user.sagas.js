@@ -1,5 +1,5 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
-import { signInFailure, signInSuccessful, signUpFail, signUpSuccesful, taskOwnerAndTradePartnerSignUpSuccessful } from "./user.actions";
+import { inviteUserFailure, inviteUserSuccess, signInFailure, signInSuccessful, signUpFail, signUpSuccesful, taskOwnerAndTradePartnerSignUpSuccessful } from "./user.actions";
 import { UserActionTypes } from "./user.types";
 
 export function* signUp({ payload }) {
@@ -66,6 +66,29 @@ export function* signIn({payload}){
   }
 }
 
+export function* inviteUser({payload}){
+  try {
+    let data = payload;
+    let resp = yield fetch("http://127.0.0.1:5000/inviteUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    resp = yield resp.json()
+    if(resp.done){
+      yield put(inviteUserSuccess(resp.message))
+    }else{
+      yield put(inviteUserFailure(resp.message))
+    }
+  } catch (error) {
+    console.log(error)
+    yield put(inviteUserFailure(error))
+  }
+}
+
 export function* onSignUpStart() {
   yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
@@ -74,9 +97,14 @@ export function* onSignInStart(){
   yield takeLatest(UserActionTypes.EMAIL_SIGN_IN_START, signIn)
 }
 
+export function* onInviteUserStart(){
+  yield takeLatest(UserActionTypes.INVITE_USER_START, inviteUser)
+}
+
 export function* userSagas() {
   yield all([
     call(onSignUpStart),
-    call(onSignInStart)
+    call(onSignInStart),
+    call(onInviteUserStart)
   ]);
 }

@@ -10,7 +10,8 @@ export const NavBar = styled.div`
     flex-direction:row;
     align-items: center;
     justify-content: space-between;
-    background-color:white;
+    background-color: #6C7B8A;
+    color: white;
   }
 `;
 

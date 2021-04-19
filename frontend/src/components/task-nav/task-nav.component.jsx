@@ -5,7 +5,7 @@ export const TaskNav = ({title}) => {
     return (
         <NavBar>
             <Back>
-                <Link to = "/all-projects" style={{textDecoration:'none', color:'black'}}> 
+                <Link to = "/all-projects" style={{textDecoration:'none', color:'white'}}> 
                     {`<`} Back 
                 </Link>
             </Back>

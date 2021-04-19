@@ -8,10 +8,10 @@ export const LowerNav = styled.div`
     box-shadow: 3px 0 0 0 #777;
     position: fixed;
     bottom: 0;
-    background-color: white;
     box-sizing: border-box;
     padding-bottom:10px;
-
+    color: white;
+    background-color: #6C7B8A;
 `;
 
 export const LowerNavEntity = styled.div`
@@ -28,6 +28,6 @@ export const LowerNavImage = styled.img`
 
 
 export const LowerNavText = styled.div`
-    color: grey;
+    color: white;
     font-size: 0.8rem;
 `;

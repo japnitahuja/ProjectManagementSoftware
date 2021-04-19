@@ -21,6 +21,14 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "purchaseOrder"
     }],
+    totalTasks:{
+        type: Number,
+        default: 0
+    },
+    completedTasks:{
+        type: Number,
+        default: 0
+    },
     changeOrders:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'changeOrder'

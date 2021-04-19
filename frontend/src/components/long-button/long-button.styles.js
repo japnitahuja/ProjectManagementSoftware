@@ -11,5 +11,5 @@ export const LongButton = styled.button`
     border-radius:2px;
     padding:7px;
     margin:5px 0px;
-
+    background-color: #6C7B8A
 `

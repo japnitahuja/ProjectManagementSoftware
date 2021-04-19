@@ -8,9 +8,9 @@ require("../../models/steps");
 require("../../models/task");
 require("../../models/purchase_order");
 require("../../models/purchase_order_item");
-require("../../models/change_order")
-require("../../models/change_order_item")
-const nodemailer = require('nodemailer')
+require("../../models/change_order");
+require("../../models/change_order_item");
+const nodemailer = require("nodemailer");
 
 const User = mongoose.model("User");
 const Task = mongoose.model("Task");
@@ -20,7 +20,6 @@ const PurchaseOrderItem = mongoose.model("purchaseOrderItem");
 const Step = mongoose.model("Step");
 const ChangeOrder = mongoose.model("changeOrder");
 const ChangeOrderItem = mongoose.model("changeOrderItem");
-
 
 //USER_ID: "6034cb2baed4be0890904a06"
 //PROJECT_ID: "6034cceed06e2a4938562970"
@@ -58,9 +57,12 @@ router
         },
         {
           path: "changeOrders",
-          populate: {path: "purchasedItems"}
-        }
+          populate: { path: "purchasedItems" },
+        },
       ]);
+      project.totalTasks = await project.tasks.length
+      project.save()
+      console.log('task length while fetching the project', project.totalTasks)
       res
         .status(200)
         .json({ done: true, message: "project is fetched", project });
@@ -79,42 +81,45 @@ router
         return task;
       });
       var POs = await project.purchaseOrders.map((PO) => {
-        return PO
-      })
-      for (var PO of POs){
-        console.log('purchase order id', PO)
-        let purchaseOrder = await PurchaseOrder.findOne({_id: PO})
-        if(purchaseOrder){
-        let POitems = await purchaseOrder.purchasedItems.map((POitem) => {
-          PurchaseOrderItem.findOneAndDelete({_id: POitem})
-          console.log('purchase order item id', POitem)
-        })
-        PurchaseOrder.findOneAndDelete({id: PO})
-      }
+        return PO;
+      });
+      for (var PO of POs) {
+        console.log("purchase order id", PO);
+        let purchaseOrder = await PurchaseOrder.findOne({ _id: PO });
+        if (purchaseOrder) {
+          let POitems = await purchaseOrder.purchasedItems.map((POitem) => {
+            PurchaseOrderItem.findOneAndDelete({ _id: POitem });
+            console.log("purchase order item id", POitem);
+          });
+          PurchaseOrder.findOneAndDelete({ id: PO });
+        }
       }
       console.log(tasks, "list of tasks");
       for (var task of tasks) {
         console.log(task);
         var individualTask = await Task.findOne({ _id: task });
         console.log(individualTask, "individual tasks");
-        if(individualTask){
-        console.log(individualTask.steps, "steps for the task");
-        for (var step of individualTask.steps) {
-          console.log(step);
-          var steps = await Step.findOneAndDelete({ _id: step });
+        if (individualTask) {
+          console.log(individualTask.steps, "steps for the task");
+          for (var step of individualTask.steps) {
+            console.log(step);
+            var steps = await Step.findOneAndDelete({ _id: step });
+          }
+          var taskToDelete = await Task.findOneAndDelete({ _id: task });
         }
-        var taskToDelete = await Task.findOneAndDelete({ _id: task });
-      }}
-      var projectToDelete = await Project.findOneAndDelete({  
+      }
+      var projectToDelete = await Project.findOneAndDelete({
         _id: req.params.projectId,
       });
       let UserProjects = await user.projects;
-      console.log('user projects before delete', UserProjects)
-      let projectId = await UserProjects.indexOf(req.params.projectId)
-      let updatedProjects = await UserProjects.filter((v, i) => i !== projectId)
-      console.log('user projects after delete', updatedProjects)
-      user.projects = await updatedProjects
-      user.save()
+      console.log("user projects before delete", UserProjects);
+      let projectId = await UserProjects.indexOf(req.params.projectId);
+      let updatedProjects = await UserProjects.filter(
+        (v, i) => i !== projectId
+      );
+      console.log("user projects after delete", updatedProjects);
+      user.projects = await updatedProjects;
+      user.save();
       res.json({ done: true, message: "project deleted", project });
     } catch (error) {
       console.log(error);
@@ -159,14 +164,16 @@ router.post("/create-task/:projectId", async (req, res) => {
         taskEndDate,
         taskOwner: userId,
       });
-      console.log(task._id);
+      //console.log(task._id);
       await project.tasks.push(task._id);
+      project.totalTasks = await project.tasks.length
+      console.log('total tasks', project.totalTasks)
       project.save(function (err) {
         if (err) {
           console.log(err);
           return;
         } else {
-          console.log("task added to project");
+         // console.log("task added to project");
         }
       });
       res.status(200).json({ message: "Task Created", done: true, task });
@@ -207,8 +214,8 @@ router
         },
         {
           path: "changeOrders",
-          populate: {path: "purchasedItems"}
-        }
+          populate: { path: "purchasedItems" },
+        },
       ]);
       res.status(200).json({ done: true, message: "task is fetched", task });
     } catch (error) {
@@ -236,8 +243,17 @@ router
       let idTaskToDelete = await tasks.indexOf(req.params.taskId);
       let updatedTasks = await tasks.filter((v, i) => i !== idTaskToDelete);
       console.log("task array after delete", updatedTasks);
-      project.tasks = await updatedTasks;
-      project.save();
+      tasks = await updatedTasks;
+      console.log('updated tasks list', project.tasks)
+      console.log('updated tasks number', project.tasks.length)
+      await project.save(function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        } else {
+          console.log("Project tasks updated after delete");
+        }
+      });
       res.status(200).json({ done: true });
     } catch (error) {
       console.log(error);
@@ -245,15 +261,19 @@ router
   })
   .put(async (req, res) => {
     try {
-      const task = await Task.findByIdAndUpdate(req.params.taskId, {
-        $set: req.body
-      }, {new: true})
-      console.log('task updated', task)
-      res.status(200).json({message: 'task updated', done: true, task})
+      const task = await Task.findByIdAndUpdate(
+        req.params.taskId,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      console.log("task updated", task);
+      res.status(200).json({ message: "task updated", done: true, task });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  })
+  });
 
 //create a step
 router.post("/create-step/:taskId", async (req, res) => {
@@ -270,8 +290,9 @@ router.post("/create-step/:taskId", async (req, res) => {
         questionType: questionType,
       });
       await task.steps.push(step._id);
-      task.totalSteps = await task.totalSteps + 1;
-      task.completionPercentage = await task.completedSteps / task.totalSteps * 100;
+      task.totalSteps = (await task.totalSteps) + 1;
+      task.completionPercentage =
+        ((await task.completedSteps) / task.totalSteps) * 100;
       task.isTaskDone = await false;
       task.save(function (err) {
         if (err) {
@@ -341,14 +362,18 @@ router
   })
   .put(async (req, res) => {
     try {
-      const step = await Step.findByIdAndUpdate(req.params.stepId, {
-        $set: req.body
-      }, {new: true})
-      res.status(200).json({message: 'task updated', done: true, step})
+      const step = await Step.findByIdAndUpdate(
+        req.params.stepId,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      res.status(200).json({ message: "task updated", done: true, step });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  })
+  });
 
 //creating a purchase order
 router.post("/create-purchase-order/:taskId", async (req, res) => {
@@ -583,40 +608,37 @@ router.get("/project/:projectId/changeOrders", async (req, res) => {
 });
 
 //creating change order items
-router.post(
-  "/create-change-order-items/:changeOrderId",
-  async (req, res) => {
-    var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
-    if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
-      res.status(422).json({ error: "Fill all the fields", done: false });
-    } else {
-      try {
-        let changeOrder = await ChangeOrder.findOne({
-          _id: req.params.changeOrderId,
-        });
-        let changeOrderItem = await ChangeOrderItem.create({
-          itemName,
-          itemNumber,
-          itemsShipped,
-          itemValue,
-        });
-        await changeOrder.purchasedItems.push(changeOrderItem._id);
-        changeOrder.save(function (err) {
-          if (err) {
-            console.log(err);
-            return;
-          }
-        });
-        res.status(200).json({
-          message: "Change Order items created and linked to the order",
-          done: true,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+router.post("/create-change-order-items/:changeOrderId", async (req, res) => {
+  var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
+  if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
+    res.status(422).json({ error: "Fill all the fields", done: false });
+  } else {
+    try {
+      let changeOrder = await ChangeOrder.findOne({
+        _id: req.params.changeOrderId,
+      });
+      let changeOrderItem = await ChangeOrderItem.create({
+        itemName,
+        itemNumber,
+        itemsShipped,
+        itemValue,
+      });
+      await changeOrder.purchasedItems.push(changeOrderItem._id);
+      changeOrder.save(function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+      res.status(200).json({
+        message: "Change Order items created and linked to the order",
+        done: true,
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
-);
+});
 
 //geting change order
 router.get("/changeOrder/:changeOrderId", async (req, res) => {
@@ -634,12 +656,18 @@ router.get("/changeOrder/:changeOrderId", async (req, res) => {
 
 //completing a task
 router.post("/complete-task/:taskId", async (req, res) => {
+  const {projectId} = req.body
   try {
     var task = await Task.findOne({ _id: req.params.taskId });
+    var project = await Project.findOne({_id: projectId})
     if (task.completionPercentage === 100 || task.steps.length == 0) {
       task.isTaskDone = true;
-      task.completionPercentage === await 100
+      task.completionPercentage === (await 100);
       task.save();
+      project.completedTasks = await project.completedTasks + 1
+      project.save()
+      console.log('projectid', projectId)
+      console.log(project.completedTasks, 'completed tasks for project')
       res.status(200).json({ message: "Task Completed", done: true });
     } else {
       res
@@ -664,11 +692,11 @@ router.post("/complete-step/:stepId", async (req, res) => {
     }
     //var taskId = await step.relatedTask[0].toString();
     var task = await Task.findOne({ _id: taskId });
-    step.isStepDone =  true;
+    step.isStepDone = true;
     step.save();
     task.completedSteps = (await task.completedSteps) + 1;
     task.completionPercentage =
-    ((await task.completedSteps) / task.totalSteps) * 100;
+      ((await task.completedSteps) / task.totalSteps) * 100;
     task.save(function (err) {
       if (err) {
         console.log(err);
@@ -858,35 +886,99 @@ router.post("/test-template/:userId", async (req, res) => {
   }
 });
 
-//send the request to trade partner 
-router.post('/invite-trade-partner', async (req, res) => {
+//send the request to trade partner
+router.post("/inviteUser", async (req, res) => {
+  const { email, permission, projectId, type } = req.body;
   try {
-    let mailTransporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-          user: 'johnbanana12345john@gmail.com',
-          pass: 'Banana@123'
-      }
-  });
-    
-  let mailDetails = {
-      from: 'johnbanana12345john@gmail.com',
-      to: 'krishnagopalkedia901@gmail.com',
-      subject: 'Test mail',
-      text: 'hi! this mail has come from node js.'
-  };
-    
-  mailTransporter.sendMail(mailDetails, function(err, data) {
-      if(err) {
-          console.log(err);
+    if (type === "saveandinvite") {
+      let savedUser = await User.findOne({ email });
+      if (savedUser) {
+        if (savedUser.projectId === projectId) {
+          res.status(422).json({
+            message: "User already exists in the project!",
+            done: false,
+            done: false,
+          });
+        } else {
+          savedUser.projects.push(projectId);
+          let mailTransporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: "johnbanana12345john@gmail.com",
+              pass: "Banana@123",
+            },
+          });
+          let mailDetails = {
+            from: "johnbanana12345john@gmail.com",
+            to: email,
+            subject: "Test mail",
+            text: "hi! this mail has come from node js.",
+          };
+          mailTransporter.sendMail(mailDetails, function (err, data) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("Email sent successfully");
+            }
+          });
+          res
+            .status(200)
+            .json({ done: true, message: "Invitation mail sent!" });
+        }
       } else {
-          console.log('Email sent successfully');
+        let user = await User.create({ email: email, permission: permission });
+        user.projects.push(projectId);
+        let mailTransporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "johnbanana12345john@gmail.com",
+            pass: "Banana@123",
+          },
+        });
+
+        let mailDetails = {
+          from: "johnbanana12345john@gmail.com",
+          to: email,
+          subject: "Test mail",
+          text: "hi! this mail has come from node js.",
+        };
+
+        mailTransporter.sendMail(mailDetails, function (err, data) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log("Email sent successfully");
+          }
+        });
+        res.status(200).json({ done: true, message: "Invitation mail sent" });
       }
-  });
-  res.status(200).json({done: true, message: 'mail sent'})
+    } else {
+      let savedUser = await User.findOne({ email });
+      if (savedUser) {
+        if (savedUser.projectId === projectId) {
+          res.status(422).json({
+            message: "User already exists in the project!",
+            done: false,
+          });
+        } else {
+          savedUser.projects.push(projectId);
+        }
+      } else {
+        let user = await User.create({
+          email: email,
+          permission: permission,
+          isInvitationSent: false,
+        });
+        user.projects.push(projectId);
+        res.status(200).json({
+          message: "User saved for the project!",
+          done: true,
+        });
+      }
+    }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 module.exports = router;
