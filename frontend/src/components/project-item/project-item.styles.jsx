@@ -5,7 +5,7 @@ export const ProjectDiv = styled.div`
     @media screen and (min-width: 320px) {
     width:100vw;
     border: 1px solid #d3d3d3;
-    border-left: 5px solid #5887F9;
+    border-left: 5px solid #BCC5D3;
     padding: 25px;
     box-sizing: border-box;
     display:flex;

@@ -1,5 +1,7 @@
 import {Link} from "react-router-dom";
 import { NavBar, Heading, NotifDiv, Back } from "./task-nav.styles"
+import addUder from '../../assets/addUser.png'
+import notification from '../../assets/Notification.png'
 
 export const TaskNav = ({title}) => {
     return (
@@ -10,7 +12,10 @@ export const TaskNav = ({title}) => {
                 </Link>
             </Back>
             <Heading> {title} </Heading>
-            <NotifDiv> N </NotifDiv>
+            <NotifDiv> 
+                    {/* <img src={addUder} />
+                    <img src={notification} /> */}
+             </NotifDiv>
         </NavBar>
     )
 }

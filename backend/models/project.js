@@ -13,9 +13,27 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
+    projectType: {
+        type: String
+    },
+    propertyType:{
+        type: String
+    },
+    projectLocation:{
+        type: String
+    },
+    projectBudget:{
+        type: Number
+    },
+    projectFinishDate:{
+        type: Date
+    },
     tasks:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Task"
+    }],
+    projectRoles: [{
+        type: String
     }],
     purchaseOrders:[{
         type: mongoose.Schema.Types.ObjectId,
@@ -33,9 +51,21 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'changeOrder'
     }],
-    requestsToJoin:[{
+    punchList:[{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: 'punchList'
+    }],
+    Users:[{
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User' 
+        },
+        role: {
+            type: String
+        },
+        permission: {
+            type: String
+        }
     }]
 })
 mongoose.model('Project', projectSchema)

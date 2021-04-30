@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const morgan = require('morgan')
 
 require('dotenv').config();
 require('./models/user');
@@ -19,6 +20,7 @@ require('./models/user');
 const authenticate = require('./middleware/authenticate');
 app.use(cors());
 app.use(express.json());
+app.use(morgan('dev'))
 app.use(require('./routes/auth/auth'));
 app.use(require('./routes/user/index'));
 

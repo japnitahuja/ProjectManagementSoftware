@@ -13,6 +13,8 @@ class ProjectItem extends Component {
         this.state = {
             id: this.props.id,
             projectName: this.props.projectName,
+            totalTasks: this.props.totalTasks,
+            completedTasks: this.props.completedTasks
         }
     }
     deleteProject(e){
@@ -22,7 +24,7 @@ class ProjectItem extends Component {
         window.location.reload()
     }
     render() {
-        const {id, projectName} = this.state
+        const {id, projectName, totalTasks, completedTasks} = this.state
         return (
             <>
             <ProjectDiv key={id}>
@@ -39,6 +41,7 @@ class ProjectItem extends Component {
                     <SmallText>Remodel</SmallText>  
                 </Link>
                 <DeleteButton onClick={(e)=>this.deleteProject(e)}>DELETE</DeleteButton>
+                {completedTasks}/{totalTasks}
                 </RightDiv>
                 
                 

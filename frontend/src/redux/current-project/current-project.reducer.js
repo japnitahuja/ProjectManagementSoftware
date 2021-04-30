@@ -9,10 +9,19 @@ const INITIAL_STATE = {
   currentProjectChangeOrders: null,
   currentProjectTasks: null,
   currentProjectMessage: null,
+  currentProjectRoles: null,
+  currentProjectUsers: null,
+  currentProjectType: null,
+  currentPropertyType: null,
+  currentProjectOwner: null,
   errorMessage: null,
   isCurrentProjectDeleting: false,
   deletionMessage: null,
-  deletionError: null
+  deletionError: null,
+  inviteUserStart: false,
+  inviteUserMessage: null,
+  updateUserInProjectStart: null,
+  updateUserInProjectMessage: null,
 };
 
 const currentProjectReducer = (state = INITIAL_STATE, action) => {
@@ -20,10 +29,22 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_START:
       return {
         ...state,
-        isCurrentProjectFetching: true
+        isCurrentProjectFetching: true,
       };
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_SUCCESS:
-      const {tasks, purchaseOrders, _id, projectName, projectStatus, changeOrders} = action.payload
+      const {
+        tasks,
+        purchaseOrders,
+        _id,
+        projectName,
+        projectStatus,
+        changeOrders,
+        projectOwner,
+        projectType,
+        propertyType,
+        projectRoles,
+        Users
+      } = action.payload;
       return {
         ...state,
         isCurrentProjectFetching: false,
@@ -33,41 +54,84 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         currentProjectPurchaseOrders: purchaseOrders,
         currentProjectChangeOrders: changeOrders,
         currentProjectId: _id,
-        currentProjectMessage: 'PROJECT FETCHED!'
+        currentProjectType: projectType,
+        currentProjectOwner: projectOwner,
+        currentPropertyType: propertyType,
+        currentProjectRoles: projectRoles,
+        currentProjectUsers: Users,
+        currentProjectMessage: "PROJECT FETCHED!",
       };
-   
+
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_FAILURE:
       return {
         ...state,
-       isCurrentProjectFetching: false,
-       errorMessage: action.payload
+        isCurrentProjectFetching: false,
+        errorMessage: action.payload,
       };
-    
+
     case CurrentProjectActionTypes.DELETE_CURRENT_TASK_IN_REDUCER:
-      console.log(state)
-      let updatedTasks = state.currentProjectTasks.filter(task => task._id != action.payload)
-      console.log('current project reducer', updatedTasks)
-      console.log(action.payload)
+      console.log(state);
+      let updatedTasks = state.currentProjectTasks.filter(
+        (task) => task._id != action.payload
+      );
+      console.log("current project reducer", updatedTasks);
+      console.log(action.payload);
       return {
         ...state,
-       currentProjectTasks: updatedTasks
+        currentProjectTasks: updatedTasks,
       };
     case CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_START:
-      return{
-        isCurrentProjectDeleting: true
-      }
+      return {
+        isCurrentProjectDeleting: true,
+      };
     case CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_SUCCESS:
-      return{
+      return {
         isCurrentProjectDeleting: false,
-        deletionMessage: action.payload
-      }
+        deletionMessage: action.payload,
+      };
     case CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_FAILURE:
-      return{
+      return {
         isCurrentProjectDeleting: false,
-        deletionError: action.payload
-      }
+        deletionError: action.payload,
+      };
+      case CurrentProjectActionTypes.INVITE_USER_START:
+        return{
+          ...state,
+          inviteUserStart: true,
+          inviteUserMessage: null
+        }
+      case CurrentProjectActionTypes.INVITE_USER_SUCCESS:
+        return{
+          ...state,
+          inviteUserStart: false,
+          inviteUserMessage: action.payload
+        }
+      case CurrentProjectActionTypes.INVITE_USER_FAILURE:
+        return{
+          ...state,
+          inviteUserStart: false,
+          inviteUserMessage: action.payload
+        }
+        case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_START:
+          return{
+            ...state,
+            updateUserInProjectStart: true,
+            updateUserInProjectMessage: null
+          }
+        case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_SUCCESS:
+          return{
+            ...state,
+            updateUserInProjectStart: false,
+            updateUserInProjectMessage: action.payload
+          }
+        case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_FAILURE:
+          return{
+            ...state,
+            updateUserInProjectStart: false,
+            updateUserInProjectMessage: action.payload
+          }
     default:
-    return state;
+      return state;
   }
 };
 

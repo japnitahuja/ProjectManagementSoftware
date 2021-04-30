@@ -5,6 +5,11 @@ import img from "../../assets/addUser.svg";
 import AddUserForm from '../adduser-form/adduser-form.component'
 import {AddUserFormHeading} from '../adduser-form/adduser-form.styles'
 import { BigText, SmallText } from '../project-item/project-item.styles';
+import addUder from '../../assets/addUser.png'
+import notification from '../../assets/Notification.png'
+import {NoStyleButton} from "../styles/no-style-button.style";
+import CreateProjectForm from "../create-project-form/create-project-form.component";
+
 export default class ProjectNav extends Component {
     constructor(){
         super();
@@ -26,16 +31,18 @@ export default class ProjectNav extends Component {
       <NavBar>
         <Hamburger />
         <Heading> {title} </Heading>
-        <button onClick={this.addUser}><NotifDiv>Add</NotifDiv></button>
+        <NotifDiv onClick={this.addUser}>
+        + Add 
+        </NotifDiv>
       </NavBar>
       {
           this.state.addUser ? 
           <div style={{marginTop: '2vh'}}>
               <AddUserFormHeading>
-                <BigText>INVITE</BigText>
+                <BigText>Create a Project</BigText>
                 <button style={{textDecoration:'none', background: 'none', border: 'none'}} onClick={this.addUser}><BigText>X</BigText></button>
             </AddUserFormHeading>
-            <AddUserForm />
+            <CreateProjectForm />
           </div> : null
       }
         </>

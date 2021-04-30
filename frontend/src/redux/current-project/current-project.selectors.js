@@ -31,7 +31,7 @@ export const selectCurrentProjectStatus = createSelector(
 
   export const selectCurrentProjectChangeOrders = createSelector(
     [selectCurrentProjectDetails],
-    (currentProject) => currentProject.selectCurrentProjectChangeOrders
+    (currentProject) => currentProject.currentProjectChangeOrders
   )
 
   export const selectIsProjectFetching = createSelector(
@@ -39,3 +39,28 @@ export const selectCurrentProjectStatus = createSelector(
     (currentProject) => currentProject.isCurrentProjectFetching
   )
 
+  export const selectCurrentProjectType = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectType
+  )
+
+  export const selectCurrentProjectRoles = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectRoles
+  )
+
+  export const selectCurrentProjectOwner = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectOwner
+  )
+
+  export const selectCurrentPropertyType = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.selectCurrentPropertyType
+  )
+
+  export const selectCurrentProjectUsers = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectUsers
+  )
+  

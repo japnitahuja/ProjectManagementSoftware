@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
 
 router.post("/signup", async (req, res) => {
     let {username, email, password, firstName, lastName, phoneNumber, permission} = req.body;
-    if(!email || !password || !username || !firstName || !lastName || !phoneNumber || !permission){
+    if(!email || !password || !username || !firstName || !lastName || !phoneNumber){
         res.status(422).json({error:"Please add all the details",done:false})
     }else{
         try {
@@ -63,7 +63,8 @@ router.post("/signup", async (req, res) => {
             //     $set: req.body
             // }, 
             // {new: true})
-            await savedUser.updateOne({email, password:hashedPassword, permission, firstName, lastName, phoneNumber, username})
+            permission = await savedUser.permission
+            await savedUser.updateOne({email, password:hashedPassword, firstName, lastName, phoneNumber, username, permission})
             savedUser.save()
             const token = jwt.sign({_id: savedUser._id}, jwt_secret)
             const _id = savedUser._id;

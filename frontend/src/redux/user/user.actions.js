@@ -36,20 +36,7 @@ export const signInFailure = (error) => ({
     payload: error
 })
 
-export const inviteUserStart = (userDetails) => ({
-    type: UserActionTypes.INVITE_USER_START,
-    payload: userDetails
-})
 
-export const inviteUserSuccess = (message) => ({
-    type: UserActionTypes.INVITE_USER_SUCCESS,
-    payload: message
-})
-
-export const inviteUserFailure = (message) => ({
-    type: UserActionTypes.INVITE_USER_FAILURE,
-    payload: message
-})
 
 export const signOut = () => ({
     type: UserActionTypes.USER_SIGN_OUT

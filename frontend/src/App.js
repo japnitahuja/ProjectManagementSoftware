@@ -14,6 +14,8 @@ import projectPurchaseOrders from './pages/project-purchase-orders/project-purch
 import ChangeOrder from './pages/task-change-orders/task-change-orders.page'
 import IndividualChangeOrder from './pages/individual-change-order/individual-change-order.page';
 import projectSchedule from './pages/project-schedule/project-schedule';
+import ManageTeam from './components/manage-team/manage-team.component';
+import ProjectChangeOrders from './pages/project-change-orders/project-change-orders.page';
 
 
 function App(props) {
@@ -33,6 +35,8 @@ function App(props) {
         <Route path='/purchaseOrder/:POid' exact component={IndividualPurchaseOrder} />
         <Route path='/projectPurchaseOrders/:projectId' exact component={projectPurchaseOrders}/>
         <Route path='/schedule/:projectId' exact component={projectSchedule}/>
+        <Route path='/ManageTeam' exact component={ManageTeam} />
+        <Route path='/projectChangeOrders/:projectId' exact component={ProjectChangeOrders} />
       </Switch>
     </BrowserRouter>
     
