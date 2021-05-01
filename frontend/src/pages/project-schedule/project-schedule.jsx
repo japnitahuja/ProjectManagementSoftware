@@ -4,7 +4,7 @@ import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import { TaskNav } from '../../components/task-nav/task-nav.component';
 import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component';
-import GanttChart from '../../components/gantt-chart/gantt-chart.component';
+import GanttChartContainer from '../../components/gantt-chart/gantt-chart.container';
 
 class ProjectSchedule extends Component {
 
@@ -15,7 +15,7 @@ class ProjectSchedule extends Component {
         return (
              <div>
                 <TaskNav title = {projectName}/>
-                <GanttChart/>
+                <GanttChartContainer/>
                 <LowerNavBar/>
             </div>
         )

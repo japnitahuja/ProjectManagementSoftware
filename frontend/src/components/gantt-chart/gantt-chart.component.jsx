@@ -4,6 +4,8 @@ import 'dhtmlx-gantt/codebase/dhtmlxgantt.css';
 import { selectCurrentProjectTasks } from '../../redux/current-project/current-project.selectors';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { updateCurrentTaskStart } from '../../redux/current-task/current-task.actions';
+import { updateTask } from '../../redux/current-task/current-task.sagas';
  
 class GanttChart extends Component {
 
@@ -20,11 +22,8 @@ class GanttChart extends Component {
         gantt.config.columns=[
             {name:"text",width:10, resize:true, label:"Task name", align: "center"  }
         ];
-
-
-
-        gantt.init(this.ganttContainer);
-        this.initGanttDataProcessor();
+        gantt.config.drag_progress = false;
+        gantt.config.readonly = true;
 
         const {tasks} = this.props;
         console.log(tasks);
@@ -49,22 +48,12 @@ class GanttChart extends Component {
         });
 
         console.log("data",data);
-        gantt.parse(data);
-    }
 
-    initGanttDataProcessor(props) {
-        /**
-         * type: "task"|"link"
-         * action: "create"|"update"|"delete"
-         * item: data object object
-         */
-        const onDataUpdated = this.props.onDataUpdated;
+        gantt.init(this.ganttContainer);
+        gantt.clearAll();
+        gantt.parse(data);
         
-        this.dataProcessor = gantt.createDataProcessor((type, action, item, id) => {
-          console.log(type, action, item, id);
-          
-        });
-      }
+    }
 
     componentWillUnmount() {
         if (this.dataProcessor) {
@@ -89,9 +78,9 @@ const mapStateToProps = createStructuredSelector({
     tasks: selectCurrentProjectTasks
   });
   
-  const mapDispatchToProps = (dispatch) => ({
-      
+const mapDispatchToProps = (dispatch) => ({
     
-  });
+});
+  
   
   export default connect(mapStateToProps, mapDispatchToProps)(GanttChart);

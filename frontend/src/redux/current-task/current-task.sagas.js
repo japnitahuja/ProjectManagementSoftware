@@ -78,8 +78,16 @@ export function* deleteTask({ payload }) {
 
 export function* updateTask({ payload }) {
   try {
-    let taskId = yield select(selectCurrentTaskId);
-    let data = payload
+    let {taskId} = payload;
+    let data = {};
+    console.log(payload)
+    for (const key of Object.keys(payload)) {
+      console.log(key);
+      if(key != "taskId"){
+        data[key] = payload[key];
+      }
+    }
+    
     let taskUpdate = yield fetch(`http://127.0.0.1:5000/task/${taskId}`, {
       method: "PUT",
       headers: {
