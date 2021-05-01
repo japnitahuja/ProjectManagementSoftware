@@ -5,7 +5,7 @@ export const ProjectDiv = styled.div`
     @media screen and (min-width: 320px) {
     width:100%;
     border: 1px solid #d3d3d3;
-    border-left: 5px solid #FF3366;
+    border-left: 5px solid #BCC5D3;
     padding: 15px 25px;
     box-sizing: border-box;
     display:flex;
@@ -75,5 +75,5 @@ export const ProgressBar = styled.div`
 export const Progress = styled.div`
   @media screen and (min-width:320px){
     height: 5px;
-    background-color:#5887F9;
+    background-color:#429629;
 }`

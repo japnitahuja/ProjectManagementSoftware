@@ -11,7 +11,7 @@ class COItemNav extends Component {
         const {COitem, projectId} = this.props
         return (
             <COItemNavDiv>
-                <Link to={`/projectpurchaseorders/${projectId}`} style={{textDecoration: 'none'}}>
+                <Link to={`/projectchangeorders/${projectId}`} style={{textDecoration: 'none'}}>
                 <COItemNavBackButton>x</COItemNavBackButton>
                 </Link>
                 <COName>{COitem}</COName>

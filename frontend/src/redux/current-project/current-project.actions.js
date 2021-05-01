@@ -34,3 +34,33 @@ export const deleteCurrentProjectFailure = (message) => ({
     type: CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_FAILURE,
     payload: message
 })
+
+export const inviteUserStart = (userDetails) => ({
+    type: CurrentProjectActionTypes.INVITE_USER_START,
+    payload: userDetails
+})
+
+export const inviteUserSuccess = (message) => ({
+    type: CurrentProjectActionTypes.INVITE_USER_SUCCESS,
+    payload: message
+})
+
+export const inviteUserFailure = (message) => ({
+    type: CurrentProjectActionTypes.INVITE_USER_FAILURE,
+    payload: message
+})
+
+export const UpdateUserInProjectStart = (userDetails) => ({
+    type: CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_START,
+    payload: userDetails
+})
+
+export const UpdateUserInProjectSuccess = (message) => ({
+    type: CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_SUCCESS,
+    payload: message
+})
+
+export const UpdateUserInProjectFailure = (message) => ({
+    type: CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_FAILURE,
+    payload: message
+})

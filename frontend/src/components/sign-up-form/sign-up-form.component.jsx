@@ -15,7 +15,7 @@ class SignUpForm extends React.Component {
         phoneNumber: "",
         email: "",
         password: "",
-        role: "",
+        permission: "",
         username: "",
       },
       confirmPassword: "",
@@ -51,7 +51,7 @@ class SignUpForm extends React.Component {
             username: '',
             email: '',
             password: '',
-            role: 'STUDENT',
+            permission: '',
           },
           confirmPassword: '',
         });
@@ -125,11 +125,11 @@ class SignUpForm extends React.Component {
           </div>
 
           <div>
-            <label htmlFor="role"> Role: </label>
+            <label htmlFor="permission"> Role: </label>
             <select 
-                value={this.state.resp.role} 
-                name="role" 
-                id="role"
+                value={this.state.resp.permission} 
+                name="permission" 
+                id="permission"
                 onChange={(e) => this.handleOnChange(e)}
                 required>
               <option value="">Please choose an option</option>

@@ -7,6 +7,9 @@ import { selectCurrentProjectName, selectCurrentProjectStatus, selectCurrentProj
 import {TaskNav} from "../../components/task-nav/task-nav.component"
 import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component';
 import TaskListContainer from '../../components/tasks-list/tasks-list.container';
+import SearchBar from '../../components/search-bar/search-bar.component';
+import AdminPanelTaskPage from '../../components/admin-panel-task-page/admin-panel-task-page.component';
+import ManageTeam from '../../components/manage-team/manage-team.component';
 
 class Project extends Component {
     componentDidMount(){
@@ -24,9 +27,11 @@ class Project extends Component {
         return (
              <div>
                 <TaskNav title = {projectName}/>
+                <AdminPanelTaskPage />
+                <SearchBar placeholder='Search Tasks...' />
                 <TaskListContainer tasks = {tasks}/>
-                <LowerNavBar  />
                 <CreateTaskForm projectId = {this.props.match.params.projectId}/>
+                <LowerNavBar  />
                 
             </div>
         )

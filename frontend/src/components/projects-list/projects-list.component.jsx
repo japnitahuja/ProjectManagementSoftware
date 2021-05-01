@@ -8,10 +8,10 @@ export default function ProjectList({ projects }) {
     }
   return (
     <div>
-        {projects.map(({ projectName, projectStatus, _id}, index ) => {
+        {projects.map(({ totalTasks, completedTasks, projectName, projectStatus, _id}, index ) => {
           console.log(index)
           return (
-            <ProjectItem key={index} projectName = {projectName} projectStatus = {projectStatus} id={_id}/>
+            <ProjectItem totalTasks={totalTasks} completedTasks={completedTasks} key={index} projectName = {projectName} projectStatus = {projectStatus} id={_id}/>
           );
         })}
     </div>

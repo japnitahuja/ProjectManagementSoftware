@@ -1,5 +1,7 @@
-import { all, call, put, takeLatest } from "redux-saga/effects";
-import { signInFailure, signInSuccessful, signUpFail, signUpSuccesful, taskOwnerAndTradePartnerSignUpSuccessful } from "./user.actions";
+import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { fetchCurrentProjectStart } from "../current-project/current-project.actions";
+import { selectCurrentProjectId } from "../current-project/current-project.selectors";
+import { inviteUserFailure, inviteUserSuccess, signInFailure, signInSuccessful, signUpFail, signUpSuccesful, taskOwnerAndTradePartnerSignUpSuccessful } from "./user.actions";
 import { UserActionTypes } from "./user.types";
 
 export function* signUp({ payload }) {
@@ -66,6 +68,8 @@ export function* signIn({payload}){
   }
 }
 
+
+
 export function* onSignUpStart() {
   yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
@@ -73,6 +77,8 @@ export function* onSignUpStart() {
 export function* onSignInStart(){
   yield takeLatest(UserActionTypes.EMAIL_SIGN_IN_START, signIn)
 }
+
+
 
 export function* userSagas() {
   yield all([

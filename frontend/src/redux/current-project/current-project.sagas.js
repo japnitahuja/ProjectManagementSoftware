@@ -1,8 +1,10 @@
 import { all, call, put, takeLatest, select} from "redux-saga/effects";
-import {deleteCurrentProjectFailure, deleteCurrentProjectSuccess, fetchCurrentProjectFailure, fetchCurrentProjectSuccess } from "./current-project.actions";
+import {deleteCurrentProjectFailure, deleteCurrentProjectSuccess, fetchCurrentProjectFailure, fetchCurrentProjectStart, fetchCurrentProjectSuccess, inviteUserFailure, inviteUserSuccess, UpdateUserInProjectFailure, UpdateUserInProjectSuccess } from "./current-project.actions";
 import { CurrentProjectActionTypes } from "./current-project.types";
 import { selectUserId } from "../user/user.selectors"
 import { deleteProject } from "../all-projects/all-projects.actions";
+import { selectCurrentProjectId } from "./current-project.selectors";
+import currentProjectReducer from "./current-project.reducer";
 
 export function* fetchCurrentProject({payload}){
   try {
@@ -45,6 +47,56 @@ export function* deleteCurrentProject({payload}){
   }
 }
 
+export function* inviteUser({payload}){
+  try {
+    let data = payload;
+    let projectId = yield select(selectCurrentProjectId)
+    data['projectId'] = projectId
+    let resp = yield fetch("http://127.0.0.1:5000/inviteUser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    resp = yield resp.json()
+    if(resp.done){
+      yield put(inviteUserSuccess(resp.message))
+      yield put(fetchCurrentProjectStart(projectId))
+    }else{
+      yield put(inviteUserFailure(resp.message))
+    }
+  } catch (error) {
+    console.log(error)
+    yield put(inviteUserFailure(error))
+  }
+}
+
+export function* updateUserInProject({payload}){
+try {
+  let data = payload
+  let projectId = yield select(selectCurrentProjectId)
+  console.log(data, 'saga data')
+  console.log(projectId)
+    let resp = yield fetch(`http://127.0.0.1:5000/updatePermissions/${projectId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    resp = yield resp.json()
+    if(resp.done){
+      yield put(UpdateUserInProjectSuccess(resp.message))
+    }else{
+      yield put(UpdateUserInProjectFailure(resp.message))
+    }
+} catch (error) {
+  console.log(error)
+}
+}
+
 export function* onCurrentProjectFetchStart(){
   yield takeLatest(CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_START , fetchCurrentProject)
 }
@@ -53,9 +105,19 @@ export function* onCurrentProjectDeleteStart(){
   yield takeLatest(CurrentProjectActionTypes.DELETE_CURRENT_PROJECT_START, deleteCurrentProject)
 }
 
+export function* onInviteUserStart(){
+  yield takeLatest(CurrentProjectActionTypes.INVITE_USER_START, inviteUser)
+}
+
+export function* onUpdateUserStart(){
+  yield takeLatest(CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_START, updateUserInProject)
+}
+
 export function* currentProjectSagas() {
   yield all([
     call(onCurrentProjectFetchStart),
-    call(onCurrentProjectDeleteStart)
+    call(onCurrentProjectDeleteStart),
+    call(onInviteUserStart),
+    call(onUpdateUserStart)
   ]);
 }

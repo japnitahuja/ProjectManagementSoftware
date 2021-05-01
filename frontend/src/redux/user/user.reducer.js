@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   phoneNumber: null,
   email: null,
   role: null,
+  permission: null,
   username: null,
   _id: null,
   signUpStart: false,
@@ -16,6 +17,7 @@ const INITIAL_STATE = {
   signInFail: false,
   errorMessage: undefined,
   message: null,
+
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -38,8 +40,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
         lastName: action.payload.lastName,
         phoneNumber: action.payload.phoneNumber,
         email: action.payload.email,
-        role: action.payload.role,
+        //role: action.payload.role,
         username: action.payload.username,
+        //permission: action.payload.permission,
         _id:action.payload._id,
         message: "SIGNED IN SUCCESSFULLY!",
       };
@@ -73,6 +76,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         role: action.payload.role,
         username: action.payload.username,
         _id:action.payload._id,
+        permission: action.payload.permission,
         message: "SIGNED IN SUCCESSFULLY!",
         errorMessage: null
       };
@@ -102,6 +106,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         errorMessage: undefined,
         message: null,
       };
+    
     default:
       return state;
   }

@@ -13,7 +13,7 @@ export const CheckMarkCircle = styled.div`
     position: absolute;
     width:22px;
     height:22px;
-    background-color: #5887F9;
+    background-color: #429629;
     border-radius:11px;
     left:0;
     top:0;

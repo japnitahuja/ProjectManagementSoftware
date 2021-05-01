@@ -36,6 +36,8 @@ export const signInFailure = (error) => ({
     payload: error
 })
 
+
+
 export const signOut = () => ({
     type: UserActionTypes.USER_SIGN_OUT
 })

@@ -7,9 +7,11 @@ import { selectUserProjects } from "../../redux/all-projects/all-projects.select
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 import CreateProjectForm from "../../components/create-project-form/create-project-form.component"
-import { ProjectNav } from "../../components/project-nav/project-nav.component";
+import  ProjectNav  from "../../components/project-nav/project-nav.component";
 import ProjectListContainer from "../../components/projects-list/projects-list.container";
 import { GenericButton } from "../../components/generic-button/generic-button.styles";
+import AddUserForm from "../../components/adduser-form/adduser-form.component";
+import SearchBar from "../../components/search-bar/search-bar.component";
 
 
  class AllProjects extends Component {
@@ -31,8 +33,8 @@ import { GenericButton } from "../../components/generic-button/generic-button.st
         return (
             <div>
                 <ProjectNav title = "Projects" />
+                <SearchBar placeholder='Search Projects...'/>
                 <ProjectListContainer projects={projects}/>
-                <CreateProjectForm/>
                 <GenericButton onClick={this.signOut}>Sign out</GenericButton>
             </div>
         )

@@ -5,7 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { deleteCurrentProjectStart } from '../../redux/current-project/current-project.actions';
 import { DeleteButton } from '../delete-button/delete-button.styles';
 import { ProjectDiv, LeftDiv, RightDiv, BigText, SmallText} from "./project-item.styles";
-
+import tick from '../../assets/tick.jpg'
 
 class ProjectItem extends Component {
     constructor(props){
@@ -13,6 +13,8 @@ class ProjectItem extends Component {
         this.state = {
             id: this.props.id,
             projectName: this.props.projectName,
+            totalTasks: this.props.totalTasks,
+            completedTasks: this.props.completedTasks
         }
     }
     deleteProject(e){
@@ -22,7 +24,7 @@ class ProjectItem extends Component {
         window.location.reload()
     }
     render() {
-        const {id, projectName} = this.state
+        const {id, projectName, totalTasks, completedTasks} = this.state
         return (
             <>
             <ProjectDiv key={id}>
@@ -39,6 +41,7 @@ class ProjectItem extends Component {
                     <SmallText>Remodel</SmallText>  
                 </Link>
                 <DeleteButton onClick={(e)=>this.deleteProject(e)}>DELETE</DeleteButton>
+                {completedTasks}/{totalTasks}
                 </RightDiv>
                 
                 

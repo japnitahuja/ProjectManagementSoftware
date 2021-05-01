@@ -25,7 +25,7 @@ class Task extends Component {
     completeTask = () => {
         const taskId = this.props.match.params.taskId
         this.props.completeTask(taskId)
-        this.props.fetchSteps(taskId)
+        //this.props.fetchSteps(taskId)
     }
 
     
@@ -52,7 +52,7 @@ class Task extends Component {
 
                 </center>
                 
-                 <h3>{taskCompletionMessage}</h3>
+                {/* <h3>{taskCompletionMessage}</h3> */}
                 <CreateStepForm taskId = {this.props.match.params.taskId} />
                 <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
                 <Link to={`/changeOrders/${taskId}`}><button>CHANGE ORDERS</button></Link>

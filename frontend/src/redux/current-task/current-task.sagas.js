@@ -29,8 +29,12 @@ export function* fetchCurrentTask({ payload }) {
 }
 
 export function* completeTask({ payload }) {
-  let taskId = payload;
   try {
+    console.log('task completion starts at saga')
+    let taskId = payload
+    let projectId = yield select(selectCurrentProjectId);
+    projectId = yield { projectId: projectId }
+    console.log('saga project id', projectId)
     let taskCompletion = yield fetch(
       `http://127.0.0.1:5000/complete-task/${taskId}`,
       {
@@ -38,6 +42,7 @@ export function* completeTask({ payload }) {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(projectId),
       }
     );
     taskCompletion = yield taskCompletion.json();

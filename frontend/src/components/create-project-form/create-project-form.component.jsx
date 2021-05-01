@@ -16,9 +16,7 @@ class CreateProjectForm extends Component {
       },
     };
   }
-
- 
-
+  
   handleOnChange = (e) => {
     const { name, value } = e.target;
     let project = this.state.projectDetails;
@@ -47,7 +45,6 @@ class CreateProjectForm extends Component {
     
     return (
       <div style={{padding:"10px"}}>
-        <h1>Hi {name}!</h1>
         <form
           style={{ display: "flex", flexDirection: "column" }}
           onChange={(e) => this.handleOnChange(e)}
@@ -76,6 +73,81 @@ class CreateProjectForm extends Component {
               <option value="PLANNED">Planned</option>
               <option value="COMPLETED">Completed</option>
             </select>
+          </div>
+          <div>
+            <label htmlFor="projectType"> Project Type: </label>
+            <select
+              value={this.state.projectDetails.projectType}
+              name="projectType"
+              id="projectType"
+              onChange={(e) => this.handleOnChange(e)}
+              required
+            >
+              <option value="">Please choose an option</option>
+              <option value="REMODEL">Remodel</option>
+              <option value="NEWBUILD">New Build</option>
+              <option value="ADDITION">Addition</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="propertyType"> Property Type </label>
+            <select
+              value={this.state.projectDetails.propertyType}
+              name="propertyType"
+              id="propertyType"
+              onChange={(e) => this.handleOnChange(e)}
+              required
+            >
+              <option value="">Please choose an option</option>
+              <option value="OFFICE">Office</option>
+              <option value="RETAIL">Retail</option>
+              <option value="INDUSTRIAL">Industrial</option>
+              <option value="HOSPITALITY">Hospitality</option>
+              <option value="RESIDENTIAL">Residential</option>
+              <option value="LAND">Land</option>
+              <option value="AGRICULTURAL">Agricultural</option>
+              <option value="ENTERTAINMENT">Entertainment</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="projectName"> Project Name: </label>
+            <input
+              type="text"
+              value={this.state.projectDetails.projectName}
+              name="projectName"
+              id="projectName"
+              onChange={(e) => this.handleOnChange(e)}
+              required/>
+          </div>
+          <div>
+            <label htmlFor="projectLocation"> Location: </label>
+            <input
+              type="text"
+              value={this.state.projectDetails.projectLocation}
+              name="projectLocation"
+              id="projectLocation"
+              onChange={(e) => this.handleOnChange(e)}
+              required/>
+          </div>
+          <div>
+            <label htmlFor="projectBudget"> Project Budget: </label>
+            <input
+              type="number"
+              value={this.state.projectDetails.projectBudget}
+              name="projectBudget"
+              id="projectBudget"
+              onChange={(e) => this.handleOnChange(e)}
+              required/>
+          </div>
+          <div>
+            <label htmlFor="projectFinishDate"> Finish Date:  </label>
+            <input
+              type="date"
+              value={this.state.projectDetails.projectFinishDate}
+              name="projectFinishDate"
+              id="projectFinishDate"
+              onChange={(e) => this.handleOnChange(e)}
+              required/>
           </div>
 
           <div>
