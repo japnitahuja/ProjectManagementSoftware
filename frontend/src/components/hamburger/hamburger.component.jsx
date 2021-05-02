@@ -1,10 +1,12 @@
 import react from 'react';
-import {HamburgerDiv} from "./hamburger.styles";
+import {HamburgerDiv,HamburgerLine} from "./hamburger.styles";
 
 export const Hamburger = () => {
     return (
         <HamburgerDiv>
-            &equiv;
+            <HamburgerLine/>
+            <HamburgerLine/>
+            <HamburgerLine/>
         </HamburgerDiv>
     )
 }

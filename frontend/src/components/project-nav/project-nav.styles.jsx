@@ -1,35 +1,49 @@
 import styled from "styled-components";
 
-
 export const NavBar = styled.div`
  @media screen and (min-width: 320px) {
     width:100vw;
-    height:40px;
+    height:4em;
+    margin: 0;
+    box-sizing:border-box;
+    padding: 0em 1.5em;
+    background-color: #6C7B8A;
+    color: white;
+   
     display:flex;
     flex-direction:row;
     align-items: center;
-    justify-content: space-between;
-    background-color: #6C7B8A;
-    color: white;
+    
   }
 `;
+
+export const OneThirdDiv = styled.div`
+ @media screen and (min-width: 320px) {
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:center;
+    flex:1;
+
+    text-align:left;
+
+ }
+`;
+
 
 export const Heading = styled.p`
  @media screen and (min-width: 320px) {
+    font-size:1.2em;
     margin:0;
-    justify-self: center;
+    text-align:center;
+   
   }
 `;
 
-export const NotifDiv = styled.div`
+export const AddProjectDiv = styled.div`
  @media screen and (min-width: 320px) {
-  padding: 0 1vw 0 0;
-  font-size: 0.8em;
+  font-size: 1em;
+  text-align:right;
+
   }
-`;
-
-export const NotifImg = styled.img`
-@media screen and (min-width: 320px) {
-
-}
 `;

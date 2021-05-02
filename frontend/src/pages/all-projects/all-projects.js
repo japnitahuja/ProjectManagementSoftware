@@ -35,7 +35,7 @@ import SearchBar from "../../components/search-bar/search-bar.component";
                 <ProjectNav title = "Projects" />
                 <SearchBar placeholder='Search Projects...'/>
                 <ProjectListContainer projects={projects}/>
-                <GenericButton onClick={this.signOut}>Sign out</GenericButton>
+                
             </div>
         )
     }

@@ -1,25 +1,54 @@
 import styled from 'styled-components'
 
-export const SearchBarDiv = styled.div`
+export const SearchDiv = styled.div`
     width: 100vw;
+    height: 3em;
+    padding: 1em;
+    margin: 0;
+    box-sizing:border-box;
+    border-bottom: 1px solid #BCC5D3;
+
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
     align-items: center;
-    padding: 0.2em 0;
+    
+`;
+
+export const SearchBarDiv = styled.div`
+    flex:0.9;
+
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:space-between;
+    
 `;
 
 export const SearchInput = styled.input`
-    width: 75vw;
+    flex:0.9;
     border: none; 
-    border-right: 1px solid grey;
     background-color: #f7f7f7; 
     height: 3.5vh;
+
+    font-size: 1em;
+    color: rgba(108,123,138,0.6);
+    
 `;
 
 export const SearchIcon = styled.img`
-    height: 1.4em;
+    height: 1.5em;
 `;
 
-export const SearchText = styled.div`
+export const FilterDiv = styled.div`
+    flex:0.1;
+    height: 1.5em;
+    border-left: 1px solid #BCC5D3;
+    font-size: 0.9em;
+    font-weight:bold;
+    color: #56657F;
+    text-align:center;
+    padding: 0.25em 0em 0.25em 0.5em;
+    margin-left:0.2em;
+
 `;
+

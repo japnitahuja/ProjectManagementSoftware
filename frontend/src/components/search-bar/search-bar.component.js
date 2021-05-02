@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import {SearchBarDiv, SearchIcon, SearchInput, SearchText } from './search-bar.styles'
+import {SearchDiv, SearchBarDiv, SearchIcon, SearchInput, FilterDiv } from './search-bar.styles'
 import search from '../../assets/search.png'
-import { SmallText } from '../task-item/task-item.styles'
+
 
 
 class SearchBar extends Component {
@@ -14,11 +14,13 @@ class SearchBar extends Component {
     render() {
         const {placeholder} = this.state
         return (
-            <SearchBarDiv>
-                <SearchInput type='text' placeholder={placeholder} />
-                <SearchIcon src={search} />
-                <SearchText><SmallText>FILTER</SmallText></SearchText>
-            </SearchBarDiv>
+            <SearchDiv>
+                <SearchBarDiv>
+                    <SearchInput type='text' value={placeholder} />
+                    <SearchIcon src={search} />
+                </SearchBarDiv>
+                <FilterDiv>FILTER</FilterDiv>
+            </SearchDiv>
         )
     }
 }
