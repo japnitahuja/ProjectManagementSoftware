@@ -19,12 +19,8 @@ export const NavBar = styled.div`
 
 export const OneThirdDiv = styled.div`
  @media screen and (min-width: 320px) {
-    display: flex;
-    flex-direction:row;
-    align-items: center;
-    justify-content:center;
+    
     flex:1;
-
     text-align:left;
 
  }
@@ -46,4 +42,33 @@ export const AddProjectDiv = styled.div`
   text-align:right;
 
   }
+`;
+
+export const Overlay = styled.div`
+ @media screen and (min-width: 320px) {
+  width: 100%;
+  height:0;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  bottom: 0;
+  background-color: #FFFFFF; /* Black fallback color */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  transition: 0.2s;  
+
+  display:flex;
+  flex-direction:column;
+  box-sizing: border-box;
+  }
+`;
+
+export const FormHeading = styled.div`
+ @media screen and (min-width: 320px) {
+    display: flex;
+    flex-direction:row;
+    justify-content:space-between;
+    
+    color: #666666;
+    font-size:1.4em;
+ }
 `;

@@ -30,7 +30,14 @@ class ProjectItem extends Component {
     }
     render() {
         const {id, published, projectName, totalTasks, completedTasks,projectBudget} = this.state;
-        const progress = completedTasks/totalTasks*100;
+        let progress = completedTasks/totalTasks*100;
+
+        console.log(progress)
+
+        if (isNaN(progress)){
+            progress = 0;
+        }
+
         return (
             <Link to={`/project/${id}`} style={{textDecoration:'none'}}>
                 <ProjectDiv key={id}>

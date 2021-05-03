@@ -4,7 +4,8 @@ import { createStructuredSelector } from "reselect";
 import { createProjectStart, createProjectTemplateStart, fetchProjectsStart} from "../../redux/all-projects/all-projects.actions";
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
-
+import {FormDiv, FormInput, FormLabel, FormSelect, FormButton} from "./create-project-form.styles"
+import downArrow from "../../assets/down-arrow.png"
 
 class CreateProjectForm extends Component {
   constructor() {
@@ -13,6 +14,8 @@ class CreateProjectForm extends Component {
       projectDetails: {
         projectName: "",
         projectStatus: "",
+        projectBudget: 0,
+        projectLocation: ""
       },
     };
   }
@@ -29,13 +32,16 @@ class CreateProjectForm extends Component {
     e.preventDefault();
     let projectDetails = this.state.projectDetails;
     this.props.createProject(projectDetails);
+    this.props.addProject();
   };
 
   createProjectTemplate = (e) => {
     e.preventDefault()
     let projectDetails = this.state.projectDetails;
-    console.log(projectDetails)
-    this.props.createProjectTemplate(projectDetails)
+    console.log(projectDetails);
+    this.props.createProjectTemplate(projectDetails);
+    this.props.addProject();
+    
   }
 
   
@@ -44,61 +50,67 @@ class CreateProjectForm extends Component {
     const { name, projects } = this.props;
     
     return (
-      <div style={{padding:"10px"}}>
-        <form
-          style={{ display: "flex", flexDirection: "column" }}
-          onChange={(e) => this.handleOnChange(e)}
-        >
+      <div>
+        <FormDiv onChange={(e) => this.handleOnChange(e)}>
           <div>
-            <label htmlFor="projectName"> Project Name: </label>
-            <input
+            <FormLabel htmlFor="projectName"> What is the name of the Project? </FormLabel>
+            <br/>
+            <FormInput
               type="text"
+              placeholder = "Project Name"
               value={this.state.projectDetails.projectName}
               name="projectName"
               id="projectName"
               onChange={(e) => this.handleOnChange(e)}
               required/>
           </div>
+
           <div>
-            <label htmlFor="projectStatus"> Project Status: </label>
-            <select
+            <FormLabel htmlFor="projectStatus"> What is the project status? </FormLabel>
+            <br/>
+            <FormSelect 
+              style={{backgroundImage: `url(${downArrow})` }}
               value={this.state.projectDetails.projectStatus}
               name="projectStatus"
               id="projectStatus"
               onChange={(e) => this.handleOnChange(e)}
               required
             >
-              <option value="">Please choose an option</option>
+              <option style={{color: '#666666'}} value="">Select Status</option>
               <option value="ACTIVE">Active</option>
               <option value="PLANNED">Planned</option>
               <option value="COMPLETED">Completed</option>
-            </select>
+            </FormSelect>
           </div>
           <div>
-            <label htmlFor="projectType"> Project Type: </label>
-            <select
+            <FormLabel htmlFor="projectType"> What type of project is this? </FormLabel>
+            <br/>
+            <FormSelect
+              style={{backgroundImage: `url(${downArrow})` }}
               value={this.state.projectDetails.projectType}
               name="projectType"
               id="projectType"
               onChange={(e) => this.handleOnChange(e)}
               required
             >
-              <option value="">Please choose an option</option>
+              <option value="">Select Project Type</option>
               <option value="REMODEL">Remodel</option>
               <option value="NEWBUILD">New Build</option>
               <option value="ADDITION">Addition</option>
-            </select>
+            </FormSelect>
           </div>
           <div>
-            <label htmlFor="propertyType"> Property Type </label>
-            <select
+            <FormLabel htmlFor="propertyType"> What is the type of property? </FormLabel>
+            <br/>
+            <FormSelect
+              style={{backgroundImage: `url(${downArrow})` }}
               value={this.state.projectDetails.propertyType}
               name="propertyType"
               id="propertyType"
               onChange={(e) => this.handleOnChange(e)}
               required
             >
-              <option value="">Please choose an option</option>
+              <option value="">Select Property Type</option>
               <option value="OFFICE">Office</option>
               <option value="RETAIL">Retail</option>
               <option value="INDUSTRIAL">Industrial</option>
@@ -107,12 +119,14 @@ class CreateProjectForm extends Component {
               <option value="LAND">Land</option>
               <option value="AGRICULTURAL">Agricultural</option>
               <option value="ENTERTAINMENT">Entertainment</option>
-            </select>
+            </FormSelect>
           </div>
           <div>
-            <label htmlFor="projectName"> Project Name: </label>
-            <input
+            <FormLabel htmlFor="projectName"> What is the name of the project? </FormLabel>
+            <br/>
+            <FormInput
               type="text"
+              placeholder = "Project Name"
               value={this.state.projectDetails.projectName}
               name="projectName"
               id="projectName"
@@ -120,9 +134,11 @@ class CreateProjectForm extends Component {
               required/>
           </div>
           <div>
-            <label htmlFor="projectLocation"> Location: </label>
-            <input
+            <FormLabel htmlFor="projectLocation"> Location </FormLabel>
+            <br/>
+            <FormInput
               type="text"
+              placeholder = "Street Address"
               value={this.state.projectDetails.projectLocation}
               name="projectLocation"
               id="projectLocation"
@@ -130,8 +146,9 @@ class CreateProjectForm extends Component {
               required/>
           </div>
           <div>
-            <label htmlFor="projectBudget"> Project Budget: </label>
-            <input
+            <FormLabel htmlFor="projectBudget"> Project Budget </FormLabel>
+            <br/>
+            <FormInput
               type="number"
               value={this.state.projectDetails.projectBudget}
               name="projectBudget"
@@ -140,9 +157,11 @@ class CreateProjectForm extends Component {
               required/>
           </div>
           <div>
-            <label htmlFor="projectFinishDate"> Finish Date:  </label>
-            <input
+            <FormLabel htmlFor="projectFinishDate"> Estimated Finish Date  </FormLabel>
+            <br/>
+            <FormInput
               type="date"
+              placeholder = "Finish Date"
               value={this.state.projectDetails.projectFinishDate}
               name="projectFinishDate"
               id="projectFinishDate"
@@ -151,10 +170,10 @@ class CreateProjectForm extends Component {
           </div>
 
           <div>
-            <button onClick={this.createProject}>Create Project</button>
-            <button onClick={this.createProjectTemplate}>Create Project Templates</button>
+            <FormButton onClick={this.createProject}>Create Project</FormButton>
+            <FormButton onClick={this.createProjectTemplate}>Create Project Template</FormButton>
           </div>
-        </form>
+        </FormDiv>
 
         
 
