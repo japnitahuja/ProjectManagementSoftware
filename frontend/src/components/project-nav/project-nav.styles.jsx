@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 export const NavBar = styled.div`
  @media screen and (min-width: 320px) {
-    width:100vw;
-    height:4em;
+    width:100%;
+    height:3.5em;
     margin: 0;
     box-sizing:border-box;
     padding: 0em 1.5em;
@@ -51,7 +51,7 @@ export const Overlay = styled.div`
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   left: 0;
-  bottom: 0;
+  bottom: -100;
   background-color: #FFFFFF; /* Black fallback color */
   overflow-x: hidden; /* Disable horizontal scroll */
   transition: 0.2s;  
@@ -59,16 +59,7 @@ export const Overlay = styled.div`
   display:flex;
   flex-direction:column;
   box-sizing: border-box;
+  
   }
 `;
 
-export const FormHeading = styled.div`
- @media screen and (min-width: 320px) {
-    display: flex;
-    flex-direction:row;
-    justify-content:space-between;
-    
-    color: #666666;
-    font-size:1.4em;
- }
-`;

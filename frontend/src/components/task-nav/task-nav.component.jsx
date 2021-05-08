@@ -1,21 +1,23 @@
 import {Link} from "react-router-dom";
-import { NavBar, Heading, NotifDiv, Back } from "./task-nav.styles"
-import addUder from '../../assets/addUser.png'
-import notification from '../../assets/Notification.png'
+import { NavBar, Heading, Back, Image, OneThirdDiv, TwoThirdDiv } from "./task-nav.styles"
+import backArrow from "../../assets/backArrow.png"
 
 export const TaskNav = ({title}) => {
     return (
         <NavBar>
+            <OneThirdDiv>
             <Back>
                 <Link to = "/all-projects" style={{textDecoration:'none', color:'white'}}> 
-                    {`<`} Back 
+                    <Image src={backArrow}/> Projects
                 </Link>
             </Back>
+
+            </OneThirdDiv>
+
+            <TwoThirdDiv>
             <Heading> {title} </Heading>
-            <NotifDiv> 
-                    {/* <img src={addUder} />
-                    <img src={notification} /> */}
-             </NotifDiv>
+            </TwoThirdDiv>
+            
         </NavBar>
     )
 }
