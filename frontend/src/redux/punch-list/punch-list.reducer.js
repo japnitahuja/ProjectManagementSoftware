@@ -61,6 +61,7 @@ const currentPunchListReducer = (state = INITIAL_STATE, action) => {
         punchListName,
         punchListAssignedBy,
         punchListAssignedTo,
+        punchListItems
       } = action.payload;
       return {
         ...state,
@@ -68,6 +69,7 @@ const currentPunchListReducer = (state = INITIAL_STATE, action) => {
         currentPunchListName: punchListName,
         currentPunchListAssignedTo: punchListAssignedTo,
         currentPunchListAssignedBy: punchListAssignedBy,
+        currentPunchListItems: punchListItems
       };
     case CurrentPunchListActionTypes.FETCH_CURRENT_PUNCH_LIST_FAILURE:
       return {

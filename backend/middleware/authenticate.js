@@ -1,6 +1,7 @@
+const express = require("express"); 
 const mongoose = require("mongoose");
-const User = require('../models/user')
-mongoose.model('User')
+require('../models/user')
+const User = mongoose.model('User')
 const jwt = require("jsonwebtoken");
 
 //require("dotenv").config();

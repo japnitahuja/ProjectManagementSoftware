@@ -9,7 +9,16 @@ import currentProjectReducer from "./current-project.reducer";
 export function* fetchCurrentProject({payload}){
   try {
       const projectId = payload
-    let currentProject = yield fetch(`http://127.0.0.1:5000/project/${projectId}`)
+      const token = localStorage.getItem('token')
+      console.log(token, 'token')
+    let currentProject = yield fetch(`http://127.0.0.1:5000/project/${projectId}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "role": 'ADMIN',
+        "authorization": `Bearer ${token}`
+      }
+    })
     currentProject = yield currentProject.json()
     console.log(currentProject)
     currentProject.done

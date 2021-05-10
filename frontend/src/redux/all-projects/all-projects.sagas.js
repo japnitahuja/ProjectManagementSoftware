@@ -32,8 +32,19 @@ export function* createProject({payload}){
 
 export function* fetchProjects(){
   try {
+    // const token = yield JSON.parse(localStorage.getItem('token'))
+    // console.log(token)
+    const token =  localStorage.getItem('token')
+    console.log(token)
     let userId = yield select(selectUserId);
-    let projects = yield fetch(`http://127.0.0.1:5000/all-projects/${userId}`)
+    let projects = yield fetch(`http://127.0.0.1:5000/all-projects/${userId}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        // "Authorization" : `Bearer ${token}`,
+        "UserPermission": 'ADMIN'
+      }
+    })
     projects = yield projects.json()
     projects.done
     ? yield put(fetchProjectsSuccess(projects.projects.projects))

@@ -22,7 +22,8 @@ const Step = mongoose.model("Step");
 const PunchList = mongoose.model("punchList")
 const ChangeOrder = mongoose.model("changeOrder");
 const ChangeOrderItem = mongoose.model("changeOrderItem");
-
+const authenticate = require('./../../middleware/authenticate')
+const authorize = require('./../../middleware/restrictTo')
 //USER_ID: "6034cb2baed4be0890904a06"
 //PROJECT_ID: "6034cceed06e2a4938562970"
 //TASK_ID: 6034cd87d06e2a4938562971
@@ -30,9 +31,11 @@ const ChangeOrderItem = mongoose.model("changeOrderItem");
 //all projects list
 router.route("/all-projects/:userId").get(async (req, res) => {
   try {
-    var projects = await User.findOne({ _id: req.params.userId })
+    console.log(req.headers.userpermission)
+    var projects = await User.findOne({ _id: req.params.userId})
       .populate({
         path: "projects",
+        match: doc => ({published: {$ne: false}})
       })
       .select("projects");
     res.status(200).json({ done: true, projects });
@@ -45,7 +48,7 @@ router.route("/all-projects/:userId").get(async (req, res) => {
 //getting a particular project
 router
   .route("/project/:projectId")
-  .get(async (req, res) => {
+  .get(authenticate, authorize('ADMIN') ,async (req, res) => {
     try {
       var project = await Project.findOne({
         _id: req.params.projectId,
@@ -67,6 +70,9 @@ router
         },
         {
           path: 'projectOwner', select:'firstName lastName email'
+        },
+        {
+          path: "punchList"
         }
       ]);
       project.totalTasks = await project.tasks.length;
@@ -133,7 +139,23 @@ router
     } catch (error) {
       console.log(error);
     }
-  });
+  })
+  .put(async (req, res) => {
+    try {
+      const project = await Project.findByIdAndUpdate(
+        req.params.projectId,
+        {
+          $set: req.body,
+        },
+        { new: true }
+      );
+      console.log("project updated", project);
+      res.status(200).json({ message: "project updated", done: true, project });
+    } catch (error) {
+      console.log(error)
+    }
+
+  })
 
 //create a new project
 router.post("/create-project/:userId", async (req, res) => {
@@ -220,7 +242,7 @@ router.get("/project/:projectId/task", async (req, res) => {
 //get a prticular task
 router
   .route("/task/:taskId")
-  .get(async (req, res) => {
+  .get( async (req, res) => {
     try {
       var task = await Task.findOne({ _id: req.params.taskId }).populate([
         {
@@ -491,8 +513,7 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 });
 
 //creating purchase order items
-router.post(
-  "/create-purchase-order-items/:purchaseOrderId",
+router.post("/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
     var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
     if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
@@ -992,6 +1013,7 @@ router.post("/inviteUser", async (req, res) => {
   }
 });
 
+//update user permissions for project 
 router.post('/updatePermissions/:projectId', async (req, res) => {
   //const {userDetails} = req.body;
   const {projectId} = req.params
@@ -1017,6 +1039,44 @@ router.post('/updatePermissions/:projectId', async (req, res) => {
   } catch (error) {
     console.log(error)
   }
+})
+
+//delete user from project
+router.post('/deleteUser/:projectId', async (req, res) => {
+    const {projectId} = req.params
+    try {
+      let project = await Project.findOne({_id: projectId})
+      let projectUsers = await project.Users
+      await req.body.map(async (user, index) => {
+        console.log('body user', user, index)
+        await projectUsers.map(async (projectUser) => {
+          console.log('project user', projectUser, index)
+          if(projectUser.user == user){
+            console.log(index, user, projectUser.user, 'the ids are same')
+            let idToDelete =  projectUsers.indexOf(projectUser)
+            let updatedUser =  projectUsers.filter((v, i) => i != idToDelete)
+            projectUsers =  updatedUser
+            console.log(projectUsers, 'final project users')
+            // await project.save()
+            project.markModified('Users')
+      project.save(function(err){
+        if(err){
+          console.log(err, 'err in saving!')
+        }else{
+          console.log('project saved!')
+        }
+      })
+          }else{
+            console.log('different ids')
+            //console.log(projectUser.user)
+          }
+        })
+      })
+      
+      res.status(200).json({message: 'User deleted from project!', done: true, project})
+    } catch (error) {
+      console.log(error)
+    } 
 })
 
 //create punch list 
@@ -1055,30 +1115,48 @@ router.post('/create-punch-list-item/:punchListId', async(req, res) => {
   }
 })
 
-//get a particular change order
-router.get('change-order/:changeOrderId', async (req, res) => {
+//getting punch lists for a project
+router.get('/punchList/:projectId', async (req, res) => {
   try {
-    const CO = await ChangeOrder.findOne({_id: req.params.changeOrderId})
+    const PL = await Project.findOne({_id: req.params.projectId}).populate({
+      path: "punchList"
+    })
+    res.status(200).json({message: 'change orders fetched', done: true, PL})
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+//get a particular punch list 
+router.get('punch-list/:punchListId', async (req, res) => {
+  try {
+    const CO = await ChangeOrder.findOne({_id: req.params.punchListId})
     res.json({message: 'Change Order Fetched', done: true, CO})
   } catch (error) {
     console.log(error)
   }
 })
 
-router.post('publish/:projectId', async (req, res) => {
+//publish or unpublish a project
+router.post('/publish/:projectId', async (req, res) => {
   try {
-    let project = await Project.findOne({_id: req.params.projectId})
-    let projectUsers = await project.Users
-    projectUsers.map(async (user) => {
-      let userId = await user.user
-      let userInProject = await User.findOne({_id: userId})
-      let projectsOfUser = await userInProject.projects
-      
-    })
+   const project = await Project.findOne({_id: req.params.projectId})
+   if(project.published == true){
+      project.published = await false
+      console.log('false')
+   }else{
+    project.published = await true
+    console.log('true')
+   }
+   project.save()
+   res.status(200).json({message: 'publish access changed', done: true, project})
   } catch (error) {
     console.log(error)
   }
-})
+});
+
+
+
 
 
 

@@ -7,7 +7,6 @@ export const SearchDiv = styled.div`
     margin: 0;
     box-sizing:border-box;
     border-bottom: 1px solid #BCC5D3;
-
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -16,7 +15,6 @@ export const SearchDiv = styled.div`
 
 export const SearchBarDiv = styled.div`
     flex:0.9;
-
     display:flex;
     flex-direction:row;
     align-items: center;
@@ -29,7 +27,6 @@ export const SearchInput = styled.input`
     border: none; 
     background-color: #f7f7f7; 
     height: 3.5vh;
-
     font-size: 1em;
     color: rgba(108,123,138,0.6);
     

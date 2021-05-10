@@ -1,13 +1,13 @@
 import { CurrentPunchListActionTypes } from "./punch-list.types"
 
-export const fetchCurrentPunchListStart = (stepId) => ({
+export const fetchCurrentPunchListStart = (projectId) => ({
     type: CurrentPunchListActionTypes.FETCH_CURRENT_STEP_START,
-    payload: stepId
+    payload: projectId
 })
 
-export const fetchCurrentPunchListSuccess = (currentStep) => ({
+export const fetchCurrentPunchListSuccess = (PL) => ({
     type: CurrentPunchListActionTypes.FETCH_CURRENT_STEP_SUCCESS,
-    payload: currentStep
+    payload: PL
 })
 
 export const fetchCurrentPunchListFailure = (error) => ({
@@ -15,48 +15,34 @@ export const fetchCurrentPunchListFailure = (error) => ({
     payload: error
 })
 
-export const completeStepQuestionStart = (stepId) => ({
-    type: CurrentPunchListActionTypes.COMPLETE_STEP_QUESTION_START,
-    payload: stepId
+
+export const createPunchListStart = (data) => ({
+    type: CurrentPunchListActionTypes.CREATE_PUNCH_LIST_START,
+    payload: data
 })
 
-export const completeStepQuestionSuccess = (message) => ({
-    type: CurrentPunchListActionTypes.COMPLETE_STEP_QUESTION_SUCCESS,
+export const createPunchListSuccess = (message) => ({
+    type: CurrentPunchListActionTypes.CREATE_PUNCH_LIST_SUCCESS,
     payload: message
 })
 
-export const completeStepQuestionFailure = (error) => ({
-    type: CurrentPunchListActionTypes.COMPLETE_STEP_QUESTION_FAILURE,
+export const createPunchListFailure = (error) => ({
+    type: CurrentPunchListActionTypes.CREATE_PUNCH_LIST_FAILURE,
     payload: error
 })
 
-export const completeStepStart = (stepId) => ({
-    type: CurrentPunchListActionTypes.COMPLETE_STEP_START,
-    payload: stepId
+export const createPunchListItemStart = (data) => ({
+    type: CurrentPunchListActionTypes.CREATE_PUNCH_LIST_ITEM_START,
+    payload: data
 })
 
-export const completeStepSuccess = (message) => ({
-    type: CurrentPunchListActionTypes.COMPLETE_STEP_SUCCESS,
+export const createPunchListItemSuccess = (message) => ({
+    type: CurrentPunchListActionTypes.CREATE_PUNCH_LIST_ITEM_SUCCESS,
     payload: message
 })
 
-export const completeStepFailure = (error) => ({
-    type: CurrentPunchListActionTypes.COMPLETE_STEP_FAILURE,
-    payload: error
-})
-
-export const deleteCurrentPunchListStart = (stepId) => ({
-    type: CurrentPunchListActionTypes.DELETE_CURRENT_STEP_START,
-    payload: stepId
-})
-
-export const deleteCurrentPunchListSuccess = (message) => ({
-    type: CurrentPunchListActionTypes.DELETE_CURRENT_STEP_SUCCESS,
-    payload: message
-})
-
-export const deleteCurrentPunchListFailure = (error) => ({
-    type: CurrentPunchListActionTypes.DELETE_CURRENT_STEP_FAILURE,
+export const createPunchListItemFailure = (error) => ({
+    type: CurrentPunchListActionTypes.CREATE_PUNCH_LIST_ITEM_FAILURE,
     payload: error
 })
 
