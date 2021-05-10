@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const SearchDiv = styled.div`
-    width: 100vw;
+    width: 100%;
     height: 3em;
     padding: 1em;
     margin: 0;

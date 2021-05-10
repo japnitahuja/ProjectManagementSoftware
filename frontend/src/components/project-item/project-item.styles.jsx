@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const ProjectDiv = styled.div`
     @media screen and (min-width: 320px) {
-    width:100vw;
+    width:100%;
     border-bottom: 1px solid #BCC5D3;
     padding: 1em;
     box-sizing: border-box;

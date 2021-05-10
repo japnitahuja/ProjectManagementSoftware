@@ -4,7 +4,7 @@ import { createStructuredSelector } from "reselect";
 import { createProjectStart, createProjectTemplateStart, fetchProjectsStart} from "../../redux/all-projects/all-projects.actions";
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
-import {FormDiv, FormInput, FormLabel, FormSelect, FormButton} from "./create-project-form.styles"
+import {FormDiv, FormInput, FormLabel, FormSelect, FormButton, FormHeading} from "./create-project-form.styles"
 import downArrow from "../../assets/down-arrow.png"
 
 class CreateProjectForm extends Component {
@@ -51,6 +51,14 @@ class CreateProjectForm extends Component {
     
     return (
       <div>
+        <FormHeading>
+            Create a Project
+            <button  onClick={this.props.addProject} style={{textDecoration:'none', 
+                            background: 'none', 
+                            border: 'none', 
+                            fontSize:'1.4em', 
+                            color:'rgba(102,102,102,0.6)'}}> &times;</button>
+        </FormHeading>
         <FormDiv onChange={(e) => this.handleOnChange(e)}>
           <div>
             <FormLabel htmlFor="projectName"> What is the name of the Project? </FormLabel>

@@ -4,12 +4,12 @@ import styled from "styled-components";
 export const ProjectDiv = styled.div`
     @media screen and (min-width: 320px) {
     width:100%;
-    border: 1px solid #d3d3d3;
-    border-left: 5px solid #BCC5D3;
-    padding: 15px 25px;
+    border-bottom: 1px solid #BCC5D3;
+    padding: 1em;
     box-sizing: border-box;
-    display:flex;
-    flex-direction:row;
+
+    display: flex;
+    flex-direction: row;
   }
 `
 

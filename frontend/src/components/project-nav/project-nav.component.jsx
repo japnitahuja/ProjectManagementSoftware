@@ -37,16 +37,7 @@ export default class ProjectNav extends Component {
       </NavBar>
       {
           this.state.addProject ? 
-          <Overlay style={{height:"100%", padding:"2em"}}>
-            <FormHeading>
-            Create a Project
-            <button  onClick={this.addProject} style={{textDecoration:'none', 
-                            background: 'none', 
-                            border: 'none', 
-                            fontSize:'1.4em', 
-                            color:'rgba(102,102,102,0.6)'}}> &times;</button>
-            </FormHeading>
-            
+          <Overlay style={{bottom:"0",height:"100%", padding:"2em"}}>
             <CreateProjectForm addProject = {this.addProject}/>
           </Overlay> : <Overlay/>
       }

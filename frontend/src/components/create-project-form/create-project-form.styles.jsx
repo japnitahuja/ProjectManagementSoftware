@@ -4,9 +4,21 @@ export const FormDiv = styled.form`
  @media screen and (min-width: 320px) {
     display: flex;
     flex-direction: column;
-    margin-bottom: 0.5em;
+    box-sizing: border-box;
+
     
   }
+`;
+
+export const FormHeading = styled.div`
+ @media screen and (min-width: 320px) {
+    display: flex;
+    flex-direction:row;
+    justify-content:space-between;
+    
+    color: #666666;
+    font-size:1.4em;
+ }
 `;
 
 export const FormLabel= styled.label`
