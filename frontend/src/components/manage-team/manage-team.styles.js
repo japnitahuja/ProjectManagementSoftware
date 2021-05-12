@@ -1,16 +1,21 @@
 import styled from 'styled-components'
 
-export const ManageTeamHeader = styled.div`
-display: flex;
-justify-content: space-around;
-padding: 1em;
-
+export const FormHeading = styled.div`
+ @media screen and (min-width: 320px) {
+    display: flex;
+    flex-direction:row;
+    justify-content:space-between;
+    
+    color: #666666;
+    font-size:1.4em;
+ }
 `;
 
-export const ManageTeamHeading = styled.div`
-    color: #678c;
-    font-size: 1.2em;
+export const Text = styled.p`
+ margin:0;
+ padding:0;
 `;
+
 
 export const ManageTeamHeaderIcon = styled.div`
 
@@ -18,16 +23,22 @@ export const ManageTeamHeaderIcon = styled.div`
 
 export const ManageTeamNavDiv = styled.div`
     display: flex;
+    flex-direction:row;
     justify-content: space-around;
-    border-bottom: 1px solid #BCC5D3;
-    margin: 0 1em 1em 1em;
+    margin-top:1.5em;
 `;
 
 export const ManageTeamNavItem = styled.button`
-    background-color: #f7f7f7;
+    flex:1;
+    background-color:white;
     border: none;
     font-size: 1em;
+    color: rgba(102,102,102,0.75);
+    padding: 0.5em 0em;
+    
 `;
+
+
 
 
 

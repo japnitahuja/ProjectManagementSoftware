@@ -10,7 +10,7 @@ export const LowerNav = styled.div`
     position: fixed;
     bottom: 0;
     overflow: hidden;
-    z-index:100;
+    z-index:1;
 
     /* box-sizing: border-box; */
     color: white;

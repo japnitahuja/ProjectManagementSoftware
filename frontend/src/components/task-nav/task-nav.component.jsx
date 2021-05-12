@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import { NavBar, Heading, Back, Image, OneThirdDiv, TwoThirdDiv } from "./task-nav.styles"
+import { NavBar, Heading, Back, Image, OneThirdDiv } from "./task-nav.styles"
 import backArrow from "../../assets/backArrow.png"
 
 export const TaskNav = ({title}) => {
@@ -14,9 +14,11 @@ export const TaskNav = ({title}) => {
 
             </OneThirdDiv>
 
-            <TwoThirdDiv>
+            <OneThirdDiv>
             <Heading> {title} </Heading>
-            </TwoThirdDiv>
+            </OneThirdDiv>
+
+            <OneThirdDiv></OneThirdDiv>
             
         </NavBar>
     )

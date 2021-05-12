@@ -29,7 +29,7 @@ import SearchBar from "../../components/search-bar/search-bar.component";
       };
     render() {
         const {projects} = this.props
-        
+        console.log("projects",projects)
         return (
             <div>
                 <ProjectNav title = "Projects" />

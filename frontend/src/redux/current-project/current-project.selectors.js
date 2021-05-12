@@ -63,4 +63,14 @@ export const selectCurrentProjectStatus = createSelector(
     [selectCurrentProjectDetails],
     (currentProject) => currentProject.currentProjectUsers
   )
+
+  export const selectCurrentProjectBudget = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectBudget
+  )
+
+  export const selectCurrentProjectPublished = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectPublished
+  )
   

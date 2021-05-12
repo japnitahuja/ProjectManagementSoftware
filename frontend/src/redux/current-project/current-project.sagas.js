@@ -1,5 +1,5 @@
-import { all, call, put, takeLatest, select} from "redux-saga/effects";
-import {deleteCurrentProjectFailure, deleteCurrentProjectSuccess, fetchCurrentProjectFailure, fetchCurrentProjectStart, fetchCurrentProjectSuccess, inviteUserFailure, inviteUserSuccess, UpdateUserInProjectFailure, UpdateUserInProjectSuccess } from "./current-project.actions";
+import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
+import { UpdatePublishedInProjectFailure,UpdatePublishedInProjectSuccess, deleteCurrentProjectFailure, deleteCurrentProjectSuccess, fetchCurrentProjectFailure, fetchCurrentProjectStart, fetchCurrentProjectSuccess, inviteUserFailure, inviteUserSuccess, UpdateUserInProjectFailure, UpdateUserInProjectSuccess } from "./current-project.actions";
 import { CurrentProjectActionTypes } from "./current-project.types";
 import { selectUserId } from "../user/user.selectors"
 import { deleteProject } from "../all-projects/all-projects.actions";
@@ -20,7 +20,7 @@ export function* fetchCurrentProject({payload}){
       }
     })
     currentProject = yield currentProject.json()
-    console.log(currentProject)
+    console.log("saga", currentProject)
     currentProject.done
     ? yield put(fetchCurrentProjectSuccess(currentProject.project))
     : yield put(fetchCurrentProjectFailure('CURRENT PROJECCT FETTCHING FAILED'))
@@ -98,6 +98,7 @@ try {
     resp = yield resp.json()
     if(resp.done){
       yield put(UpdateUserInProjectSuccess(resp.message))
+
     }else{
       yield put(UpdateUserInProjectFailure(resp.message))
     }
@@ -105,6 +106,29 @@ try {
   console.log(error)
 }
 }
+
+export function* updatePublishedInProject(){
+  try {
+    console.log("Inside update published saga")
+    let projectId = yield select(selectCurrentProjectId)
+    let resp = yield fetch(`http://127.0.0.1:5000/publish/${projectId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    resp = yield resp.json()
+    if(resp.done){
+      yield put( UpdatePublishedInProjectSuccess(resp.message))
+      yield delay(500)
+      yield put(fetchCurrentProjectStart(projectId))
+    }else{
+      yield put(UpdatePublishedInProjectFailure(resp.message))
+    }
+  } catch (error) {
+    console.log(error)
+  }
+  }
 
 export function* onCurrentProjectFetchStart(){
   yield takeLatest(CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_START , fetchCurrentProject)
@@ -122,11 +146,16 @@ export function* onUpdateUserStart(){
   yield takeLatest(CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_START, updateUserInProject)
 }
 
+export function* onUpdatePublishedStart(){
+  yield takeLatest(CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_START, updatePublishedInProject)
+}
+
 export function* currentProjectSagas() {
   yield all([
     call(onCurrentProjectFetchStart),
     call(onCurrentProjectDeleteStart),
     call(onInviteUserStart),
-    call(onUpdateUserStart)
+    call(onUpdateUserStart),
+    call(onUpdatePublishedStart)
   ]);
 }

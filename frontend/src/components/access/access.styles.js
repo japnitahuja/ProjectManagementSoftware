@@ -1,42 +1,29 @@
 import styled from 'styled-components'
 
 export const AccessForm = styled.form`
-    height: 50vh;
-    overflow: scroll;
-`
 
-export const AccessDivItem = styled.div`
+`
+export const FormSelect = styled.select`
+    border: 0.5px solid #BCC5D3; 
+    box-sizing:border-box;
+    height: 2.5em;
+    width: 100%;
+    border-radius:4px;
+    background-color:#F9F9F9;
+
+    margin: 0.5em 0;
+    font-size: 1em;
+    color:#666666;
+
     padding: 0.5em;
-    border-bottom: 0.2px solid black;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: 50%;
+    
 `;
 
-export const LowerDiv = styled.div`
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    justify-content: center;
-    align-items: center; 
-    height: auto;
-`
 
-export const SaveButton = styled.button`
-    width: 60vw;
-    border-radius: 5px;
-    background-color: #6C7B8A;
-    color: white;
-    padding: 0.4em 0;
-    border: none;   
-    margin: 1vh 0;
 
-`;
-
-export const ExitButton = styled.button`
-width: 60vw;
-border-radius: 5px;
-background-color: #f7f7f7;
-
-color: black;
-padding: 0.4em 0;
-border: 1px solid black;   
-margin: 1vh 0;
-`;

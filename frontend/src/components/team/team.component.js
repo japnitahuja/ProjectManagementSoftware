@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentProjectUsers } from "../../redux/current-project/current-project.selectors";
-import { ExitButton, LowerDiv, SaveButton } from "../access/access.styles";
 import AddUserForm from "../adduser-form/adduser-form.component";
 import { AddUserFormHeading } from "../adduser-form/adduser-form.styles";
 import { BigText, SmallText } from "../project-item/project-item.styles";
-import { TeamDiv, TeamDivItem } from "./team.styles";
+import { LowerDiv, Overlay, FormButton, FormInverseButton, Text, SmallCircle, BigCircle, Image, TeamDiv, TeamDivItem } from "./team.styles";
 
 class Team extends Component {
     constructor(){
@@ -27,35 +26,46 @@ class Team extends Component {
   render() {
     console.log(this.props.users);
     const { users } = this.props;
+    
     return (
       <>
         <TeamDiv>
           {users.map((user, index) => {
+
+            let unnamed = user.user.email.slice(0,user.user.email.indexOf('@'));
+
             return (
               <TeamDivItem key={index}>
-                {user.user.firstName}
-                {user.user.email}
+                <div style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
+                  <BigCircle>{user.user.firstName?user.user.firstName.charAt(0):unnamed.charAt(0)}</BigCircle>
+                  <Text style={{marginLeft:"1em"}}>{user.user.firstName?user.user.firstName:unnamed}</Text>
+                </div>
+                {/* <div>
+                  <SmallCircle></SmallCircle>
+                  <SmallCircle></SmallCircle>
+                  <SmallCircle></SmallCircle>
+                </div> */}
               </TeamDivItem>
             );
           })}
         </TeamDiv>
-        <LowerDiv>
+        <LowerDiv style={{marginBottom:"5em"}}>
         {
           this.state.invite ? 
-          <div style={{marginTop: '2vh', top: '10vh'}}>
-              <AddUserFormHeading>
+          <Overlay style={{bottom:"0",height:"100%", padding:"2em"}}>
+            <AddUserFormHeading>
                 <BigText>Invite A User</BigText>
                 <button style={{textDecoration:'none', background: 'none', border: 'none'}} onClick={this.invite}><BigText>X</BigText></button>
             </AddUserFormHeading>
             <AddUserForm />
-          </div> : null
+          </Overlay> : null
       }
-          <SmallText>Need to add additional users not in Dig?</SmallText>
-          <SmallText onClick={this.invite}>
+          <Text style={{fontSize:"0.9em",color:"#666666", margin:"1.5em 0em"}}>Need to add additional users not in Dig?</Text>
+          <Text style={{fontSize:"0.9em",color:"#6C7B8A"}} onClick={this.invite}>
             <u>Invite now</u>
-          </SmallText>
-          <SaveButton>Save</SaveButton>
-          <ExitButton>Exit</ExitButton>
+          </Text>
+          {/* <FormButton>Save</FormButton>
+          <FormInverseButton>Exit</FormInverseButton> */}
         </LowerDiv>
       </>
     );
