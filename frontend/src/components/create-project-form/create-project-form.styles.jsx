@@ -5,8 +5,6 @@ export const FormDiv = styled.form`
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-
-    
   }
 `;
 
@@ -15,6 +13,7 @@ export const FormHeading = styled.div`
     display: flex;
     flex-direction:row;
     justify-content:space-between;
+    align-items:center;
     
     color: #666666;
     font-size:1.4em;

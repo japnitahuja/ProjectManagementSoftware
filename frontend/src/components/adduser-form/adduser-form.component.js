@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { LongButton } from "../long-button/long-button.styles";
-import { AddUserDiv, AddUserFormHeading } from "./adduser-form.styles";
-import { BigText, SmallText } from "../project-item/project-item.styles";
+import { AddUserDiv } from "./adduser-form.styles";
+import { SmallText } from "../project-item/project-item.styles";
 import { connect } from "react-redux";
 import { inviteUserStart } from "../../redux/current-project/current-project.actions";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentProjectRoles } from "../../redux/current-project/current-project.selectors";
+import {FormHeading, FormLabel, FormInput, FormDiv} from "../create-project-form/create-project-form.styles"
+import DropDown from "../form-dropdown/form-dropdown.component"
 
 class AddUserForm extends Component {
   constructor() {
@@ -14,8 +16,14 @@ class AddUserForm extends Component {
       userDetails: {
         email: '',
         permission: '',
-        role: '',
+        role: ''
       },
+      permissions:[
+        ["BILLINGADMIN", "Billing Admin", "Can lorem ipsum dolor"],
+        ["ADMIN", "Admin", "Can lorem ipsum dolor"],
+        ["AUTHOR", "Author", "Can lorem ipsum dolor"],
+        ["CONTRIBUTER", "Contributer", "Can lorem ipsum dolor"]
+      ]
     };
   }
   handleOnChange = (e) => {
@@ -51,31 +59,38 @@ class AddUserForm extends Component {
     const {projectRoles} = this.props
     console.log('project roles', projectRoles)
     return (
-      <AddUserDiv style={{ height: "70vh" }}>
-        <form
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            margin: "4vh 8vw",
-          }}
-          onChange={(e) => this.handleOnChange(e)}
-        >
+      <AddUserDiv>
+        <FormHeading>
+            Create a Project
+            <button  onClick={this.props.exit} style={{textDecoration:'none', 
+                            background: 'none', 
+                            border: 'none', 
+                            fontSize:'1.4em', 
+                            color:'rgba(102,102,102,0.6)'}}> &times;</button>
+        </FormHeading>
+
+        <FormDiv onChange={(e) => this.handleOnChange(e)} >
           <div>
-            <label htmlFor="email"> Email: </label><br/>
-          </div>
-          <div>
-            <input
+            <FormLabel htmlFor="email" style={{textAlign:"left"}}> Email </FormLabel>
+            <br/>
+            <FormInput
               type="text"
               value={this.state.userDetails.email}
               name="email"
               id="email"
               onChange={(e) => this.handleOnChange(e)}
-              required
-            />
+              placeholder = "Email address"
+              required />
           </div>
+          
           <div>
-            <label htmlFor="permission"> Permission Level: </label><br/>
-            <select
+            <FormLabel htmlFor="permission" style={{textAlign:"left"}}> Permission Level: </FormLabel>
+            <br/>
+            <div style={{width:"100%"}}>
+              <DropDown options = {this.state.permissions}/>
+            </div>
+            
+            {/* <select
               value={this.state.userDetails.permission}
               name="permission"
               id="permission"
@@ -88,10 +103,11 @@ class AddUserForm extends Component {
               <option value="MANAGER">Manager</option>
               <option value="AUTHOR">Author</option>
               <option value="CONTRIBUTOR">Contributor</option>
-            </select>
+            </select> */}
           </div>
+
           <div>
-            <label htmlFor="role"> Role(optional): </label><br/>
+            <FormLabel htmlFor="role"> Role(optional): </FormLabel><br/>
             <select
               value={this.state.userDetails.role}
               name="role"
@@ -107,7 +123,7 @@ class AddUserForm extends Component {
               })}
             </select>
           </div>
-          <div style={{ alignSelf: "center", margin: "5vh 0" }}>
+          <div>
             <button
               style={{
                 textDecoration: "none",
@@ -121,7 +137,7 @@ class AddUserForm extends Component {
             </button>
             <LongButton onClick={this.inviteUser}>Invite</LongButton>
           </div>
-        </form>
+        </FormDiv>
       </AddUserDiv>
     );
   }

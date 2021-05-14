@@ -63,12 +63,12 @@ export const Overlay = styled.div`
  @media screen and (min-width: 320px) {
   width: 100%;
   height:0;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  position: fixed; 
+  z-index: 1; 
   left: 0;
   bottom: -100;
-  background-color: #FFFFFF; /* Black fallback color */
-  overflow-x: hidden; /* Disable horizontal scroll */
+  background-color: ${props=>props.backgroundcolor}; 
+  overflow-x: hidden; 
   transition: 0.2s;  
   display:flex;
   flex-direction:column;
@@ -76,3 +76,5 @@ export const Overlay = styled.div`
   
   }
 `;
+
+

@@ -6,13 +6,15 @@ import { Overlay, Text, AdminPanelButtons, AdminPanelDiv, AdminPanelProjectDetai
 import { createStructuredSelector } from "reselect";
 import { UpdatePublishedInProjectStart } from '../../redux/current-project/current-project.actions';
 import ManageTeam from '../manage-team/manage-team.component'
+import ManageRoles from '../manage-roles/manage-roles.component'
 
 class AdminPanelTaskPage extends Component {
     constructor() {
         super();
         this.state = {
             publishedSwitch: null,
-            manageTeamSwitch: false
+            manageTeamSwitch: false,
+            manageRolesSwitch: false
         }
       }
 
@@ -32,6 +34,12 @@ class AdminPanelTaskPage extends Component {
     manageTeamToggle = () => {
         this.setState((prevState) => ({
             manageTeamSwitch: !prevState.manageTeamSwitch
+        }));
+    }
+
+    manageRolesToggle = () => {
+        this.setState((prevState) => ({
+            manageRolesSwitch: !prevState.manageRolesSwitch
         }));
     }
 
@@ -108,13 +116,20 @@ class AdminPanelTaskPage extends Component {
             </AdminPanelTeamDiv>
             <AdminPanelTeamDiv>
                     <AdminPanelProjectDetailsHeading>Roles Assigned</AdminPanelProjectDetailsHeading>
-                    <AdminPanelButtons>Manage Roles</AdminPanelButtons>
+                    <AdminPanelButtons onClick={this.manageRolesToggle}>Manage Roles</AdminPanelButtons>
             </AdminPanelTeamDiv>
 
             {
             this.state.manageTeamSwitch? 
-            <Overlay style={{bottom:"0",height:"100%", padding:"2em"}}>
+            <Overlay backgroundcolor = "#FFFFFF" style={{bottom:"0",height:"100%", padding:"2em"}}>
             <ManageTeam toggleManageTeam={this.manageTeamToggle}></ManageTeam>
+            </Overlay> : <Overlay/>
+            }
+
+            {
+            this.state.manageRolesSwitch? 
+            <Overlay backgroundcolor = "rgba(0,0,0,0.3)" style={{bottom:"0",height:"100%"}}>
+            <ManageRoles toggleManageRoles={this.manageRolesToggle}></ManageRoles>
             </Overlay> : <Overlay/>
             }
             </>

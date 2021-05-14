@@ -52,20 +52,16 @@ class Team extends Component {
         <LowerDiv style={{marginBottom:"5em"}}>
         {
           this.state.invite ? 
-          <Overlay style={{bottom:"0",height:"100%", padding:"2em"}}>
-            <AddUserFormHeading>
-                <BigText>Invite A User</BigText>
-                <button style={{textDecoration:'none', background: 'none', border: 'none'}} onClick={this.invite}><BigText>X</BigText></button>
-            </AddUserFormHeading>
-            <AddUserForm />
+          <Overlay style={{bottom:"0",height:"100%"}}>
+            
+            <AddUserForm exit={this.invite}/>
           </Overlay> : null
       }
           <Text style={{fontSize:"0.9em",color:"#666666", margin:"1.5em 0em"}}>Need to add additional users not in Dig?</Text>
           <Text style={{fontSize:"0.9em",color:"#6C7B8A"}} onClick={this.invite}>
             <u>Invite now</u>
           </Text>
-          {/* <FormButton>Save</FormButton>
-          <FormInverseButton>Exit</FormInverseButton> */}
+
         </LowerDiv>
       </>
     );
