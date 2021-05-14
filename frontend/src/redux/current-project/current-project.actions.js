@@ -64,3 +64,17 @@ export const UpdateUserInProjectFailure = (message) => ({
     type: CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_FAILURE,
     payload: message
 })
+
+export const UpdatePublishedInProjectStart = () => ({
+    type: CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_START,
+})
+
+export const UpdatePublishedInProjectSuccess = (message) => ({
+    type: CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_SUCCESS,
+    payload: message
+})
+
+export const UpdatePublishedInProjectFailure = (message) => ({
+    type: CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_FAILURE,
+    payload: message
+})

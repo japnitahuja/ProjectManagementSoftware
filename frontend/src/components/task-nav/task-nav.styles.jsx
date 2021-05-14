@@ -26,19 +26,12 @@ export const OneThirdDiv = styled.div`
  }
 `;
 
-export const TwoThirdDiv = styled.div`
- @media screen and (min-width: 320px) {
-    flex:2;
-    text-align:left;
-
- }
-`;
-
 
 export const Heading = styled.p`
  @media screen and (min-width: 320px) {
     font-size:1.2em;
     margin:0;
+    text-align:center;
    
   }
 `;

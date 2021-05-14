@@ -35,7 +35,7 @@ router.route("/all-projects/:userId").get(async (req, res) => {
     var projects = await User.findOne({ _id: req.params.userId})
       .populate({
         path: "projects",
-        //match: doc => ({published: {$ne: false}})
+        // match: doc => ({published: {$ne: false}})
       })
       .select("projects");
     res.status(200).json({ done: true, projects });
@@ -48,7 +48,7 @@ router.route("/all-projects/:userId").get(async (req, res) => {
 //getting a particular project
 router
   .route("/project/:projectId")
-  .get(authorize('ADMIN'), async (req, res) => {
+  .get(async (req, res) => {
     try {
       var project = await Project.findOne({
         _id: req.params.projectId,

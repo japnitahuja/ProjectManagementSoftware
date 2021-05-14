@@ -14,6 +14,8 @@ const INITIAL_STATE = {
   currentProjectType: null,
   currentPropertyType: null,
   currentProjectOwner: null,
+  currentProjectBudget:null, 
+  currentProjectPublished:null,
   errorMessage: null,
   isCurrentProjectDeleting: false,
   deletionMessage: null,
@@ -22,6 +24,8 @@ const INITIAL_STATE = {
   inviteUserMessage: null,
   updateUserInProjectStart: null,
   updateUserInProjectMessage: null,
+  updatePublishedInProjectStart: null,
+  updatePublishedInProjectMessage: null
 };
 
 const currentProjectReducer = (state = INITIAL_STATE, action) => {
@@ -43,6 +47,8 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         projectType,
         propertyType,
         projectRoles,
+        projectBudget,
+        published,
         Users
       } = action.payload;
       return {
@@ -59,6 +65,8 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         currentPropertyType: propertyType,
         currentProjectRoles: projectRoles,
         currentProjectUsers: Users,
+        currentProjectBudget: projectBudget,
+        currentProjectPublished: published,
         currentProjectMessage: "PROJECT FETCHED!",
       };
 
@@ -129,6 +137,24 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
             ...state,
             updateUserInProjectStart: false,
             updateUserInProjectMessage: action.payload
+          }
+          case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_START:
+          return{
+            ...state,
+            updatePublishedInProjectStart: true,
+            updatePublishedInProjectMessage: null
+          }
+        case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_SUCCESS:
+          return{
+            ...state,
+            updatePublishedInProjectStart: false,
+            updatePublishedInProjectMessage: action.payload
+          }
+        case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_FAILURE:
+          return{
+            ...state,
+            updatePublishedInProjectStart: false,
+            updatePublishedInProjectMessage: action.payload
           }
     default:
       return state;

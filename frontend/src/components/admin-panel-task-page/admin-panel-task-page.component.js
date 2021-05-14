@@ -1,28 +1,56 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
-import { selectCurrentProjectOwner, selectCurrentProjectPurchaseOrders, selectCurrentProjectType, selectCurrentPropertyType } from '../../redux/current-project/current-project.selectors';
+import { selectCurrentProjectBudget, selectCurrentProjectOwner, selectCurrentProjectPublished, selectCurrentProjectPurchaseOrders, selectCurrentProjectType, selectCurrentPropertyType } from '../../redux/current-project/current-project.selectors';
 import ToggleButton from '../toggle-button/toggle-button.component';
-import { Text, AdminPanelButtons, AdminPanelDiv, AdminPanelProjectDetailsDiv, AdminPanelProjectDetailsHeading, AdminPanelProjectsDetailsValue, AdminPanelTeamDiv } from './admin-panel-task-page.styles'
+import { Overlay, Text, AdminPanelButtons, AdminPanelDiv, AdminPanelProjectDetailsDiv, AdminPanelProjectDetailsHeading, AdminPanelProjectsDetailsValue, AdminPanelTeamDiv } from './admin-panel-task-page.styles'
 import { createStructuredSelector } from "reselect";
+import { UpdatePublishedInProjectStart } from '../../redux/current-project/current-project.actions';
+import ManageTeam from '../manage-team/manage-team.component'
 
 class AdminPanelTaskPage extends Component {
     constructor() {
         super();
         this.state = {
-            publishedSwitch: false
+            publishedSwitch: null,
+            manageTeamSwitch: false
         }
       }
+
+      componentDidMount(){
+        this.setState({publishedSwitch: this.props.published})
+    }
+    
 
     publishedToggle = () => {
         this.setState((prevState) => ({
             publishedSwitch: !prevState.publishedSwitch
         }));
+        console.log('called')
+        this.props.updatePublished();
+    }
+
+    manageTeamToggle = () => {
+        this.setState((prevState) => ({
+            manageTeamSwitch: !prevState.manageTeamSwitch
+        }));
     }
 
     render() {
-        let {owner, projectType, propertyType} = this.props;
+        let {owner, projectType, propertyType, projectBudget, purchaseOrders} = this.props;
         console.log(this.props)
+
+        let actualAmount = 0;
+        purchaseOrders.map(({totalOrderAmount}) => {actualAmount = actualAmount + totalOrderAmount})
+        
+        let diffAmount = projectBudget - actualAmount;
+        let diffColour = "";
+        if (diffAmount<0){
+            diffColour = "#EB5757"
+        }
+        else {
+            diffColour= "#429629"
+        }
+
         return (
             <>
             <AdminPanelDiv>
@@ -35,15 +63,15 @@ class AdminPanelTaskPage extends Component {
                 <div style={{display:'flex', flexDirection:'column', width:'50%'}}>
                     <AdminPanelProjectDetailsDiv>
                         <AdminPanelProjectDetailsHeading>Estimated</AdminPanelProjectDetailsHeading>
-                        <AdminPanelProjectsDetailsValue>$180,000</AdminPanelProjectsDetailsValue>
+                        <AdminPanelProjectsDetailsValue>${projectBudget}</AdminPanelProjectsDetailsValue>
                     </AdminPanelProjectDetailsDiv>
                     <AdminPanelProjectDetailsDiv>
                         <AdminPanelProjectDetailsHeading>Actual</AdminPanelProjectDetailsHeading>
-                        <AdminPanelProjectsDetailsValue>$180,000</AdminPanelProjectsDetailsValue>
+                        <AdminPanelProjectsDetailsValue>${actualAmount}</AdminPanelProjectsDetailsValue>
                     </AdminPanelProjectDetailsDiv>
                     <AdminPanelProjectDetailsDiv>
-                        <AdminPanelProjectDetailsHeading>Over</AdminPanelProjectDetailsHeading>
-                        <AdminPanelProjectsDetailsValue style={{color:"#EB5757"}}>$180,000</AdminPanelProjectsDetailsValue>
+                        <AdminPanelProjectDetailsHeading>Difference</AdminPanelProjectDetailsHeading>
+                        <AdminPanelProjectsDetailsValue style={{color:diffColour}}>${diffAmount}</AdminPanelProjectsDetailsValue>
                     </AdminPanelProjectDetailsDiv>
                 </div>
                
@@ -76,12 +104,19 @@ class AdminPanelTaskPage extends Component {
             </AdminPanelTeamDiv>
             <AdminPanelTeamDiv>
                     <AdminPanelProjectDetailsHeading>Assigned Members</AdminPanelProjectDetailsHeading>
-                    <Link to='/ManageTeam'><AdminPanelButtons>Manage Team</AdminPanelButtons></Link>
+                    <AdminPanelButtons onClick={this.manageTeamToggle}>Manage Team</AdminPanelButtons>
             </AdminPanelTeamDiv>
             <AdminPanelTeamDiv>
                     <AdminPanelProjectDetailsHeading>Roles Assigned</AdminPanelProjectDetailsHeading>
                     <AdminPanelButtons>Manage Roles</AdminPanelButtons>
             </AdminPanelTeamDiv>
+
+            {
+            this.state.manageTeamSwitch? 
+            <Overlay style={{bottom:"0",height:"100%", padding:"2em"}}>
+            <ManageTeam toggleManageTeam={this.manageTeamToggle}></ManageTeam>
+            </Overlay> : <Overlay/>
+            }
             </>
         )
     }
@@ -91,11 +126,13 @@ const mapStateToProps = createStructuredSelector({
     owner: selectCurrentProjectOwner, 
     projectType: selectCurrentProjectType,
     propertyType: selectCurrentPropertyType,
-    purchaseOrders: selectCurrentProjectPurchaseOrders
+    purchaseOrders: selectCurrentProjectPurchaseOrders,
+    projectBudget: selectCurrentProjectBudget,
+    published: selectCurrentProjectPublished
 });
   
 const mapDispatchToProps = (dispatch) => ({
-    
+    updatePublished: () => dispatch(UpdatePublishedInProjectStart())
 });
   
 export default connect(mapStateToProps, mapDispatchToProps)(AdminPanelTaskPage);

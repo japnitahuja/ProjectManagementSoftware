@@ -10,7 +10,8 @@ import TaskListContainer from '../../components/tasks-list/tasks-list.container'
 import SearchBar from '../../components/search-bar/search-bar.component';
 import AdminPanelTaskPage from '../../components/admin-panel-task-page/admin-panel-task-page.component';
 import ManageTeam from '../../components/manage-team/manage-team.component';
-import ToggleButton from '../../components/toggle-button/toggle-button.component';
+import ToggleButton from '../../components/toggle-button/toggle-button.component'
+import DropDown from '../../components/access-dropdown/access-dropdown.component';
 
 class Project extends Component {
     constructor() {
@@ -22,6 +23,7 @@ class Project extends Component {
 
     componentDidMount(){
         const projectId = this.props.match.params.projectId;
+        console.log("mount")
         this.props.fetchProjects(projectId);
     }
 
@@ -63,6 +65,7 @@ class Project extends Component {
                 <SearchBar placeholder='Search Tasks...' />
                 <TaskListContainer tasks = {tasks}/>
                 <CreateTaskForm projectId = {this.props.match.params.projectId}/>
+                
                 <LowerNavBar  />
                 
             </div>

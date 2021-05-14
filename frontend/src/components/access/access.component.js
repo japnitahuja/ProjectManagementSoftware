@@ -3,43 +3,55 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { UpdateUserInProjectStart } from "../../redux/current-project/current-project.actions";
 import { selectCurrentProjectUsers } from "../../redux/current-project/current-project.selectors";
-import AddUserForm from "../adduser-form/adduser-form.component";
-import { AddUserFormHeading } from "../adduser-form/adduser-form.styles";
-import { BigText, SmallText } from "../project-item/project-item.styles";
-import { AccessDivItem, AccessForm, ExitButton, LowerDiv, SaveButton } from "./access.styles";
+import {AccessForm, FormSelect} from "./access.styles";
+import {TeamDivItem, BigCircle, LowerDiv, Overlay, Text, FormButton, FormInverseButton} from "../team/team.styles";
+import DropDown from "../access-dropdown/access-dropdown.component";
 
 class Access extends Component {
     constructor(){
         super()
+   
         this.state = {
             userDetails: [],
-            invite: false
+            permissions:[
+              ["BILLINGADMIN", "Billing Admin", "Can lorem ipsum dolor"],
+              ["ADMIN", "Admin", "Can lorem ipsum dolor"],
+              ["AUTHOR", "Author", "Can lorem ipsum dolor"],
+              ["CONTRIBUTER", "Contributer", "Can lorem ipsum dolor"]
+            ]
         }
     }
-    handleOnChange = (e) => {
-        let userDetails = this.state.userDetails;
-        const { id, value } = e.target;
-        //userDetails[id] = value;
-        //this.setState({ userDetails: userDetails }, () => console.log(userDetails));
-        const user = {
-            id: id,
-            updatedPermission: value
-        }
-        userDetails.push(user)
-        console.log(this.state)
+
+    componentDidMount(){
+      console.log("mounter", this.state.userDetails)
     }
-    invite = () => {
-        if(this.state.invite == false){
-            this.setState({invite: true})
-        }else{
-            this.setState({invite: false})
+
+    handleOnChange = (Userid, newPermission) => {
+        let done = false;
+        this.state.userDetails.map((user) => {
+          console.log(user)
+          if (user.id === Userid){
+            user.updatedPermission = newPermission;
+            done = true;
+          }
+        })
+
+        if(!done){
+          const user = {
+              id: Userid,
+              updatedPermission: newPermission
+          }
+          this.state.userDetails.push(user)
+
         }
-        console.log(this.state.invite)
+        
     }
-    submit = () => {
+ 
+    submit = (e) => {
+      e.preventDefault()
       const userDetails = this.state.userDetails
       const {updateUser} = this.props
-      console.log(userDetails)
+      console.log("saved", userDetails)
       updateUser(userDetails)
     }
   render() {
@@ -48,45 +60,31 @@ class Access extends Component {
     <>
       <AccessForm>
         {users.map((user, index) => {
+          let unnamed = user.user.email.slice(0,user.user.email.indexOf('@'));
           return (
-            <AccessDivItem key={index}>
+            <TeamDivItem key={index}>
               <label htmlFor={user.user._id}>
-                {user.user.firstName} {user.user.lastName} {user.user.email}
+                <div style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
+                  <BigCircle>{user.user.firstName?user.user.firstName.charAt(0):unnamed.charAt(0)}</BigCircle>
+                  <Text style={{marginLeft:"1em"}}>{user.user.firstName?user.user.firstName:unnamed}</Text>
+                </div>
               </label>
-              <select
-                value={user.user.permission}
-                name={index}
-                id={user.user._id}
-                required
-                onChange={(e) => this.handleOnChange(e)}
-              >
-                <option value="">Please choose an option</option>
-                <option value="BILLINGADMIN">Billing Admin</option>
-                <option value="ADMIN">Admin</option>
-                <option value="MANAGER">Manager</option>
-                <option value="AUTHOR">Author</option>
-                <option value="CONTRIBUTOR">Contributor</option>
-              </select>
-              <br/>
-            </AccessDivItem>
+              
+              <DropDown key={index} 
+                        userID = {user.user._id} 
+                        options={this.state.permissions} 
+                        selected={user.permission}
+                        onChangePermission = {this.handleOnChange}/> 
+             
+
+            </TeamDivItem>
           );
         })}
       </AccessForm>
-      <LowerDiv>
-      {
-          this.state.invite ? 
-          <div style={{marginTop: '2vh', top: '10vh'}}>
-              <AddUserFormHeading>
-                <BigText>Invite A User</BigText>
-                <button style={{textDecoration:'none', background: 'none', border: 'none'}} onClick={this.invite}><BigText>X</BigText></button>
-            </AddUserFormHeading>
-            <AddUserForm />
-          </div> : null
-      }
-      <SmallText>Need to add additional users not in Dig?</SmallText>
-      <SmallText onClick={this.invite}><u>Invite now</u></SmallText>
-      <SaveButton onClick={this.submit}>Save</SaveButton>
-      <ExitButton>Exit</ExitButton>
+      
+      <LowerDiv style={{marginBottom:"7em"}}>
+          <FormButton onClick={this.submit}>Save</FormButton>
+          <FormInverseButton onClick={this.props.exit}>Exit</FormInverseButton>
       </LowerDiv>
       
     </>
@@ -95,14 +93,10 @@ class Access extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  // projectName: selectCurrentProjectName,
-  // projectStatus: selectCurrentProjectStatus,
-  // tasks: selectCurrentProjectTasks
   users: selectCurrentProjectUsers,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // fetchProjects : (projectId) => dispatch(fetchCurrentProjectStart(projectId))
   updateUser: (userDetails) => dispatch(UpdateUserInProjectStart(userDetails))
 });
 
