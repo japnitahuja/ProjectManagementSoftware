@@ -1,7 +1,7 @@
-module.exports=restrictTo = (...roles) => {
+module.exports = restrictTo = (role) => {
     return (req, res, next) => {   
-      console.log(req.headers)
-      if (roles != req.headers.auth) {
+      console.log('hi')
+      if (role != req.headers.role) {
         return res.status(403).json({error: 'you are not authorized to access this',done:false})
       }
       next();

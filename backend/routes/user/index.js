@@ -176,7 +176,19 @@ router.post("/create-project/:userId", async (req, res) => {
       });
       var user = await User.findOne({ _id: req.params.userId });
       await user.projects.push(project._id);
+      const userDetails = {
+        user: userId,
+        permission: 'PROJECT_OWNER',
+        role: 'GOD'
+      }
+      project.Users.push(userDetails)
       user.save(function (err) {
+        if (err) {
+          console.log(err);
+          return;
+        }
+      });
+      project.save(function (err) {
         if (err) {
           console.log(err);
           return;

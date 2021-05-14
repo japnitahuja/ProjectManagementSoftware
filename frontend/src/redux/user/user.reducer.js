@@ -76,7 +76,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         role: action.payload.role,
         username: action.payload.username,
         _id:action.payload._id,
-        permission: action.payload.permission,
+        // permission: action.payload.permission,
         message: "SIGNED IN SUCCESSFULLY!",
         errorMessage: null
       };
@@ -106,7 +106,12 @@ const userReducer = (state = INITIAL_STATE, action) => {
         errorMessage: undefined,
         message: null,
       };
-    
+    case UserActionTypes.SET_USER_ROLE:
+      console.log(action.payload, 'reducer permission console log')
+      return{
+        ...state, 
+        permission: action.payload
+      }
     default:
       return state;
   }

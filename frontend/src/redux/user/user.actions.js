@@ -41,3 +41,19 @@ export const signInFailure = (error) => ({
 export const signOut = () => ({
     type: UserActionTypes.USER_SIGN_OUT
 })
+
+export const setUserPermission = ({projectList, userId}) => {
+    console.log(projectList, userId, 'user action material')
+    var permission
+    projectList.map((user) => {
+        console.log(user.user._id)
+        if(user.user._id == userId){
+            permission =  user.permission
+            console.log(permission)
+        }
+    })
+    return({
+        type: UserActionTypes.SET_USER_ROLE,
+        payload: permission
+    })
+}
