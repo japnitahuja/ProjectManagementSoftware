@@ -5,12 +5,13 @@ import { selectUserId } from "../user/user.selectors"
 import { deleteProject } from "../all-projects/all-projects.actions";
 import { selectCurrentProjectId } from "./current-project.selectors";
 import currentProjectReducer from "./current-project.reducer";
+import { setUserPermission } from "../user/user.actions";
 
 export function* fetchCurrentProject({payload}){
   try {
       const projectId = payload
+      const userId = yield select(selectUserId)
       const token = localStorage.getItem('token')
-      console.log(token, 'token')
     let currentProject = yield fetch(`http://127.0.0.1:5000/project/${projectId}`, {
       method: 'GET',
       headers: {
@@ -21,9 +22,15 @@ export function* fetchCurrentProject({payload}){
     })
     currentProject = yield currentProject.json()
     console.log(currentProject)
-    currentProject.done
-    ? yield put(fetchCurrentProjectSuccess(currentProject.project))
-    : yield put(fetchCurrentProjectFailure('CURRENT PROJECCT FETTCHING FAILED'))
+    if(currentProject.done){
+      yield put(fetchCurrentProjectSuccess(currentProject.project))
+      yield put(setUserPermission({
+        projectList: currentProject.project.Users,
+        userId: userId
+      }))
+    }else{
+      yield put(fetchCurrentProjectFailure('CURRENT PROJECCT FETTCHING FAILED'))
+    }
   } catch (error) {
     fetchCurrentProjectFailure(error)
   }

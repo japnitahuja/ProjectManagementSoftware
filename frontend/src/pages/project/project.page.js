@@ -10,13 +10,13 @@ import TaskListContainer from '../../components/tasks-list/tasks-list.container'
 import SearchBar from '../../components/search-bar/search-bar.component';
 import AdminPanelTaskPage from '../../components/admin-panel-task-page/admin-panel-task-page.component';
 import ManageTeam from '../../components/manage-team/manage-team.component';
-import ToggleButton from '../../components/toggle-button/toggle-button.component'
+import ToggleButton from '../../components/toggle-button/toggle-button.component';
 
 class Project extends Component {
     constructor() {
         super();
         this.state = {
-          adminSwitch: true
+          adminSwitch: false
         };
       }
 
