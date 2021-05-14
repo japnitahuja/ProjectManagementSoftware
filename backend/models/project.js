@@ -32,9 +32,7 @@ const projectSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Task"
     }],
-    projectRoles: [{
-        type: String
-    }],
+    projectRoles: [],
     purchaseOrders:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "purchaseOrder"

@@ -25,7 +25,9 @@ const INITIAL_STATE = {
   updateUserInProjectStart: null,
   updateUserInProjectMessage: null,
   updatePublishedInProjectStart: null,
-  updatePublishedInProjectMessage: null
+  updatePublishedInProjectMessage: null,
+  updateRolesInProjectStart: null,
+  updateRolesInProjectMessage: null
 };
 
 const currentProjectReducer = (state = INITIAL_STATE, action) => {
@@ -155,6 +157,23 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
             ...state,
             updatePublishedInProjectStart: false,
             updatePublishedInProjectMessage: action.payload
+          }
+        case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_START:
+          return{
+            ...state,
+            updateRolesInProjectStart: true
+          }
+        case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_SUCCESS:
+          return{
+            ...state,
+            updateRolesInProjectStart: false,
+            updateRolesInProjectMessage: action.payload
+          }
+        case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_FAILURE:
+          return{
+            ...state,
+            updateRolesInProjectStart: false,
+            updateRolesInProjectMessage: action.payload
           }
     default:
       return state;

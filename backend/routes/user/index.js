@@ -1053,6 +1053,37 @@ router.post('/updatePermissions/:projectId', async (req, res) => {
   }
 })
 
+//add new roles and assign it to users
+router.post('/updateRoles/:projectId', async (req, res) => {
+  const {projectId} = req.params
+  const {allRoles, updatedRoles} = req.body
+  try {
+    console.log(req.body)
+    const project = await Project.findOne({_id: projectId})
+    project.projectRoles = allRoles
+    console.log(project.projectRoles)
+    let projectUsers =  project.Users
+    await updatedRoles.map(async (userDetail, index) => {
+      //console.log(index, userDetail, 'body user')
+      await projectUsers.map(async (user) => {
+        //console.log(index, user, 'project user')
+        if(userDetail.id == user.user){
+         // console.log(index, userDetail.id, user.user, 'if else user IDs')
+          user.role = userDetail.updatedRole
+          //console.log(user.permission)
+        }
+      })
+    })
+    project.save(function(err){
+      if(err) console.log(err)
+    })
+    console.log(project.Users)
+    res.status(200).json({done: true, project, message: 'Roles updated succesfully!', project})
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 //delete user from project
 router.post('/deleteUser/:projectId', async (req, res) => {
     const {projectId} = req.params

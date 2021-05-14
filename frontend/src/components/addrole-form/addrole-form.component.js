@@ -3,7 +3,7 @@ import { LongButton } from "../long-button/long-button.styles";
 import { AddRoleDiv, UsersDiv, UsersDivContent, CheckBox, FormButton } from "./addrole-form.styles";
 import { SmallText } from "../project-item/project-item.styles";
 import { connect } from "react-redux";
-import { inviteUserStart } from "../../redux/current-project/current-project.actions";
+import { inviteUserStart, UpdateRolesInProjectStart } from "../../redux/current-project/current-project.actions";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentProjectRoles, selectCurrentProjectUsers } from "../../redux/current-project/current-project.selectors";
 import {FormHeading, FormLabel, FormInput, FormDiv} from "../create-project-form/create-project-form.styles"
@@ -50,13 +50,13 @@ class AddRoleForm extends Component {
       this.setState({usersAssigned:temp})
     } 
     }
-    
+    console.log(this.state)
   }
 
   handleOnSubmit = (e) => {
     e.preventDefault()
     let allRoles =[]
-    let updatedUserPermission = []
+    let updatedRoles = []
 
     this.props.projectRoles.map((projectRole)=> {
       allRoles.push(projectRole)
@@ -68,14 +68,17 @@ class AddRoleForm extends Component {
     this.state.usersAssigned.map((userId)=>{
       let temp = {
         id:'',
-        updatedPermission:''
+        updatedRole:''
       };
       temp.id = userId;
-      temp.updatedPermission = this.state.newRole;
-      updatedUserPermission.push(temp);
+      temp.updatedRole = this.state.newRole;
+      updatedRoles.push(temp);
     })
 
-    console.log(updatedUserPermission)
+    console.log(updatedRoles)
+    let payload = {allRoles, updatedRoles}
+    console.log(payload)
+    this.props.updateRoles(payload)
   }
   
   render() {
@@ -121,7 +124,7 @@ class AddRoleForm extends Component {
                   <CheckBox
                   name="user"
                   id={index}
-                  data-userid = {user._id}
+                  data-userid = {user.user._id}
                   onChange={(e) => this.handleOnChange(e)}
                   ></CheckBox>
                   <label>{user.user.firstName?user.user.firstName:unnamed}</label>
@@ -172,7 +175,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  
+    updateRoles: (payload) => dispatch(UpdateRolesInProjectStart(payload))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddRoleForm);
