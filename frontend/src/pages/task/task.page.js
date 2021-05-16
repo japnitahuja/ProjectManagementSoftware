@@ -3,8 +3,8 @@ import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import CreateStepForm from '../../components/create-step-form/create-step-form.component';
 import { completeCurrentTaskStart, fetchCurrentTaskStart } from '../../redux/current-task/current-task.actions';
-import { selectCurrentTaskCompletionMessage, selectCurrentTaskIsDone, selectCurrentTaskName, selectCurrentTaskSteps } from '../../redux/current-task/current-task.selectors';
-import { Link } from 'react-router-dom';
+import { selectCurrentTaskCompletionMessage, selectCurrentTaskCompletionPercentage, selectCurrentTaskIsDone, selectCurrentTaskName, selectCurrentTaskSteps } from '../../redux/current-task/current-task.selectors';
+import { Link, withRouter } from 'react-router-dom';
 import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
 import StepNavBar from '../../components/step-navbar/step-navbar.component';
 import StepListContainer from '../../components/steps-list/steps-list.container';
@@ -25,7 +25,11 @@ class Task extends Component {
     completeTask = () => {
         const taskId = this.props.match.params.taskId
         this.props.completeTask(taskId)
-        //this.props.fetchSteps(taskId)
+        if(this.props.completionPercentage == 100){
+            console.log("back")
+            this.props.history.goBack()
+        }
+        
     }
 
     
@@ -39,7 +43,7 @@ class Task extends Component {
         return (
             <div>
                 <StepPageTaskNav projectId = {projectId}/>
-                <StepNavBar />
+                
                 {/* <TaskList tasks = {tasks}/> */}
                 <StepListContainer steps = {steps} />
                 <br></br>
@@ -74,7 +78,8 @@ const mapStateToProps = createStructuredSelector({
     questionCompletion: selectCurrentStepQuestionAnswerConfirmation,
     stepCompletionMessage: selectCurrentStepCompletionMessage,
     isStepDone: selectCurrentStepIsDone,
-    taskId: selectCurrentTaskId
+    taskId: selectCurrentTaskId,
+    completionPercentage: selectCurrentTaskCompletionPercentage
     
   });
   
@@ -86,4 +91,4 @@ const mapStateToProps = createStructuredSelector({
     completeStep: (data) => dispatch(completeStepStart(data))
   });
   
-  export default connect(mapStateToProps, mapDispatchToProps)(Task);
+  export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Task));

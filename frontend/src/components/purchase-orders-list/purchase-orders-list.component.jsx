@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import { BigText, SmallText } from "../project-item/project-item.styles";
-import { PODetailsDiv, PODiv, POName, PONameDiv, PONumber } from "./purchase-orders-list.styles";
+import SearchBar from "../search-bar/search-bar.component";
+import { POSummaryDiv, PODetailsDiv, PODiv, POName, PONameDiv, PONumber } from "./purchase-orders-list.styles";
 
 class PurchaseOrderList extends React.Component {
     
   render() {
     let purchaseOrders = this.props.purchaseOrders;
+    console.log(purchaseOrders)
 
     if (!purchaseOrders) {
         purchaseOrders = [];
@@ -23,12 +25,12 @@ class PurchaseOrderList extends React.Component {
               >
                 <PONameDiv>
                 <Link to={`/purchaseOrder/${_id}`} style={{textDecoration: 'none'}}>
-                  <SmallText>PO #{index+1001}</SmallText>
+                  <SmallText>PO #{index}</SmallText>
                   <BigText>{purchasedItem}</BigText>
                 </Link>
                 </PONameDiv>
                 <PODetailsDiv>
-                  <BigText>Open</BigText>
+                  <BigText>{totalOrderAmount===totalPaidAmount?"Close":"Open"}</BigText>
                 </PODetailsDiv>
               </PODiv>
             );
@@ -40,6 +42,7 @@ class PurchaseOrderList extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
+  
 });
 
 const mapDispatchToProps = (dispatch) => ({

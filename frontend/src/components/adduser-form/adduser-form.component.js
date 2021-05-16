@@ -61,7 +61,7 @@ class AddUserForm extends Component {
     return (
       <AddUserDiv>
         <FormHeading>
-            Create a Project
+            Add a User
             <button  onClick={this.props.exit} style={{textDecoration:'none', 
                             background: 'none', 
                             border: 'none', 
@@ -87,7 +87,7 @@ class AddUserForm extends Component {
             <FormLabel htmlFor="permission" style={{textAlign:"left"}}> Permission Level: </FormLabel>
             <br/>
             <div style={{width:"100%"}}>
-              <DropDown options = {this.state.permissions}/>
+              {/* <DropDown options = {this.state.permissions}/> */}
             </div>
             
             {/* <select

@@ -7,6 +7,8 @@ import { fetchCurrentProjectStart } from '../../redux/current-project/current-pr
 import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component';
 import PurchaseOrderListContainer from '../../components/purchase-orders-list/purchase-order-lists.container';
 import { TaskNav } from '../../components/task-nav/task-nav.component';
+import SearchBar from '../../components/search-bar/search-bar.component';
+import PurchaseOrdersSummary from "../../components/purchase-orders-summary/purchase-orders-summary.component"
 
 class ProjectPurchaseOrders extends Component {
     componentDidMount(){
@@ -22,6 +24,8 @@ class ProjectPurchaseOrders extends Component {
         return (
              <div>
                 <TaskNav title = {projectName}/>
+                <PurchaseOrdersSummary purchaseOrders = {purchaseOrders}/>
+                <SearchBar placeholder="Search POs..."/>
                 <PurchaseOrderListContainer purchaseOrders = {purchaseOrders} />
                 <LowerNavBar />
             </div>

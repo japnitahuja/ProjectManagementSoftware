@@ -5,7 +5,7 @@ export const ManageRolesDiv = styled.div`
     background-color: #FFFFFF;
     padding:2em;
     box-sizing: border-box;
-    margin-top:40%;
+    margin-top:20%;
     width: 100%;
  }
 `;

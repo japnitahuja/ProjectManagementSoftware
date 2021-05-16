@@ -7,7 +7,7 @@ export const AddRoleDiv = styled.div`
     height:70%;
     border-radius:4px;
     background-color:white;
-    margin-top:10%;
+    margin-top:5%;
     padding:2em;
     box-sizing:border-box;
 
