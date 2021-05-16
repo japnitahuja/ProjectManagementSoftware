@@ -73,4 +73,10 @@ export const selectCurrentProjectStatus = createSelector(
     [selectCurrentProjectDetails],
     (currentProject) => currentProject.currentProjectPublished
   )
+
+  export const selectCurrentProjectPunchlists = createSelector(
+    [selectCurrentProjectDetails],
+    (currentProject) => currentProject.currentProjectPunchLists
+  )
+  
   

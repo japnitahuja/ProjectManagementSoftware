@@ -38,6 +38,7 @@ export function* fetchCurrentProject({ payload }) {
       }
     );
     currentProject = yield currentProject.json();
+ 
     console.log("saga", currentProject);
     currentProject.done
       ? yield put(fetchCurrentProjectSuccess(currentProject.project))

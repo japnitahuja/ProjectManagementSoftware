@@ -35,7 +35,7 @@ export const CreateDiv = styled.div`
 export const CreateOptionsDiv = styled.div`
     flex:1;
     color:#6C7B8A;
-    font-size:0.9em;
+    font-size:1em;
     font-weight: bold;
     border-bottom: 1px solid #BCC5D3;
     width:100%;
@@ -44,8 +44,15 @@ export const CreateOptionsDiv = styled.div`
     flex-direction:row;
     justify-content:${props=>props.justify?"center":"flex-start"};
     align-items:center;
+    box-sizing:border-box;
 
-    
+`
+
+export const CreateOptionsImg = styled.img`
+    height: 1.5em;
+    width: 1.5em;
+    margin:0.5em;
+
 `
 
 

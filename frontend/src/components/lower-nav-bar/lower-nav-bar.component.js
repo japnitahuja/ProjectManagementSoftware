@@ -3,19 +3,19 @@ import {
   LowerNav,
   LowerNavEntity,
   LowerNavImage,
-  LowerNavImageDiv,
   LowerNavText,
 } from "./lower-nav-bar.styles";
 import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentProjectId } from "../../redux/current-project/current-project.selectors";
 import { connect } from "react-redux";
-import CO from "../../assets/CO.png";
+import VPO from "../../assets/VPO.png";
 import PO from "../../assets/PO.png";
-import task from "../../assets/Task.png";
-import punch from "../../assets/Punch.png";
-import Schedule from "../../assets/Schedule.png";
+import task from "../../assets/task.png";
+import punch from "../../assets/Punchlist.png";
+import Schedule from "../../assets/schedule.png";
 import CreateButton from "../create-button/create-button.component";
+
 class LowerNavBar extends Component {
     constructor(){
       super()
@@ -38,28 +38,35 @@ class LowerNavBar extends Component {
         {
           this.state.navSwitch?
           <LowerNav>
-          <Link to={`/project/${projectId}`}>
+          <Link to={`/project/${projectId}`} style={{textDecoration:"none"}}>
             <LowerNavEntity>
                 <LowerNavImage src={task} />
+                <LowerNavText>TASKS</LowerNavText>
             </LowerNavEntity>
           </Link>
-          <Link to={`/projectPurchaseOrders/${projectId}`}>
+          <Link to={`/projectPurchaseOrders/${projectId}`} style={{textDecoration:"none"}}>
             <LowerNavEntity>
                 <LowerNavImage src={PO} />
+                <LowerNavText>POs</LowerNavText>
             </LowerNavEntity>
           </Link>
-          <Link to={`/projectChangeOrders/${projectId}`}>
+          <Link to={`/projectChangeOrders/${projectId}`} style={{textDecoration:"none"}}>
             <LowerNavEntity>
-                <LowerNavImage src={CO} />
+                <LowerNavImage src={VPO} />
+                <LowerNavText>VPOs</LowerNavText>
             </LowerNavEntity>
           </Link>
-          <LowerNavEntity>
-              <LowerNavImage src={punch} />
-          </LowerNavEntity>
-          <Link to={`/schedule/${projectId}`}>
+          <Link to={`/punchList/${projectId}`} style={{textDecoration:"none"}} >
+            <LowerNavEntity >
+                <LowerNavImage src={punch} />
+                <LowerNavText>PUNCH</LowerNavText>
+            </LowerNavEntity>
+          </Link>
+         
+          <Link to={`/schedule/${projectId}`} style={{textDecoration:"none"}}>
             <LowerNavEntity>
-              
                 <LowerNavImage src={Schedule} />
+                <LowerNavText>SCHEDULE</LowerNavText>
             </LowerNavEntity>
           </Link>
         </LowerNav>

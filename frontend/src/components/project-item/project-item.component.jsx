@@ -32,6 +32,8 @@ class ProjectItem extends Component {
         const {id, published, projectName, totalTasks, completedTasks,projectBudget} = this.state;
         let progress = completedTasks/totalTasks*100;
 
+        console.log(completedTasks, totalTasks)
+
         console.log(progress)
 
         if (isNaN(progress)){

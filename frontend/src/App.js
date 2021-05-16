@@ -16,6 +16,7 @@ import IndividualChangeOrder from './pages/individual-change-order/individual-ch
 import projectSchedule from './pages/project-schedule/project-schedule';
 import ManageTeam from './components/manage-team/manage-team.component';
 import ProjectChangeOrders from './pages/project-change-orders/project-change-orders.page';
+import projectPunchList from './pages/project-punch-list/project-punch-list';
 
 
 function App(props) {
@@ -37,6 +38,7 @@ function App(props) {
         <Route path='/schedule/:projectId' exact component={projectSchedule}/>
         <Route path='/ManageTeam' exact component={ManageTeam} />
         <Route path='/projectChangeOrders/:projectId' exact component={ProjectChangeOrders} />
+        <Route path='/punchList/:projectId' exact component={projectPunchList} />
       </Switch>
     </BrowserRouter>
     

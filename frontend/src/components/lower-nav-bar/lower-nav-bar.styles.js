@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const LowerNav = styled.div`
     width: 100%;
-    height: 3.5em;
+    height: 4em;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -19,20 +19,23 @@ export const LowerNav = styled.div`
 `;
 
 export const LowerNavEntity = styled.div`
-    height:2em;
+    height:100%;
     display: flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
     
 `;
 
-export const LowerNavImageDiv = styled.div`
-
-`;
 
 export const LowerNavImage = styled.img`
-    height: 3em;
+    height: 1.5em;
+    width: 1.5em;
 `;
 
 
 export const LowerNavText = styled.div`
-
+    color:#FFFFFF;
+    font-size:0.9em;
+    margin-top: 0.3em;
 `;

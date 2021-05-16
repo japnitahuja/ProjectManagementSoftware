@@ -1,7 +1,12 @@
 import react, {Component} from 'react';
-import {BigCircle, CreateDiv, CreateOptionsDiv} from "./create-button.styles";
+import {BigCircle, CreateDiv, CreateOptionsDiv, CreateOptionsImg} from "./create-button.styles";
 import {Overlay} from "../admin-panel-task-page/admin-panel-task-page.styles";
 import { Link } from 'react-router-dom'
+import VPO from "../../assets/VPODark.png";
+import PO from "../../assets/PODark.png";
+import task from "../../assets/taskDark.png";
+import punch from "../../assets/PunchDark.png";
+
 
 class CreateButton extends Component {
     constructor(){
@@ -29,25 +34,29 @@ class CreateButton extends Component {
                     <CreateDiv>
                         <Link style={{textDecoration:"none"}}>
                             <CreateOptionsDiv justify={false}>
+                            <CreateOptionsImg src={task} style={{width:"2em", height:"2em"}}/>
                                 Task
                             </CreateOptionsDiv>
                         </Link>
 
                         <Link style={{textDecoration:"none"}}>
                             <CreateOptionsDiv justify={false}>
+                            <CreateOptionsImg src={PO}/>
                                 PO
                             </CreateOptionsDiv>
                         </Link>
 
                         <Link style={{textDecoration:"none"}}>
                             <CreateOptionsDiv justify={false}>
+                                <CreateOptionsImg src={VPO}/>
                                 VPO
                             </CreateOptionsDiv>
                         </Link>
 
                         <Link style={{textDecoration:"none"}}>
                             <CreateOptionsDiv justify={false}>
-                                PunchList
+                                <CreateOptionsImg src={punch}/>
+                                Punch List Item
                             </CreateOptionsDiv>
                         </Link>
                         <CreateOptionsDiv onClick={this.handleOnClick} justify={true} style={{flex:"2"}}>

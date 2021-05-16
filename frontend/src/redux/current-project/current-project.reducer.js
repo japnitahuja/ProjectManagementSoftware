@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   currentPropertyType: null,
   currentProjectOwner: null,
   currentProjectBudget:null, 
+  currentProjectPunchLists:null, 
   currentProjectPublished:null,
   errorMessage: null,
   isCurrentProjectDeleting: false,
@@ -51,7 +52,8 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         projectRoles,
         projectBudget,
         published,
-        Users
+        Users, 
+        punchList
       } = action.payload;
       return {
         ...state,
@@ -69,6 +71,7 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         currentProjectUsers: Users,
         currentProjectBudget: projectBudget,
         currentProjectPublished: published,
+        currentProjectPunchLists: punchList,
         currentProjectMessage: "PROJECT FETCHED!",
       };
 
