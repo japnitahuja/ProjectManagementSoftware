@@ -8,6 +8,7 @@ import LowerNavBar from '../../components/lower-nav-bar/lower-nav-bar.component'
 import PurchaseOrderListContainer from '../../components/purchase-orders-list/purchase-order-lists.container';
 import { TaskNav } from '../../components/task-nav/task-nav.component';
 import ChangeOrderList from '../../components/change-orders-list/change-orders-list.component';
+import SearchBar from '../../components/search-bar/search-bar.component'
 
 class ProjectChangeOrders extends Component {
     componentDidMount(){
@@ -22,6 +23,7 @@ class ProjectChangeOrders extends Component {
         return (
              <div>
                 <TaskNav title = {projectName}/>
+                <SearchBar placeholder="Search variance POs..."/>
                 <ChangeOrderList changeOrders = {changeOrders} />
                 <LowerNavBar />
             </div>

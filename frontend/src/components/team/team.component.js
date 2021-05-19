@@ -40,11 +40,11 @@ class Team extends Component {
                   <BigCircle>{user.user.firstName?user.user.firstName.charAt(0):unnamed.charAt(0)}</BigCircle>
                   <Text style={{marginLeft:"1em"}}>{user.user.firstName?user.user.firstName:unnamed}</Text>
                 </div>
-                {/* <div>
+                <div>
                   <SmallCircle></SmallCircle>
                   <SmallCircle></SmallCircle>
                   <SmallCircle></SmallCircle>
-                </div> */}
+                </div>
               </TeamDivItem>
             );
           })}

@@ -23,12 +23,12 @@ class ChangeOrderList extends React.Component {
               >
                 <PONameDiv>
                 <Link to={`/changeOrder/${_id}`} style={{textDecoration: 'none'}}>
-                  <SmallText>CO #{index+1001}</SmallText>
+                  <SmallText>CO #{index}</SmallText>
                   <BigText>{purchasedItem}</BigText>
                 </Link>
                 </PONameDiv>
                 <PODetailsDiv>
-                  <BigText>Open</BigText>
+                  <BigText>{totalOrderAmount===totalPaidAmount?"Close":"Open"}</BigText>
                 </PODetailsDiv>
               </PODiv>
             );
