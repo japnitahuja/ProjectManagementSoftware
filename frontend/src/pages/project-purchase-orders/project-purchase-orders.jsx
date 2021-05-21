@@ -9,24 +9,45 @@ import PurchaseOrderListContainer from '../../components/purchase-orders-list/pu
 import { TaskNav } from '../../components/task-nav/task-nav.component';
 import SearchBar from '../../components/search-bar/search-bar.component';
 import PurchaseOrdersSummary from "../../components/purchase-orders-summary/purchase-orders-summary.component"
+import NoResult from '../../components/no-result/no-result.component';
 
 class ProjectPurchaseOrders extends Component {
+    constructor(){
+        super()
+        this.state={
+            POsList:''
+        }
+    }
     componentDidMount(){
         const projectId = this.props.match.params.projectId;
         this.props.fetchProject(projectId);
+        this.setState({POsList:this.props.purchaseOrders})
     }
 
+    search = (searchedText) => {
+        let temp = this.props.purchaseOrders
+
+        if(searchedText){
+          temp = temp.filter(({purchasedItem})=>{
+            return purchasedItem.toLowerCase().includes(searchedText.toLowerCase())
+          })
+        }
+        
+     
+        this.setState({POsList: temp})
+        
+     }
+
     render() {
-        const {purchaseOrders, projectName} = this.props;
-        console.log('project purchase order page')
-        console.log(purchaseOrders)
+        const {projectName, purchaseOrders} = this.props;
+        const {POsList} = this.state;
         
         return (
              <div>
                 <TaskNav title = {projectName}/>
                 <PurchaseOrdersSummary purchaseOrders = {purchaseOrders}/>
-                <SearchBar placeholder="Search POs..."/>
-                <PurchaseOrderListContainer purchaseOrders = {purchaseOrders} />
+                <SearchBar placeholder="Search POs..." search={this.search}/>
+                {POsList.length === 0?<NoResult/>:<PurchaseOrderListContainer purchaseOrders = {POsList} />}
                 <LowerNavBar />
             </div>
         )

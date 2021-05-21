@@ -33,10 +33,6 @@ class ProjectItem extends Component {
         let progress = completedTasks/totalTasks*100;
         progress = progress.toFixed(0)
 
-        console.log(completedTasks, totalTasks)
-
-        console.log(progress)
-
         if (isNaN(progress)){
             progress = 0;
         }

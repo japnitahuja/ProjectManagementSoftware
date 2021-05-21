@@ -9,11 +9,13 @@ import {PODetailsDiv, PODiv,PONameDiv, Image} from "./all-punch-list.styles";
 import punch from "../../assets/PunchDark.png";
 
 class PunchLists extends React.Component {
+  constructor(props){
+    super(props)
+  }
     
   render() {
     let punchlists = this.props.punchlists;
-    console.log(punchlists)
-
+ 
     if (!punchlists) {
         punchlists = [];
     }
@@ -44,7 +46,7 @@ class PunchLists extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-    punchlists: selectCurrentProjectPunchlists
+    
 });
 
 const mapDispatchToProps = (dispatch) => ({
