@@ -31,10 +31,7 @@ class ProjectItem extends Component {
     render() {
         const {id, published, projectName, totalTasks, completedTasks,projectBudget} = this.state;
         let progress = completedTasks/totalTasks*100;
-
-        console.log(completedTasks, totalTasks)
-
-        console.log(progress)
+        progress = progress.toFixed(0)
 
         if (isNaN(progress)){
             progress = 0;
@@ -62,7 +59,7 @@ class ProjectItem extends Component {
                                 <CircularProgressbar value={progress} text={`${progress}%`}
                                 styles={buildStyles({
                                     // Rotation of path and trail, in number of turns (0-1)
-                                    rotation: 0.25,
+                                    rotation: 1,
                                 
                                     // Whether to use rounded or flat corners on the ends - can use 'butt' or 'round'
                                     strokeLinecap: 'round',

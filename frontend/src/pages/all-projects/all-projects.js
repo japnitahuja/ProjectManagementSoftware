@@ -12,29 +12,48 @@ import ProjectListContainer from "../../components/projects-list/projects-list.c
 import { GenericButton } from "../../components/generic-button/generic-button.styles";
 import AddUserForm from "../../components/adduser-form/adduser-form.component";
 import SearchBar from "../../components/search-bar/search-bar.component";
+import NoResult from "../../components/no-result/no-result.component";
 
 
  class AllProjects extends Component {
+
+    constructor(){
+      super()
+      this.state={
+        projectsList: '' //will change based on search
+      }
+    }
+
      componentDidMount(){
-         const {fetchProjects} = this.props;
+        const {fetchProjects} = this.props;
         fetchProjects()
+        this.setState({projectsList: this.props.projects})
      }
 
-     signOut = () => {
-        const { history, signOut } = this.props;
-        signOut();
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        history.push("/login");
-      };
+     search = (searchedText) => {
+        let temp = this.props.projects
+
+        if(searchedText){
+          temp = temp.filter(({projectName})=>{
+            return projectName.toLowerCase().includes(searchedText.toLowerCase())
+          })
+        }
+        
+     
+        this.setState({projectsList: temp})
+        
+     }
+
+
     render() {
-        const {projects} = this.props
-        console.log("projects",projects)
+        const {projectsList} = this.state
+        console.log(projectsList)
+
         return (
             <div>
                 <ProjectNav title = "Projects" />
-                <SearchBar placeholder='Search Projects...'/>
-                <ProjectListContainer projects={projects}/>
+                <SearchBar placeholder='Search Projects...' search={this.search}/>
+                {projectsList.length === 0?<NoResult/>:<ProjectListContainer projects={projectsList}/>}
                 
             </div>
         )

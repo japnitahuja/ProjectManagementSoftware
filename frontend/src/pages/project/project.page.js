@@ -11,12 +11,14 @@ import SearchBar from '../../components/search-bar/search-bar.component';
 import AdminPanelTaskPage from '../../components/admin-panel-task-page/admin-panel-task-page.component';
 import ToggleButton from '../../components/toggle-button/toggle-button.component'
 import CreateButton from '../../components/create-button/create-button.component'
+import NoResult from '../../components/no-result/no-result.component';
 
 class Project extends Component {
     constructor() {
         super();
         this.state = {
-          adminSwitch: false
+          adminSwitch: false,
+          tasksList: ''
         };
       }
 
@@ -24,6 +26,7 @@ class Project extends Component {
         const projectId = this.props.match.params.projectId;
         console.log("mount")
         this.props.fetchProjects(projectId);
+        this.setState({tasksList:this.props.tasks})
     }
 
     adminToggle = () => {
@@ -31,11 +34,26 @@ class Project extends Component {
             adminSwitch: !prevState.adminSwitch
         }));
     }
+
+    search = (searchedText) => {
+        let temp = this.props.tasks
+
+        if(searchedText){
+          temp = temp.filter(({taskName})=>{
+            return taskName.toLowerCase().includes(searchedText.toLowerCase())
+          })
+        }
+        
+     
+        this.setState({tasksList: temp})
+        
+     }
     
     render() {
-        const {tasks, projectName} = this.props;
+        const {projectName} = this.props;
+        const {tasksList} = this.state;
         console.log('project page')
-        console.log(tasks)
+        console.log(tasksList)
         
         return (
              <div style={{marginBottom:"5em"}}>
@@ -61,8 +79,8 @@ class Project extends Component {
                 </div>
             
                 {this.state.adminSwitch? <AdminPanelTaskPage/> : null}
-                <SearchBar placeholder='Search Tasks...' />
-                <TaskListContainer tasks = {tasks}/>
+                <SearchBar placeholder='Search Tasks...' search={this.search}/>
+                {tasksList.length === 0?<NoResult/>:<TaskListContainer tasks = {tasksList}/>}
                 <CreateTaskForm projectId = {this.props.match.params.projectId}/>
                 <LowerNavBar/>
                 

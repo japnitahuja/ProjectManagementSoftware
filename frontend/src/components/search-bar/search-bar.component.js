@@ -9,14 +9,27 @@ class SearchBar extends Component {
         super(props)
         this.state = {
             placeholder: this.props.placeholder,
+            searchText: ""
         }
     }
+
+    handleOnChange = (e) => {
+        let {value} = e.target;
+        this.setState({searchText: value})
+        this.props.search(value)
+        
+    }
+
     render() {
-        const {placeholder} = this.state
+        const {placeholder, searchText} = this.state
         return (
             <SearchDiv>
                 <SearchBarDiv>
-                    <SearchInput type='text' value={placeholder} />
+                    <SearchInput 
+                        type='text' 
+                        placeholder={placeholder} 
+                        value={searchText}
+                        onChange={this.handleOnChange}/>
                     <SearchIcon src={search} />
                 </SearchBarDiv>
                 <FilterDiv>FILTER</FilterDiv>
