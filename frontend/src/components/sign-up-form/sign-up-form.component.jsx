@@ -15,7 +15,6 @@ class SignUpForm extends React.Component {
         phoneNumber: "",
         email: "",
         password: "",
-        permission: "",
         username: "",
       },
       confirmPassword: "",
@@ -124,7 +123,7 @@ class SignUpForm extends React.Component {
             />
           </div>
 
-          <div>
+          {/* <div>
             <label htmlFor="permission"> Role: </label>
             <select 
                 value={this.state.resp.permission} 
@@ -137,7 +136,7 @@ class SignUpForm extends React.Component {
               <option value="TRADE_PARTNER">Trade Partner</option>
               <option value="TASK_OWNER">Task Owner</option>
             </select>
-          </div>
+          </div> */}
 
           <div>
             <label htmlFor="username"> Username: </label>

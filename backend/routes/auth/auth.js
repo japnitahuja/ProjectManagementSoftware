@@ -47,8 +47,8 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/signup", async (req, res) => {
-    let {username, email, password, firstName, lastName, phoneNumber, permission} = req.body;
-    if(!email || !password || !username || !firstName || !lastName || !phoneNumber){
+    let {username, email, password, firstName, lastName, phoneNumber} = req.body;
+    if(!email || !password || !username || !firstName || !lastName){
         res.status(422).json({error:"Please add all the details",done:false})
     }else{
         try {
@@ -64,7 +64,7 @@ router.post("/signup", async (req, res) => {
             // }, 
             // {new: true})
             permission = await savedUser.permission
-            await savedUser.updateOne({email, password:hashedPassword, firstName, lastName, phoneNumber, username, permission})
+            await savedUser.updateOne({email, password:hashedPassword, firstName, lastName, phoneNumber, username, permission: 'USER'})
             savedUser.save()
             const token = jwt.sign({_id: savedUser._id}, jwt_secret)
             const _id = savedUser._id;
@@ -77,7 +77,7 @@ router.post("/signup", async (req, res) => {
                 try {
                     const hashedPassword = await bcrypt.hash(password, 12)
                     if(permission ==='PROJECT_OWNER'){
-                    const newUser = await User.create({email, password:hashedPassword, permission, firstName, lastName, phoneNumber, username})
+                    const newUser = await User.create({email, password:hashedPassword, permission: 'GLOBAL ADMIN', firstName, lastName, phoneNumber, username})
                     const token = jwt.sign({_id: newUser._id}, jwt_secret)
                     const _id = newUser._id;
                     res.json({message: "User created and signed in!",token, user: {username, email, password, firstName, lastName, phoneNumber, permission, _id}, done: true})

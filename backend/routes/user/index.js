@@ -1090,31 +1090,27 @@ router.post('/deleteUser/:projectId', async (req, res) => {
     try {
       let project = await Project.findOne({_id: projectId})
       let projectUsers = await project.Users
-      await req.body.map(async (user, index) => {
-        console.log('body user', user, index)
-        await projectUsers.map(async (projectUser) => {
-          console.log('project user', projectUser, index)
-          if(projectUser.user == user){
-            console.log(index, user, projectUser.user, 'the ids are same')
-            let idToDelete =  projectUsers.indexOf(projectUser)
+      for (const user of req.body) {
+        for (const projectUser of projectUsers) {
+          if(user == projectUser.user){
+            let idToDelete = projectUsers.indexOf(projectUser)
+            console.log(idToDelete)
             let updatedUser =  projectUsers.filter((v, i) => i != idToDelete)
-            projectUsers =  updatedUser
-            console.log(projectUsers, 'final project users')
-            // await project.save()
-            project.markModified('Users')
-      project.save(function(err){
-        if(err){
-          console.log(err, 'err in saving!')
-        }else{
-          console.log('project saved!')
-        }
-      })
-          }else{
-            console.log('different ids')
-            //console.log(projectUser.user)
+            project.Users = await updatedUser
+            let user = await User.findOne({_id: projectUser.user})
+            let userProjects = await user.projects
+            let projectToDelete = userProjects.indexOf(projectId)
+            console.log(projectToDelete)
+            let updatedProjects = userProjects.filter((v, i) => i != projectToDelete)
+            userProjects = await updatedProjects
+            user.projects = userProjects
+            console.log(userProjects, 'final users projects')
+            await user.save()
           }
-        })
-      })
+        }
+      }
+      console.log(projectUsers, 'final project users')
+      await project.save()
       
       res.status(200).json({message: 'User deleted from project!', done: true, project})
     } catch (error) {
