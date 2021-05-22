@@ -1,30 +1,70 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { selectCurrentProjectUsers } from "../../redux/current-project/current-project.selectors";
+import { selectCurrentProjectId, selectCurrentProjectUsers } from "../../redux/current-project/current-project.selectors";
 import AddUserForm from "../adduser-form/adduser-form.component";
-import { AddUserFormHeading } from "../adduser-form/adduser-form.styles";
-import { BigText, SmallText } from "../project-item/project-item.styles";
-import { LowerDiv, Overlay, FormButton, FormInverseButton, Text, SmallCircle, BigCircle, Image, TeamDiv, TeamDivItem } from "./team.styles";
+import { DropDownContent, DropDownOption, LowerDiv, Overlay, FormButton, FormInverseButton, Text, SmallCircle, BigCircle, Image, TeamDiv, TeamDivItem } from "./team.styles";
+import removeImage from "../../assets/remove.png"
+import TeamItem from "./teamitem.component"
 
 class Team extends Component {
     constructor(){
         super()
+        this.dropdownContainer = React.createRef();
         this.state = {
             userDetails: [],
-            invite: false
+            invite: false, 
+            removeToggle: null
         }
     }
+
+    componentDidMount() {
+        document.addEventListener("mousedown", this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+      document.removeEventListener("mousedown", this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+      // console.log(this.dropdownContainer.current)
+      // console.log(event.target)
+        event.preventDefault()
+        if (
+          this.dropdownContainer.current &&
+          !this.dropdownContainer.current.contains(event.target)
+        ) {
+          this.setState({removeToggle:null})
+        }
+      };
+
+    toggleRemoveDropdown = (e) => {
+      e.preventDefault()
+      if(this.state.removeToggle){
+        this.setState({removeToggle:null})
+      }
+      else{
+        this.setState({removeToggle:e.target.dataset.id})
+      }
+      
+    }
+
+    deleteUser = (e) => {
+      e.preventDefault()
+      console.log("delete user")
+    }
+
     invite = () => {
         if(this.state.invite == false){
             this.setState({invite: true})
         }else{
             this.setState({invite: false})
         }
-        console.log(this.state.invite)
+        //console.log(this.state.invite)
     }
+
   render() {
-    console.log(this.props.users);
+   
     const { users } = this.props;
     
     return (
@@ -33,19 +73,9 @@ class Team extends Component {
           {users.map((user, index) => {
 
             let unnamed = user.user.email.slice(0,user.user.email.indexOf('@'));
-
+            
             return (
-              <TeamDivItem key={index}>
-                <div style={{display:"flex", flexDirection:"row", alignItems: "center"}}>
-                  <BigCircle>{user.user.firstName?user.user.firstName.charAt(0):unnamed.charAt(0)}</BigCircle>
-                  <Text style={{marginLeft:"1em"}}>{user.user.firstName?user.user.firstName:unnamed}</Text>
-                </div>
-                <div>
-                  <SmallCircle></SmallCircle>
-                  <SmallCircle></SmallCircle>
-                  <SmallCircle></SmallCircle>
-                </div>
-              </TeamDivItem>
+              <TeamItem key = {user._id} projectId = {this.props.projectId} user = {user} unnamed={unnamed} id={user._id}></TeamItem>
             );
           })}
         </TeamDiv>
@@ -73,6 +103,7 @@ const mapStateToProps = createStructuredSelector({
   // projectStatus: selectCurrentProjectStatus,
   // tasks: selectCurrentProjectTasks
   users: selectCurrentProjectUsers,
+  projectId: selectCurrentProjectId
 });
 
 const mapDispatchToProps = (dispatch) => ({

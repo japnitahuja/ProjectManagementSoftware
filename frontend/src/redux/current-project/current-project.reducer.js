@@ -28,7 +28,9 @@ const INITIAL_STATE = {
   updatePublishedInProjectStart: null,
   updatePublishedInProjectMessage: null,
   updateRolesInProjectStart: null,
-  updateRolesInProjectMessage: null
+  updateRolesInProjectMessage: null,
+  isuserDeleting: null,
+  userDeletionMessage: null,
 };
 
 const currentProjectReducer = (state = INITIAL_STATE, action) => {
@@ -178,6 +180,27 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
             updateRolesInProjectStart: false,
             updateRolesInProjectMessage: action.payload
           }
+
+          case CurrentProjectActionTypes.DELETE_USER_START:
+            return {
+              ...state,
+              isuserDeleting: true,
+              userDeletionMessage: null,
+            };
+
+          case CurrentProjectActionTypes.DELETE_USER_SUCCESS:
+            return {
+              ...state,
+              isuserDeleting: false,
+              userDeletionMessage: action.payload,
+            };
+
+          case CurrentProjectActionTypes.DELETE_USER_FAILURE:
+            return {
+              ...state,
+              isuserDeleting: false,
+              userDeletionMessage: action.payload,
+            };
     default:
       return state;
   }
