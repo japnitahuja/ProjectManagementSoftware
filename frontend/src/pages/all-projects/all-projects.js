@@ -20,7 +20,7 @@ import NoResult from "../../components/no-result/no-result.component";
     constructor(){
       super()
       this.state={
-        projectsList: '' //will change based on search
+        projectsList: [] //will change based on search
       }
     }
 
