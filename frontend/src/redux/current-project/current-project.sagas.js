@@ -13,6 +13,8 @@ import {
   UpdateUserInProjectSuccess,
   UpdateRolesInProjectSuccess,
   UpdateRolesInProjectFailure,
+  deleteUserSuccess,
+  deleteUserFailure
 } from "./current-project.actions";
 import { CurrentProjectActionTypes } from "./current-project.types";
 import { selectUserId } from "../user/user.selectors";
@@ -75,6 +77,35 @@ export function* deleteCurrentProject({ payload }) {
   } catch (error) {
     console.log(error);
     deleteCurrentProjectFailure(error);
+    console.log(error);
+  }
+}
+
+export function* deleteUser({ payload }) {
+  try {
+    const {projectId, userId} = payload;
+    console.log(projectId, userId);
+
+    let userDeletion = yield fetch(
+      `http://127.0.0.1:5000/deleteUser/${projectId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: userId,
+      }
+    );
+   
+    
+    userDeletion = yield userDeletion.json();
+    
+    userDeletion.done
+      ? yield put(deleteUserSuccess(userDeletion.message))
+      : yield put(deleteUserFailure(userDeletion.error));
+  } catch (error) {
+    console.log(error);
+    deleteUserFailure(error);
     console.log(error);
   }
 }
@@ -206,6 +237,13 @@ export function* onUpdateUserStart() {
   );
 }
 
+export function* onDeleteUserStart() {
+  yield takeLatest(
+    CurrentProjectActionTypes.DELETE_USER_START,
+    deleteUser
+  );
+}
+
 export function* onUpdateRolesStart(){
   yield takeLatest(
     CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_START,
@@ -227,6 +265,7 @@ export function* currentProjectSagas() {
     call(onInviteUserStart),
     call(onUpdateUserStart),
     call(onUpdatePublishedStart),
-    call(onUpdateRolesStart)
+    call(onUpdateRolesStart),
+    call(onDeleteUserStart)
   ]);
 }

@@ -18,7 +18,7 @@ class Project extends Component {
         super();
         this.state = {
           adminSwitch: false,
-          tasksList: ''
+          tasksList: []
         };
       }
 

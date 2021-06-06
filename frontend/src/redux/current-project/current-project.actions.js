@@ -93,3 +93,18 @@ export const UpdateRolesInProjectFailure = (message) => ({
     type: CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_FAILURE,
     payload: message
 })
+
+export const deleteUserStart = (userDetails) => ({
+    type: CurrentProjectActionTypes.DELETE_USER_START,
+    payload: userDetails
+})
+
+export const deleteUserSuccess = (message) => ({
+    type: CurrentProjectActionTypes.DELETE_USER_SUCCESS,
+    payload: message
+})
+
+export const deleteUserFailure = (message) => ({
+    type: CurrentProjectActionTypes.DELETE_USER_FAILURE,
+    payload: message
+})
