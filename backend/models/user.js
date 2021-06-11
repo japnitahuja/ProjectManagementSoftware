@@ -27,14 +27,32 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
     },
+    login: {
+        type: Boolean,
+        default: true   
+    },
     isInvitationSent:{
         type: Boolean,
         default: true
     },
+    // models for organisation --->
+    // projects: [{
+    //     organisation: {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: "Organisation"
+    //     },
+    //     organisationProjects: [{
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: "Project"
+    //     }]
+    // }],
+    // ---------->
+    //comment this for organisation
     projects:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project"
     }],
+    // ------------->
     createdAt: {type: Date, default: Date.now}
 })
 mongoose.model('User', userSchema)

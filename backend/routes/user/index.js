@@ -10,7 +10,9 @@ require("../../models/purchase_order");
 require("../../models/purchase_order_item");
 require("../../models/change_order");
 require("../../models/change_order_item");
-require('../../models/punch_list')
+require("../../models/cost_book");
+require("../../models/punch_list");
+require("../../models/organisation");
 const nodemailer = require("nodemailer");
 
 const User = mongoose.model("User");
@@ -19,20 +21,161 @@ const Project = mongoose.model("Project");
 const PurchaseOrder = mongoose.model("purchaseOrder");
 const PurchaseOrderItem = mongoose.model("purchaseOrderItem");
 const Step = mongoose.model("Step");
-const PunchList = mongoose.model("punchList")
+const PunchList = mongoose.model("punchList");
 const ChangeOrder = mongoose.model("changeOrder");
 const ChangeOrderItem = mongoose.model("changeOrderItem");
-const authenticate = require('./../../middleware/authenticate')
-const authorize = require('./../../middleware/restrictTo')
+const CostBook = mongoose.model("CostBook");
+const Organisation = mongoose.model("Organisation");
+const authenticate = require("./../../middleware/authenticate");
+const authorize = require("./../../middleware/restrictTo");
 //USER_ID: "6034cb2baed4be0890904a06"
 //PROJECT_ID: "6034cceed06e2a4938562970"
 //TASK_ID: 6034cd87d06e2a4938562971
 
-//all projects list
+//create organisation
+router.post("/create-organisation/:userId", async (req, res) => {
+  const {
+    organisationName,
+    organisationAddress,
+    organisationNumber,
+    organisationEmail,
+  } = req.body;
+  try {
+    const user = await User.findOne({ _id: req.params.userId });
+    const org = await Organisation.create({
+      organisationName,
+      organisationAddress,
+      organisationNumber,
+      organisationEmail,
+    });
+    org.organisationOwner = req.params.userId;
+    const orgInfo = {
+      organisation: org._id,
+    };
+    user.projects.push(orgInfo);
+    await org.save();
+    await user.save();
+    res.json({ message: "Organisation Created!", done: true, org }).status(200);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//get orgainsation
+router.get("/organisation/:orgId", async (req, res) => {
+  try {
+    const org = await Organisation.findById(req.params.orgId).populate([
+      {
+        path: "projects",
+      },
+      {
+        path: "organisationOwner",
+      },
+      {
+        path: "organisationMembers",
+      },
+    ]);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//user
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    // .populate({
+    //   path: "projects",
+    //   populate: { path: "organisation organisationProjects" },
+    // });
+    res.status(200).json({ message: "User", user });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//create a new project
+router.post("/create-project/:userId", async (req, res) => {
+  var {
+    organisationId,
+    projectName,
+    projectBudget,
+    projectFinishDate,
+    projectLocation,
+    projectStatus,
+    projectType,
+    propertyType,
+  } = req.body;
+  var { userId } = req.params;
+  if (!projectName || !projectStatus) {
+    res.status(422).json({ error: "Fill all the fields", done: false });
+  } else {
+    try {
+      var project = await Project.create({
+        projectName,
+        projectStatus,
+        projectOwner: userId,
+        projectType,
+        propertyType,
+        projectBudget,
+        projectFinishDate,
+        projectLocation,
+        projectRoles: ["Intern", "Constuction-worker"],
+      });
+      var user = await User.findOne({ _id: req.params.userId });
+      // API for organisation ------>
+      // var organisation = await Organisation.findById(organisationId);
+      // organisation.projects.push(project._id);
+      // user.projects.map((pro) => {
+      //   if (pro.organisation == organisationId) {
+      //     pro.organisationProjects.push(project._id);
+      //   }
+      // });
+      // await organisation.save();
+      //--------->
+      const userDetails = {
+        user: userId,
+        permission: "BILLING ADMIN",
+        role: "GOD",
+      };
+      // delete this when changing to organisation ---->
+      project.Users.push(userDetails);
+      // ------>
+      await user.save();
+      await project.save();
+      res.status(200).json({ message: "Project Created", done: true });
+    } catch (error) {
+      console.log(error);
+      res.status(422).json({ error: error, done: false });
+    }
+  }
+});
+
+//all Projects List with the organisations
+// router.get("/all-projects/:userId/:orgId", async (req, res) => {
+//   try {
+//     const user = await User.findById(req.params.userId).populate({
+//       path: "projects",
+//       populate: { path: "organisationProjects" },
+//       // match: doc => ({published: {$ne: false}})
+//     });
+//     console.log(user);
+//     let projects = [];
+//     user.projects.map((project) => {
+//       if (project.organisation == req.params.orgId) {
+//         projects = project.organisationProjects;
+//       }
+//     });
+//     res.json({ message: "Projects", done: true, projects });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+//all projects list without the organisations
 router.route("/all-projects/:userId").get(async (req, res) => {
   try {
-    console.log(req.headers.userpermission)
-    var projects = await User.findOne({ _id: req.params.userId})
+    var projects = await User.findOne({ _id: req.params.userId })
       .populate({
         path: "projects",
         // match: doc => ({published: {$ne: false}})
@@ -66,14 +209,15 @@ router
         },
         {
           path: "Users",
-          populate: {path: 'user', select: 'firstName lastName email'}
+          populate: { path: "user", select: "firstName lastName email" },
         },
         {
-          path: 'projectOwner', select:'firstName lastName email'
+          path: "projectOwner",
+          select: "firstName lastName email",
         },
         {
-          path: "punchList"
-        }
+          path: "punchList",
+        },
       ]);
       project.totalTasks = await project.tasks.length;
       project.save();
@@ -152,55 +296,9 @@ router
       console.log("project updated", project);
       res.status(200).json({ message: "project updated", done: true, project });
     } catch (error) {
-      console.log(error)
-    }
-
-  })
-
-//create a new project
-router.post("/create-project/:userId", async (req, res) => {
-  var { projectName, projectBudget, projectFinishDate, projectLocation, projectStatus, projectType, propertyType } = req.body;
-  var { userId } = req.params;
-  if (!projectName || !projectStatus || !projectType || !propertyType) {
-    res.status(422).json({ error: "Fill all the fields", done: false });
-  } else {
-    try {
-      var project = await Project.create({
-        projectName,
-        projectStatus,
-        projectOwner: userId,
-        projectType,
-        propertyType,
-        projectBudget, projectFinishDate, projectLocation,
-        projectRoles: ["Intern", "Constuction-worker"],
-      });
-      var user = await User.findOne({ _id: req.params.userId });
-      await user.projects.push(project._id);
-      const userDetails = {
-        user: userId,
-        permission: 'PROJECT_OWNER',
-        role: 'GOD'
-      }
-      project.Users.push(userDetails)
-      user.save(function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      });
-      project.save(function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      });
-      res.status(200).json({ message: "Project Created", done: true });
-    } catch (error) {
       console.log(error);
-      res.status(422).json({ error: error, done: false });
     }
-  }
-});
+  });
 
 //create a new task
 router.post("/create-task/:projectId", async (req, res) => {
@@ -216,18 +314,10 @@ router.post("/create-task/:projectId", async (req, res) => {
         taskEndDate,
         taskOwner: userId,
       });
-      //console.log(task._id);
       await project.tasks.push(task._id);
       project.totalTasks = await project.tasks.length;
       console.log("total tasks", project.totalTasks);
-      project.save(function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        } else {
-          // console.log("task added to project");
-        }
-      });
+      project.save();
       res.status(200).json({ message: "Task Created", done: true, task });
     } catch (error) {
       console.log(error);
@@ -254,7 +344,7 @@ router.get("/project/:projectId/task", async (req, res) => {
 //get a prticular task
 router
   .route("/task/:taskId")
-  .get( async (req, res) => {
+  .get(async (req, res) => {
     try {
       var task = await Task.findOne({ _id: req.params.taskId }).populate([
         {
@@ -291,7 +381,7 @@ router
 
       var project = await Project.findOne({ _id: projectId });
       let tasks = await project.tasks;
-      let completedTasks = await project.completedTasks
+      let completedTasks = await project.completedTasks;
       console.log("task array before delete", tasks);
       let idTaskToDelete = await tasks.indexOf(req.params.taskId);
       let updatedTasks = await tasks.filter((v, i) => i !== idTaskToDelete);
@@ -299,10 +389,10 @@ router
       tasks = await updatedTasks;
       console.log("updated tasks list", project.tasks);
       console.log("updated tasks number", project.tasks.length);
-      if(task.isTaskDone == true){
-        completedTasks = await completedTasks - 1
-        project.completedTasks = await completedTasks
-        console.log(completedTasks, 'completed tasks')
+      if (task.isTaskDone == true) {
+        completedTasks = (await completedTasks) - 1;
+        project.completedTasks = await completedTasks;
+        console.log(completedTasks, "completed tasks");
       }
       await project.save(function (err) {
         if (err) {
@@ -525,7 +615,8 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 });
 
 //creating purchase order items
-router.post("/create-purchase-order-items/:purchaseOrderId",
+router.post(
+  "/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
     var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
     if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
@@ -719,9 +810,9 @@ router.post("/complete-task/:taskId", async (req, res) => {
     var project = await Project.findOne({ _id: projectId });
     if (task.completionPercentage === 100 || task.steps.length == 0) {
       task.isTaskDone = true;
-      task.completionPercentage === (await 100);
+      task.completionPercentage === 100;
       task.save();
-      project.completedTasks = (await project.completedTasks) + 1;
+      project.completedTasks = project.completedTasks + 1;
       project.save();
       console.log("projectid", projectId);
       console.log(project.completedTasks, "completed tasks for project");
@@ -944,259 +1035,429 @@ router.post("/test-template/:userId", async (req, res) => {
 });
 
 //send the request to trade partner
-router.post("/inviteUser", async (req, res) => {
-  const { email, permission, role, type, projectId } = req.body;
+// router.post("/inviteUser", async (req, res) => {
+//   const { email, permission, role, type, projectId, organisationId } = req.body;
+//   try {
+//     console.log(email, projectId);
+//     const savedUser = await User.findOne({ email: email });
+//     const project = await Project.findOne({ _id: projectId });
+//     let UserInProject = false;
+//     let organisationInUser = false, finalUserId, finalUser;
+//     if (savedUser) {
+//       savedUser.projects.map((project) => {
+//         console.log(project, "project id in array");
+//         if (project.organisation == organisationId) {
+//           organisationInUser = true;
+//           if (project.organisationProjects.includes(projectId)) {
+//             UserInProject = true;
+//           }
+//         }
+//       })
+//       console.log(UserInProject, organisationInUser);
+//       if (UserInProject === true) {
+//         console.log("user in project");
+//         res
+//           .status(422)
+//           .json({ message: "User already in the project team", done: false });
+//       } else {
+//         console.log("saved user not added in the project");
+//         finalUserId = await savedUser._id;
+//         finalUser = savedUser;
+//         console.log("user id in if else", finalUserId);
+//         let orgDetails = {
+//           organisation: organisationId,
+//         }
+//         console.log(orgDetails, 'org details')
+//         if (organisationInUser === false) {
+//           finalUser.projects.push(orgDetails);
+//           console.log("created org");
+//         }
+//       }
+//     } else {
+//       let user = await User.create({
+//         email: email,
+//         permission: permission,
+//         role: role,
+//       });
+//       finalUserId = user._id;
+//       finalUser = user;
+//       console.log("user id in if else", finalUserId);
+//       let orgDetails = {
+//         organisation: organisationId,
+//       };
+
+//       finalUser.projects.push(orgDetails);
+//     }
+//     console.log(finalUserId, "final user id");
+//     const userDetails = {
+//       user: finalUserId,
+//       permission: permission,
+//       role: role,
+//     };
+//     finalUser.projects.map((project) => {
+//       if (project.organisation == organisationId) {
+//         project.organisationProjects.push(projectId);
+//       }
+//     });
+//     project.Users.push(userDetails);
+//     finalUser.save();
+//     project.save();
+//     // console.log("projects for user", finalUser.projects);
+//     // console.log("users in a project", project.Users);
+//     console.log(finalUser);
+//     if (type == "saveandinvite") {
+//       let mailTransporter = nodemailer.createTransport({
+//         service: "gmail",
+//         auth: {
+//           user: "johnbanana12345john@gmail.com",
+//           pass: "Banana@123",
+//         },
+//       });
+//       let mailDetails = {
+//         from: "johnbanana12345john@gmail.com",
+//         to: email,
+//         subject: "Test mail",
+//         text: "hi! this mail has come from node js.",
+//       };
+//       mailTransporter.sendMail(mailDetails, function (err, data) {
+//         if (err) {
+//           console.log(err);
+//         } else {
+//           console.log("Email sent successfully");
+//         }
+//       });
+//       res.status(200).json({ done: true, message: "Invitation mail sent!" });
+//     } else {
+//       res
+//         .status(200)
+//         .json({ done: true, message: "User added to the project team" });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+//update user permissions for project
+router.post("/updatePermissions/:projectId", async (req, res) => {
+  const { projectId } = req.params;
   try {
-    console.log(email, projectId);
-    const savedUser = await User.findOne({ email: email });
     const project = await Project.findOne({ _id: projectId });
-    let UserInProject = false;
-    let finalUserId, finalUser;
-    console.log(UserInProject);
-    if (savedUser) {
-      await savedUser.projects.map((project) => {
-        console.log(project, "project id in array");
-        if (project == projectId) {
-          UserInProject = true;
+    let projectUsers = await project.Users;
+    console.log(req.body, "req.body");
+    console.log(project);
+    await req.body.map(async (userDetail, index) => {
+      console.log(index, userDetail, "body user");
+      await projectUsers.map(async (user) => {
+        console.log(index, user, "project user");
+        if (userDetail.id == user.user) {
+          console.log(index, userDetail.id, user.user, "if else user IDs");
+          user.permission = await userDetail.updatedPermission;
+          console.log(user.permission);
         }
       });
-      if (UserInProject === true) {
-        console.log("user in project");
-        res
-          .status(422)
-          .json({ message: "User already in the project team", done: false });
-      } else {
-        console.log("saved user not added in the project");
-        finalUserId = await savedUser._id;
-        finalUser = savedUser;
-        console.log("user id in if else", finalUserId);
-      }
-    } else {
-      let user = await User.create({
-        email: email,
-        permission: permission,
-        role: role,
-      });
-      finalUserId = await user._id;
-      finalUser = user;
-      console.log("user id in if else", finalUserId);
-    }
-    console.log(finalUserId, "final user id");
-    const userDetails = {
-      user: finalUserId,
-      permission: permission,
-      role: role,
-    };
-    finalUser.projects.push(projectId);
-    project.Users.push(userDetails);
-    finalUser.save();
+    });
     project.save();
-    console.log("projects for user", finalUser.projects);
-    console.log("users in a project", project.Users);
-    if (type == "saveandinvite") {
-      let mailTransporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "johnbanana12345john@gmail.com",
-          pass: "Banana@123",
-        },
-      });
-      let mailDetails = {
-        from: "johnbanana12345john@gmail.com",
-        to: email,
-        subject: "Test mail",
-        text: "hi! this mail has come from node js.",
-      };
-      mailTransporter.sendMail(mailDetails, function (err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log("Email sent successfully");
-        }
-      });
-      res.status(200).json({ done: true, message: "Invitation mail sent!" });
-    } else {
-      res
-        .status(200)
-        .json({ done: true, message: "User added to the project team" });
-    }
+    console.log(project.Users);
+    res.status(200).json({
+      done: true,
+      project,
+      message: "Permissions updated succesfully!",
+    });
   } catch (error) {
     console.log(error);
   }
 });
 
-//update user permissions for project 
-router.post('/updatePermissions/:projectId', async (req, res) => {
-  //const {userDetails} = req.body;
-  const {projectId} = req.params
-  try {
-    const project = await Project.findOne({_id: projectId})
-    let projectUsers = await project.Users
-    console.log(req.body, 'req.body')
-    console.log(project)
-    await req.body.map(async (userDetail, index) => {
-      console.log(index, userDetail, 'body user')
-      await projectUsers.map(async (user) => {
-        console.log(index, user, 'project user')
-        if(userDetail.id == user.user){
-          console.log(index, userDetail.id, user.user, 'if else user IDs')
-          user.permission = await userDetail.updatedPermission
-          console.log(user.permission)
-        }
-      })
-    })
-    project.save()
-    console.log(project.Users)
-    res.status(200).json({done: true, project, message: 'Permissions updated succesfully!'})
-  } catch (error) {
-    console.log(error)
-  }
-})
-
 //add new roles and assign it to users
-router.post('/updateRoles/:projectId', async (req, res) => {
-  const {projectId} = req.params
-  const {allRoles, updatedRoles} = req.body
+router.post("/updateRoles/:projectId", async (req, res) => {
+  const { projectId } = req.params;
+  const { allRoles, updatedRoles } = req.body;
   try {
-    console.log(req.body)
-    const project = await Project.findOne({_id: projectId})
-    project.projectRoles = allRoles
-    console.log(project.projectRoles)
-    let projectUsers =  project.Users
+    console.log(req.body);
+    const project = await Project.findOne({ _id: projectId });
+    project.projectRoles = allRoles;
+    console.log(project.projectRoles);
+    let projectUsers = project.Users;
     await updatedRoles.map(async (userDetail, index) => {
       //console.log(index, userDetail, 'body user')
       await projectUsers.map(async (user) => {
         //console.log(index, user, 'project user')
-        if(userDetail.id == user.user){
-         // console.log(index, userDetail.id, user.user, 'if else user IDs')
-          user.role = userDetail.updatedRole
+        if (userDetail.id == user.user) {
+          // console.log(index, userDetail.id, user.user, 'if else user IDs')
+          user.role = userDetail.updatedRole;
           //console.log(user.permission)
         }
-      })
-    })
-    project.save(function(err){
-      if(err) console.log(err)
-    })
-    console.log(project.Users)
-    res.status(200).json({done: true, project, message: 'Roles updated succesfully!', project})
+      });
+    });
+    project.save(function (err) {
+      if (err) console.log(err);
+    });
+    console.log(project.Users);
+    res.status(200).json({
+      done: true,
+      project,
+      message: "Roles updated succesfully!",
+      project,
+    });
   } catch (error) {
-    console.log(error)
-  }
-})
-
-//delete user from project
-router.post('/deleteUser/:projectId', async (req, res) => {
-    const {projectId} = req.params
-    try {
-      let project = await Project.findOne({_id: projectId})
-      let projectUsers = await project.Users
-      for (const user of req.body) {
-        for (const projectUser of projectUsers) {
-          if(user == projectUser.user){
-            let idToDelete = projectUsers.indexOf(projectUser)
-            console.log(idToDelete)
-            let updatedUser =  projectUsers.filter((v, i) => i != idToDelete)
-            project.Users = await updatedUser
-            let user = await User.findOne({_id: projectUser.user})
-            let userProjects = await user.projects
-            let projectToDelete = userProjects.indexOf(projectId)
-            console.log(projectToDelete)
-            let updatedProjects = userProjects.filter((v, i) => i != projectToDelete)
-            userProjects = await updatedProjects
-            user.projects = userProjects
-            console.log(userProjects, 'final users projects')
-            await user.save()
-          }
-        }
-      }
-      console.log(projectUsers, 'final project users')
-      await project.save()
-      
-      res.status(200).json({message: 'User deleted from project!', done: true, project})
-    } catch (error) {
-      console.log(error)
-    } 
-})
-
-//create punch list 
-router.post("/create-punch-list/:projectId", async(req, res) => {
-  const {punchListName, punchListAssignedBy, punchListAssignedTo} = req.body;
-
-  try {
-    const project = await Project.findOne({_id: req.params.projectId})
-    const PL = await PunchList.create({
-      punchListName,
-      punchListAssignedTo,
-      punchListAssignedBy
-    })
-    await project.punchList.push(PL)
-    project.save()
-    res.status(200).json({message: 'Punch list created', done: true, PL})
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-// create punch list items 
-router.post('/create-punch-list-item/:punchListId', async(req, res) => {
-  const {punchListItemName} = req.body
-  try {
-    const PL = await PunchList.findOne({_id: req.params.punchListId})
-    const PLitem = {
-      punchListItemName: punchListItemName
-    }
-    console.log(PLitem)
-    await PL.punchListItems.push(PLitem)
-    PL.save()
-    res.status(200).json({message: 'PL item created', done: true, PL})
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-//getting punch lists for a project
-router.get('/punchList/:projectId', async (req, res) => {
-  try {
-    const PL = await Project.findOne({_id: req.params.projectId}).populate({
-      path: "punchList"
-    })
-    res.status(200).json({message: 'change orders fetched', done: true, PL})
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-//get a particular punch list 
-router.get('punch-list/:punchListId', async (req, res) => {
-  try {
-    const CO = await ChangeOrder.findOne({_id: req.params.punchListId})
-    res.json({message: 'Change Order Fetched', done: true, CO})
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-//publish or unpublish a project
-router.post('/publish/:projectId', async (req, res) => {
-  try {
-   const project = await Project.findOne({_id: req.params.projectId})
-   if(project.published == true){
-      project.published = await false
-      console.log('false')
-   }else{
-    project.published = await true
-    console.log('true')
-   }
-   project.save()
-   res.status(200).json({message: 'publish access changed', done: true, project})
-  } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
+//delete user from project
+router.post("/deleteUser/:projectId", async (req, res) => {
+  const { projectId } = req.params;
+  try {
+    let project = await Project.findOne({ _id: projectId });
+    let projectUsers = await project.Users;
+    for (const user of req.body) {
+      for (const projectUser of projectUsers) {
+        if (user == projectUser.user) {
+          let idToDelete = projectUsers.indexOf(projectUser);
+          console.log(idToDelete);
+          let updatedUser = projectUsers.filter((v, i) => i != idToDelete);
+          project.Users = await updatedUser;
+          let user = await User.findOne({ _id: projectUser.user });
+          let userProjects = await user.projects;
+          let projectToDelete = userProjects.indexOf(projectId);
+          console.log(projectToDelete);
+          let updatedProjects = userProjects.filter(
+            (v, i) => i != projectToDelete
+          );
+          userProjects = await updatedProjects;
+          user.projects = userProjects;
+          console.log(userProjects, "final users projects");
+          await user.save();
+        }
+      }
+    }
+    console.log(projectUsers, "final project users");
+    await project.save();
 
+    res
+      .status(200)
+      .json({ message: "User deleted from project!", done: true, project });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
+//create punch list
+router.post("/create-punch-list/:projectId", async (req, res) => {
+  const { punchListName, punchListAssignedBy, punchListAssignedTo } = req.body;
 
+  try {
+    const project = await Project.findOne({ _id: req.params.projectId });
+    const PL = await PunchList.create({
+      punchListName,
+      punchListAssignedTo,
+      punchListAssignedBy,
+    });
+    await project.punchList.push(PL);
+    project.save();
+    res.status(200).json({ message: "Punch list created", done: true, PL });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
+// create punch list items
+router.post("/create-punch-list-item/:punchListId", async (req, res) => {
+  const { punchListItemName } = req.body;
+  try {
+    const PL = await PunchList.findOne({ _id: req.params.punchListId });
+    const PLitem = {
+      punchListItemName: punchListItemName,
+    };
+    console.log(PLitem);
+    await PL.punchListItems.push(PLitem);
+    PL.save();
+    res.status(200).json({ message: "PL item created", done: true, PL });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//getting punch lists for a project
+router.get("/punchList/:projectId", async (req, res) => {
+  try {
+    const PL = await Project.findOne({ _id: req.params.projectId }).populate({
+      path: "punchList",
+    });
+    res.status(200).json({ message: "change orders fetched", done: true, PL });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//get a particular punch list
+router.get("punch-list/:punchListId", async (req, res) => {
+  try {
+    const CO = await ChangeOrder.findOne({ _id: req.params.punchListId });
+    res.json({ message: "Change Order Fetched", done: true, CO });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//publish or unpublish a project
+router.post("/publish/:projectId", async (req, res) => {
+  try {
+    const project = await Project.findOne({ _id: req.params.projectId });
+    if (project.published == true) {
+      project.published =  false;
+      console.log("false");
+    } else {
+      project.published =  true;
+      console.log("true");
+    }
+    await project.save();
+    res
+      .status(200)
+      .json({ message: "publish access changed", done: true, project });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/costbook", async (req, res) => {
+  try {
+    const costbook = await CostBook.find();
+    res.json({ costbook, message: "Costbook Fetched!", done: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/createCostBookCategory", async (req, res) => {
+  const { categoryName } = req.body;
+  try {
+    let CostBookCategory = await CostBook.create({
+      categoryName: categoryName,
+    });
+
+    console.log(CostBookCategory);
+    res
+      .json({
+        CostBookCategory,
+        message: "cost book category created!",
+        done: true,
+      })
+      .status(200);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/editCostBookCategory", async (req, res) => {
+  const { categoryId, categoryName } = req.body;
+  try {
+    let category = await CostBook.findOne({ _id: categoryId });
+    category.categoryName = categoryName;
+    await category.save();
+    res.json({ category, message: "Cost Code Created", done: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/createCostCode", async (req, res) => {
+  const { categoryId, costCodeTitle } = req.body;
+  try {
+    let category = await CostBook.findOne({ _id: categoryId });
+    const costcodetitle = {
+      costCodeTitle: costCodeTitle,
+    };
+    category.costCodes.push(costcodetitle);
+    await category.save();
+    res.json({ category, message: "Cost Code Created", done: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/editCostCode", async (req, res) => {
+  const { categoryId, costCodeId, costCodeTitle, updatedCategoryId } = req.body;
+  try {
+    let category = await CostBook.findOne({ _id: categoryId });
+    category.costCodes.map((costCode) => {
+      if (costCode._id == costCodeId) {
+        (costCode.costCodeTitle = costCodeTitle),
+          (costCode.updatedCategoryId = updatedCategoryId);
+      }
+    });
+    await category.save();
+    res.json({ category, message: "Cost Code Created", done: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/createCostCodeItem", async (req, res) => {
+  const {
+    categoryId,
+    costCodeId,
+    itemName,
+    partNo,
+    cost,
+    itemLink,
+    description,
+  } = req.body;
+  try {
+    const category = await CostBook.findOne({ _id: categoryId });
+    console.log(category);
+    category.costCodes.map((costCode) => {
+      if (costCode._id == costCodeId) {
+        const item = {
+          itemName: itemName,
+          partNo: partNo,
+          cost: cost,
+          itemLink: itemLink,
+          description: description,
+        };
+        costCode.items.push(item);
+        console.log("cost code");
+      }
+    });
+    await category.save();
+    res.json({ message: "item created", category, done: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/editCostCodeItem", async (req, res) => {
+  const {
+    categoryId,
+    costCodeId,
+    costCodeItemId,
+    itemName,
+    partNo,
+    cost,
+    itemLink,
+    description,
+  } = req.body;
+  try {
+    const category = await CostBook.findOne({ _id: categoryId });
+    console.log(category);
+    category.costCodes.map((costCode) => {
+      if (costCode._id == costCodeId) {
+        costCode.items.map((item) => {
+          if (item._id == costCodeItemId) {
+            (item.itemName = itemName),
+              (item.partNo = partNo),
+              (item.cost = cost),
+              (item.itemLink = itemLink),
+              (item.description = description);
+          }
+        });
+      }
+    });
+    await category.save();
+    res.json({ message: "item edited", category, done: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;
