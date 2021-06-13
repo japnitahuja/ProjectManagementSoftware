@@ -1,3 +1,4 @@
+const { response } = require("express");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -61,6 +62,19 @@ router.post("/create-organisation/:userId", async (req, res) => {
   }
 });
 
+//get all user org
+router.get('/organisation/:userId', async (req, res) => {
+  try {
+    const org = await User.findOne({_id: req.params.userId}).populate({
+      path: 'projects',
+      populate: {path: 'organisation'}
+    })
+    res.json({message: 'Orgs fetched', done: true, org})
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 //get orgainsation
 router.get("/organisation/:orgId", async (req, res) => {
   try {
@@ -75,6 +89,7 @@ router.get("/organisation/:orgId", async (req, res) => {
         path: "organisationMembers",
       },
     ]);
+    res.status(200).json({message: 'organisation fetched', done: true, org})
   } catch (error) {
     console.log(error);
   }
@@ -123,7 +138,7 @@ router.post("/create-project/:userId", async (req, res) => {
         projectRoles: ["Intern", "Constuction-worker"],
       });
       var user = await User.findOne({ _id: req.params.userId });
-      // API for organisation ------>
+      // API for organisation unomment this------>
       // var organisation = await Organisation.findById(organisationId);
       // organisation.projects.push(project._id);
       // user.projects.map((pro) => {
@@ -523,23 +538,43 @@ router
     }
   });
 
+//list of all the payees
+router.get("/payees/:projectId",async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.projectId).populate({
+      path: "users",
+      populate: { path: "user" },
+    });
+    let finalUsers = [];
+    project.users.map((user) => {
+      if (user.role == "TRADE PARTNER") {
+        finalUsers.push(user.user);
+      }
+    });
+    res.status(200).json({ message: "Payees", done: true, finalUsers });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //creating a purchase order
 router.post("/create-purchase-order/:taskId", async (req, res) => {
   var {
-    orderFrom,
-    totalOrderAmount,
-    totalPaidAmount,
+    PoTitle,
     userId,
     projectId,
     purchasedItem,
+    payee, //send payee id here
+    group,
+    terms,
+    dueDate,
   } = req.body;
   if (
-    !orderFrom ||
-    !totalOrderAmount ||
-    !purchasedItem ||
-    !totalPaidAmount ||
-    !userId ||
-    !projectId
+    !PoTitle
+    // !totalOrderAmount ||
+    // !purchasedItem ||
+    // !userId ||
+    // !projectId
   ) {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
@@ -547,27 +582,22 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
       let task = await Task.findOne({ _id: req.params.taskId });
       let project = await Project.findOne({ _id: projectId });
       let purchaseOrder = await PurchaseOrder.create({
+        Potitle,
+        payee,
+        group,
+        terms,
+        dueDate,
         orderFrom,
         totalOrderAmount,
         totalPaidAmount,
-        user: userId,
+        PoCreatedBy: userId,
         purchasedItem,
       });
-      await task.purchaseOrders.push(purchaseOrder._id);
-      task.save(function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      });
+      task.purchaseOrders.push(purchaseOrder._id);
+      await task.save();
       console.log("project po", project);
-      await project.purchaseOrders.push(purchaseOrder._id);
-      project.save(function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      });
+      project.purchaseOrders.push(purchaseOrder._id);
+      await project.save();
       res.status(200).json({
         message: "Purchase order created and linked to the task",
         done: true,
@@ -582,10 +612,16 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
 router.get("/task/:taskId/purchaseOrder", async (req, res) => {
   try {
     var purchaseOrders = await Task.find({ _id: req.params.taskId })
-      .populate({
-        path: "purchaseOrders",
+    .populate(
+      {
+      path: "purchaseOrders",
+      },
+      {
+        path: 'PoCreatedBy'
+      },
+      {
+        path: 'payee'
       })
-      .select("purchaseOrders");
     res.status(200).json({
       message: "All purchase orders linked to the task",
       done: true,
@@ -600,10 +636,16 @@ router.get("/task/:taskId/purchaseOrder", async (req, res) => {
 router.get("/project/:projectId/purchaseOrders", async (req, res) => {
   try {
     var purchaseOrder = await Project.findOne({ _id: req.params.projectId })
-      .populate({
+      .populate(
+        {
         path: "purchaseOrders",
-      })
-      .select("purchaseOrders");
+        },
+        {
+          path: 'PoCreatedBy'
+        },
+        {
+          path: 'payee'
+        })
     res.status(200).json({
       message: "All purchase orders linked to the project",
       done: true,
@@ -618,8 +660,13 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 router.post(
   "/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
-    var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
-    if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
+      let {
+        itemName,
+        itemNumber,
+        itemValue,
+        comment
+      } = req.body
+    if (!itemName) {
       res.status(422).json({ error: "Fill all the fields", done: false });
     } else {
       try {
@@ -629,16 +676,11 @@ router.post(
         let purchaseOrderItem = await PurchaseOrderItem.create({
           itemName,
           itemNumber,
-          itemsShipped,
           itemValue,
+          comment
         });
-        await purchaseOrder.purchasedItems.push(purchaseOrderItem._id);
-        purchaseOrder.save(function (err) {
-          if (err) {
-            console.log(err);
-            return;
-          }
-        });
+        purchaseOrder.purchasedItems.push(purchaseOrderItem._id);
+        await purchaseOrder.save();
         res.status(200).json({
           message: "Purchase order items created and linked to the order",
           done: true,
@@ -663,6 +705,16 @@ router.get("/purchaseOrder/:purchaseOrderId", async (req, res) => {
     console.log(error);
   }
 });
+
+//editing a purchase order
+router.put('/purchaseOrder/:purchaseOrderId', async(req, res) => {
+  const PO = await PurchaseOrder.findByIdAndUpdate(
+    req.params.purchaseOrderId, 
+    {
+      $set: req.body
+    }, {new: true})
+    res.status(200).json({message: 'PO updated', done: true, PO})
+})
 
 //creating a change order
 router.post("/create-change-order/:taskId", async (req, res) => {
@@ -1143,20 +1195,15 @@ router.post("/updatePermissions/:projectId", async (req, res) => {
   try {
     const project = await Project.findOne({ _id: projectId });
     let projectUsers = await project.Users;
-    console.log(req.body, "req.body");
     console.log(project);
     await req.body.map(async (userDetail, index) => {
-      console.log(index, userDetail, "body user");
       await projectUsers.map(async (user) => {
-        console.log(index, user, "project user");
         if (userDetail.id == user.user) {
-          console.log(index, userDetail.id, user.user, "if else user IDs");
-          user.permission = await userDetail.updatedPermission;
-          console.log(user.permission);
+          user.permission =  userDetail.updatedPermission;
         }
       });
     });
-    project.save();
+    await project.save();
     console.log(project.Users);
     res.status(200).json({
       done: true,
@@ -1216,15 +1263,15 @@ router.post("/deleteUser/:projectId", async (req, res) => {
           let idToDelete = projectUsers.indexOf(projectUser);
           console.log(idToDelete);
           let updatedUser = projectUsers.filter((v, i) => i != idToDelete);
-          project.Users = await updatedUser;
+          project.Users =  updatedUser;
           let user = await User.findOne({ _id: projectUser.user });
-          let userProjects = await user.projects;
+          let userProjects =  user.projects;
           let projectToDelete = userProjects.indexOf(projectId);
           console.log(projectToDelete);
           let updatedProjects = userProjects.filter(
             (v, i) => i != projectToDelete
           );
-          userProjects = await updatedProjects;
+          userProjects =  updatedProjects;
           user.projects = userProjects;
           console.log(userProjects, "final users projects");
           await user.save();
@@ -1305,10 +1352,10 @@ router.post("/publish/:projectId", async (req, res) => {
   try {
     const project = await Project.findOne({ _id: req.params.projectId });
     if (project.published == true) {
-      project.published =  false;
+      project.published = false;
       console.log("false");
     } else {
-      project.published =  true;
+      project.published = true;
       console.log("true");
     }
     await project.save();
@@ -1320,6 +1367,7 @@ router.post("/publish/:projectId", async (req, res) => {
   }
 });
 
+//fetch costbook
 router.get("/costbook", async (req, res) => {
   try {
     const costbook = await CostBook.find();
@@ -1329,6 +1377,7 @@ router.get("/costbook", async (req, res) => {
   }
 });
 
+//create costbook category
 router.post("/createCostBookCategory", async (req, res) => {
   const { categoryName } = req.body;
   try {
@@ -1349,6 +1398,7 @@ router.post("/createCostBookCategory", async (req, res) => {
   }
 });
 
+//edit costbook category
 router.post("/editCostBookCategory", async (req, res) => {
   const { categoryId, categoryName } = req.body;
   try {
@@ -1361,6 +1411,7 @@ router.post("/editCostBookCategory", async (req, res) => {
   }
 });
 
+//create cost code
 router.post("/createCostCode", async (req, res) => {
   const { categoryId, costCodeTitle } = req.body;
   try {
@@ -1376,6 +1427,7 @@ router.post("/createCostCode", async (req, res) => {
   }
 });
 
+//edit cost code
 router.post("/editCostCode", async (req, res) => {
   const { categoryId, costCodeId, costCodeTitle, updatedCategoryId } = req.body;
   try {
@@ -1393,6 +1445,7 @@ router.post("/editCostCode", async (req, res) => {
   }
 });
 
+//create cost code item
 router.post("/createCostCodeItem", async (req, res) => {
   const {
     categoryId,
@@ -1426,6 +1479,7 @@ router.post("/createCostCodeItem", async (req, res) => {
   }
 });
 
+//edit cost code item
 router.post("/editCostCodeItem", async (req, res) => {
   const {
     categoryId,
