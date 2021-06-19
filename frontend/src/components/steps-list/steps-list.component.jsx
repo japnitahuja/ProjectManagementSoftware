@@ -7,6 +7,7 @@ import { selectStepQuestionAnsweredConfirmationMessage } from "../../redux/all-s
 import ConformationMesage from "../conformation-message/comformation-message.component";
 import { BigText, Circle, SmallText } from "../task-item/task-item.styles";
 import StepItem from "../step-item/step-item.component"
+import { LongButton } from '../../components/long-button/long-button.styles';
 
 class StepList extends React.Component {
   render() {
@@ -16,6 +17,7 @@ class StepList extends React.Component {
       steps = [];
     }
     return (
+      <>
       <div>
         {steps.map(
           ({stepName,questionStatement,_id,isStepDone,isQuestionAnswered,}, index) => {
@@ -27,6 +29,12 @@ class StepList extends React.Component {
           }
         )}
       </div>
+       <center>
+       <LongButton style={{backgroundColor: "#205284", marginTop: "2em"}} onClick={this.props.completeTask}>COMPLETE TASK</LongButton> 
+       </center>
+      
+      
+      </>
     );
   }
 }

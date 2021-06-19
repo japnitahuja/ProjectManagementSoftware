@@ -7,7 +7,6 @@ export const ProjectDiv = styled.div`
     border-bottom: 1px solid #BCC5D3;
     padding: 1em;
     box-sizing: border-box;
-
     display: flex;
     flex-direction: row;
   }

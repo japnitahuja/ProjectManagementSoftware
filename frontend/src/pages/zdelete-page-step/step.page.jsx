@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect'
-import StepNavBar from '../../components/step-navbar/step-navbar.component';
-import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
 import { selectCurrentProjectId } from '../../redux/current-project/current-project.selectors';
 import { completeStepQuestionStart, completeStepStart } from '../../redux/current-step/current-step.actions'
 import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
 import { selectCurrentTaskId } from '../../redux/current-task/current-task.selectors';
+import StepNav from '../../components/step-nav/step-nav.component'
+import StepLowerNav from '../../components/step-lower-nav/step-lower-nav.component';
 
  class Step extends Component {
     componentDidMount(){
@@ -41,8 +41,9 @@ import { selectCurrentTaskId } from '../../redux/current-task/current-task.selec
         }
         return (
             <div>
-                <StepPageTaskNav projectId={projectId}/>
-                <StepNavBar />
+                <StepNav projectId={projectId}/>
+                <StepLowerNav/>
+                
 
                 <h2>{stepName}</h2>
                 

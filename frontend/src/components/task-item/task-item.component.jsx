@@ -77,22 +77,7 @@ class TaskItem extends Component{
                     {
                         isTaskDone? <CheckBox/>: <Circle/>
                     }
-                    
-                    <div style={{marginLeft:"1.5em"}} onClick={this.toggleRemoveDropdown}>
-                        <SmallCircle></SmallCircle>
-                        <SmallCircle></SmallCircle>
-                        <SmallCircle></SmallCircle>
-                        <DropDownContent 
-                            ref={this.dropdownContainer} 
-                            display={this.state.removeDropdownSwitch?"block":"none"}
-                            onClick={this.deleteTask}>
-                            <DropDownOption data-id={_id}>
-                                <Image src={removeImage}/>
-                                Remove
-                            </DropDownOption>
-                        </DropDownContent>
-                    </div>
-                    
+  
                 </RightDiv>
             </TaskDiv>
         

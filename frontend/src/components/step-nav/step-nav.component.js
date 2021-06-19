@@ -4,9 +4,9 @@ import {Link} from "react-router-dom";
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentProjectId } from '../../redux/current-project/current-project.selectors';
 import { selectCurrentTaskName } from '../../redux/current-task/current-task.selectors';
-import { NavBar, Back, Heading, OneThirdDiv } from './step-page-task-nav.styles'
+import { NavBar, Back, Heading, OneThirdDiv } from './step-nav.styles'
 
-class StepPageTaskNav extends Component {
+class StepNav extends Component {
 
     render() {
         const {taskName, projectId} = this.props;
@@ -19,7 +19,7 @@ class StepPageTaskNav extends Component {
                             background: 'none', 
                             border: 'none', 
                             fontSize:'1.4em', 
-                            color:'#ffffff'}}> &times;</button>
+                            color:'black'}}> &times;</button>
                 </Link>
             </Back>
 
@@ -42,4 +42,4 @@ const mapStateToProps = createStructuredSelector({
 
 });
 
-export default connect(mapStateToProps, null)(StepPageTaskNav);
+export default connect(mapStateToProps, null)(StepNav);

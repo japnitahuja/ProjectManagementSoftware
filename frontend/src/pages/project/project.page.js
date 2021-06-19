@@ -18,7 +18,8 @@ class Project extends Component {
         super();
         this.state = {
           adminSwitch: false,
-          tasksList: []
+          tasksList: [], 
+          showSearch: false
         };
       }
 
@@ -48,6 +49,13 @@ class Project extends Component {
         this.setState({tasksList: temp})
         
      }
+
+     toggleSearchBar = () => {
+        this.setState((prevState) => ({
+          showSearch: !prevState.showSearch
+        }));
+      
+       }
     
     render() {
         const {projectName} = this.props;
@@ -57,7 +65,8 @@ class Project extends Component {
         
         return (
              <div style={{marginBottom:"5em"}}>
-                <TaskNav title = {projectName}/>
+                <TaskNav title = {projectName} toggleSearch={this.toggleSearchBar}/>
+                {this.state.showSearch? <SearchBar placeholder='Search Tasks...' search={this.search} toggleFilter={this.toggleFilter}/> : null}
                 <div style={{
                     padding: '1em',
                     display: 'flex',
@@ -77,9 +86,8 @@ class Project extends Component {
                     Admin
                     </p>
                 </div>
-            
+                
                 {this.state.adminSwitch? <AdminPanelTaskPage/> : null}
-                <SearchBar placeholder='Search Tasks...' search={this.search}/>
                 {tasksList.length === 0?<NoResult/>:<TaskListContainer tasks = {tasksList}/>}
                 <CreateTaskForm projectId = {this.props.match.params.projectId}/>
                 <LowerNavBar/>

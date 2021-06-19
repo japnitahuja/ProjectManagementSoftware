@@ -11,9 +11,9 @@ import { selectCurrentProjectId } from "../../redux/current-project/current-proj
 import { connect } from "react-redux";
 import VPO from "../../assets/VPO.png";
 import PO from "../../assets/PO.png";
-import task from "../../assets/Task.png";
+import task from "../../assets/task.png";
 import punch from "../../assets/Punchlist.png";
-import Schedule from "../../assets/Schedule.png";
+import Schedule from "../../assets/schedule.png";
 import CreateButton from "../create-button/create-button.component";
 
 class LowerNavBar extends Component {

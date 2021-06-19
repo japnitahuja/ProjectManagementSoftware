@@ -18,29 +18,31 @@ export const SearchBarDiv = styled.div`
     display:flex;
     flex-direction:row;
     align-items: center;
-    justify-content:space-between;
     
 `;
 
 export const SearchInput = styled.input`
     flex:0.9;
     border: none; 
-    background-color: #f7f7f7; 
-    height: 3.5vh;
-    font-size: 1em;
+    font-size: 0.9em;
     color: rgba(108,123,138,0.6);
+
+    &:focus{
+        outline:none;
+    }
     
 `;
 
 export const SearchIcon = styled.img`
-    height: 1.5em;
+    height: 18px;
+    width: 18px;
 `;
 
 export const FilterDiv = styled.div`
     flex:0.1;
     height: 1.5em;
     border-left: 1px solid #BCC5D3;
-    font-size: 0.9em;
+    font-size: 0.8em;
     font-weight:bold;
     color: #56657F;
     text-align:center;

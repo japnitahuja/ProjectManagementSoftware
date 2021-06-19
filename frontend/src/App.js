@@ -7,7 +7,7 @@ import { selectCurrentUser, selectCurrentUserFirstName } from './redux/user/user
 import AllProjects from './pages/all-projects/all-projects';
 import Project from './pages/project/project.page';
 import Task from './pages/task/task.page';
-import Step from './pages/step/step.page'
+// import Step from './pages/step/step.page'
 import PurchaseOrder from './pages/task-purchase-orders/task-purchase-orders.page'
 import IndividualPurchaseOrder from './pages/individual-purchase-order/individual-purchase-order.page';
 import projectPurchaseOrders from './pages/project-purchase-orders/project-purchase-orders';
@@ -29,7 +29,7 @@ function App(props) {
         <Route path='/all-projects' exact component={AllProjects} />
         <Route path='/project/:projectId' exact component={Project}/>
         <Route path='/task/:taskId' exact component={Task} />
-        <Route path='/step/:stepId' exact component={Step} />
+        {/* <Route path='/step/:stepId' exact component={Step} /> */}
         <Route path='/purchaseOrders/:taskId' exact component={PurchaseOrder} /> 
         <Route path='/changeOrders/:taskId' exact component={ChangeOrder} /> 
         <Route path='/changeOrder/:COid' exact component={IndividualChangeOrder} />
