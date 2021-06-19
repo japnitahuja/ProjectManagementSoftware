@@ -34,7 +34,7 @@ class LowerNavBar extends Component {
     const { projectId } = this.props;
     return (
       <div>
-        <CreateButton toggleNav ={this.toggleNav}/>
+        <CreateButton toggleNav ={this.toggleNav} projectId={projectId}/>
         {
           this.state.navSwitch?
           <LowerNav>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
-import CreateTaskForm from '../../components/create-task-form/create-task-form.component';
+import CreateTaskForm from '../../components/create-task-form/create-task-form.component'
 import { fetchCurrentProjectStart } from '../../redux/current-project/current-project.actions';
 import { selectCurrentProjectName, selectCurrentProjectStatus, selectCurrentProjectTasks } from '../../redux/current-project/current-project.selectors';
 import {TaskNav} from "../../components/task-nav/task-nav.component"
@@ -10,8 +10,9 @@ import TaskListContainer from '../../components/tasks-list/tasks-list.container'
 import SearchBar from '../../components/search-bar/search-bar.component';
 import AdminPanelTaskPage from '../../components/admin-panel-task-page/admin-panel-task-page.component';
 import ToggleButton from '../../components/toggle-button/toggle-button.component'
-import CreateButton from '../../components/create-button/create-button.component'
+import {Overlay} from "../../components/admin-panel-task-page/admin-panel-task-page.styles"
 import NoResult from '../../components/no-result/no-result.component';
+import TasksFilter from "../../components/tasks-filter/tasks-filter.component"
 
 class Project extends Component {
     constructor() {
@@ -19,13 +20,14 @@ class Project extends Component {
         this.state = {
           adminSwitch: false,
           tasksList: [], 
-          showSearch: false
+          showSearch: false,
+          showFilter: false
         };
       }
 
     componentDidMount(){
         const projectId = this.props.match.params.projectId;
-        console.log("mount")
+        console.log(this.props.match.params.projectId)
         this.props.fetchProjects(projectId);
         this.setState({tasksList:this.props.tasks})
     }
@@ -55,7 +57,13 @@ class Project extends Component {
           showSearch: !prevState.showSearch
         }));
       
-       }
+    }
+
+    toggleFilter = () => {
+        this.setState((prevState) => ({
+            showFilter: !prevState.showFilter
+          }));
+    }
     
     render() {
         const {projectName} = this.props;
@@ -89,8 +97,16 @@ class Project extends Component {
                 
                 {this.state.adminSwitch? <AdminPanelTaskPage/> : null}
                 {tasksList.length === 0?<NoResult/>:<TaskListContainer tasks = {tasksList}/>}
-                <CreateTaskForm projectId = {this.props.match.params.projectId}/>
-                <LowerNavBar/>
+                {/* <CreateTaskForm projectId = {this.props.match.params.projectId}/> */}
+                <LowerNavBar projectId = {this.props.match.params.projectId}/>
+
+                {this.state.showFilter? 
+                <Overlay 
+                    backgroundcolor = "rgba(0,0,0,0.3)" 
+                    style={{bottom:"0",height:"100%", display:"flex", flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
+                <TasksFilter exit={this.toggleFilter}/>
+                </Overlay> : null
+                }
                 
             </div>
         )
