@@ -662,8 +662,8 @@ router.post(
   async (req, res) => {
       let {
         itemName,
-        itemNumber,
-        itemValue,
+        itemNumber, //item quantity
+        itemValue, //item rate
         comment
       } = req.body
     if (!itemName) {
