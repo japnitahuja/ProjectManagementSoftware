@@ -3,17 +3,16 @@ import { createStructuredSelector } from "reselect";
 import { connect } from "react-redux";
 import CreateStepForm from '../../components/create-step-form/create-step-form.component';
 import { completeCurrentTaskStart, fetchCurrentTaskStart } from '../../redux/current-task/current-task.actions';
-import { selectCurrentTaskCompletionMessage, selectCurrentTaskCompletionPercentage, selectCurrentTaskIsDone, selectCurrentTaskName, selectCurrentTaskSteps } from '../../redux/current-task/current-task.selectors';
+import { selectCurrentTaskCompletionMessage, selectCurrentTaskCompletionPercentage, selectCurrentTaskEndDate, selectCurrentTaskIsDone, selectCurrentTaskName, selectCurrentTaskOwner, selectCurrentTaskStartDate, selectCurrentTaskSteps } from '../../redux/current-task/current-task.selectors';
 import { Link, withRouter } from 'react-router-dom';
-import StepPageTaskNav from '../../components/step-page-task-nav/step-page-task-nav.component';
-import StepNavBar from '../../components/step-navbar/step-navbar.component';
-import StepListContainer from '../../components/steps-list/steps-list.container';
 import {selectCurrentProjectId} from "../../redux/current-project/current-project.selectors";
 import { completeStepQuestionStart, completeStepStart } from '../../redux/current-step/current-step.actions'
 import { fetchCurrentStepStart } from '../../redux/current-step/current-step.actions'
 import { selectCurrentStepCompletionMessage, selectCurrentStepId, selectCurrentStepIsDone, selectCurrentStepName, selectCurrentStepQuestion, selectCurrentStepQuestionAnswerConfirmation, selectCurrentStepQuestionAnswered } from '../../redux/current-step/current-step.selectors'
 import { selectCurrentTaskId } from '../../redux/current-task/current-task.selectors';
 import { LongButton } from '../../components/long-button/long-button.styles';
+import StepNav from '../../components/step-nav/step-nav.component'
+import StepLowerNav from '../../components/step-lower-nav/step-lower-nav.component';
 
 class Task extends Component {
     componentDidMount(){
@@ -35,28 +34,21 @@ class Task extends Component {
     
 
     render() {
-        const {steps,projectId, taskName, isTaskDone, taskCompletionMessage} = this.props;
+        const {steps,projectId, taskName, isTaskDone, taskCompletionMessage, taskOwner, taskEndDate, taskStartDate} = this.props;
         console.log('task page')
         console.log(steps)
         const taskId = this.props.match.params.taskId
         console.log(taskId)
         return (
             <div>
-                <StepPageTaskNav projectId = {projectId}/>
-                
-                {/* <TaskList tasks = {tasks}/> */}
-                <StepListContainer steps = {steps} />
-                <br></br>
-                <center>
-                {
-                     isTaskDone ? 
-                     null : 
-                     <LongButton style={{backgroundColor: "#41BD64"}} onClick={this.completeTask}>COMPLETE TASK</LongButton> 
-                 }
+                <StepNav projectId = {projectId}/>
+                <StepLowerNav 
+                            steps={steps} 
+                            taskOwner={taskOwner} 
+                            taskStartDate={taskStartDate}
+                            taskEndDate={taskEndDate}
+                            completeTask = {this.completeTask}/>
 
-                </center>
-                
-                {/* <h3>{taskCompletionMessage}</h3> */}
                 <CreateStepForm taskId = {this.props.match.params.taskId} />
                 <Link to={`/purchaseOrders/${taskId}`}><button>PURCHASE ORDERS</button></Link>
                 <Link to={`/changeOrders/${taskId}`}><button>CHANGE ORDERS</button></Link>
@@ -79,8 +71,12 @@ const mapStateToProps = createStructuredSelector({
     stepCompletionMessage: selectCurrentStepCompletionMessage,
     isStepDone: selectCurrentStepIsDone,
     taskId: selectCurrentTaskId,
-    completionPercentage: selectCurrentTaskCompletionPercentage
+    completionPercentage: selectCurrentTaskCompletionPercentage,
     
+    taskOwner: selectCurrentTaskOwner,
+    taskStartDate: selectCurrentTaskStartDate,
+    taskEndDate: selectCurrentTaskEndDate
+
   });
   
   const mapDispatchToProps = (dispatch) => ({

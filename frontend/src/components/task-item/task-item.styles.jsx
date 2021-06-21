@@ -65,7 +65,7 @@ export const ProgressDiv = styled.div`
 export const ProgressBar = styled.div`
   @media screen and (min-width:320px){
     height: 5px;
-    width: 70%;
+    width: 60%;
     background-color:#e2e2e2;
     border-radius:4px;
 }`

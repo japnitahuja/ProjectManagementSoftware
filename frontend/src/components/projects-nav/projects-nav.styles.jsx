@@ -7,9 +7,9 @@ export const NavBar = styled.div`
     margin: 0;
     box-sizing:border-box;
     padding: 0em 1.5em;
-    background-color: #6C7B8A;
-    color: white;
-   
+    color: black;
+    font-weight: 600;
+    border-bottom: 1px solid #BCC5D3;
     display:flex;
     flex-direction:row;
     align-items: center;
@@ -21,8 +21,22 @@ export const OneThirdDiv = styled.div`
  @media screen and (min-width: 320px) {
     
     flex:1;
-    text-align:left;
 
+    display: flex;
+    flex-direction: row;
+    justify-content: ${props=>{
+      if(props.justify == "start"){
+        return "flex-start"
+      }
+      if(props.justify == "end"){
+        return "flex-end"
+      }
+      else{
+        return "center"
+      }
+    }};
+    align-items: center;
+   
  }
 `;
 
@@ -36,12 +50,11 @@ export const Heading = styled.p`
   }
 `;
 
-export const AddProjectDiv = styled.div`
- @media screen and (min-width: 320px) {
-  font-size: 1em;
-  text-align:right;
+export const SearchDiv = styled.img`
+  height: 24px;
+  width: 24px;
+  justify-self: flex-end;
 
-  }
 `;
 
 export const Overlay = styled.div`

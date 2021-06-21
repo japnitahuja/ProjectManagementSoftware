@@ -9,8 +9,8 @@ import punch from "../../assets/PunchDark.png";
 
 
 class CreateButton extends Component {
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state ={
             createSwitch:false
         }
@@ -25,6 +25,7 @@ class CreateButton extends Component {
 
 
     render() {
+        let {projectId} = this.props
         return (
             <div>
                 {this.state.createSwitch? 
@@ -32,7 +33,7 @@ class CreateButton extends Component {
                     backgroundcolor = "rgba(0,0,0,0.3)" 
                     style={{bottom:"0",height:"100%", display:"flex", flexDirection:"row", justifyContent:"center"}}>
                     <CreateDiv>
-                        <Link style={{textDecoration:"none"}}>
+                        <Link to={`/createTask/${projectId}`} style={{textDecoration:"none"}}>
                             <CreateOptionsDiv justify={false}>
                             <CreateOptionsImg src={task} style={{width:"2em", height:"2em"}}/>
                                 Task

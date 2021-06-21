@@ -9,7 +9,7 @@ export const LongButton = styled.button`
     color:white;
     box-sizing:border-box;
     border-radius:2px;
-    padding:7px;
-    margin:5px 0px;
+    padding: 0.5em 0;
+    margin:0.5em 0;
     background-color: #6C7B8A
 `

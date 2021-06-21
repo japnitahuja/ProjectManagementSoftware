@@ -7,12 +7,12 @@ export const NavBar = styled.div`
     margin: 0;
     box-sizing:border-box;
     padding: 0em 1.5em;
-    background-color: #6C7B8A;
-    color: white;
+    color:black;
    
     display:flex;
     flex-direction:row;
     align-items: center;
+    border: 1px solid #d3d3d3;
     
   }
 `;
@@ -23,6 +23,7 @@ export const OneThirdDiv = styled.div`
     flex:1;
     text-align:left;
 
+    
  }
 `;
 

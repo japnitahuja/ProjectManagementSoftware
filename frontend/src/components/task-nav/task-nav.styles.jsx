@@ -7,8 +7,8 @@ export const NavBar = styled.div`
     margin: 0;
     box-sizing:border-box;
     padding: 0em 1.5em;
-    background-color: #6C7B8A;
-    color: white;
+    color: black;
+    border: 1px solid #d3d3d3;
    
     display:flex;
     flex-direction:row;
@@ -21,7 +21,14 @@ export const OneThirdDiv = styled.div`
  @media screen and (min-width: 320px) {
     
     flex:1;
-    text-align:left;
+  
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    justify-content:${props=>props.align};
+
+
+
 
  }
 `;
@@ -48,4 +55,11 @@ export const Back = styled.div`
 
 export const Image = styled.img`
     
+`;
+
+export const SearchDiv = styled.img`
+  height: 24px;
+  width: 24px;
+  
+
 `;
