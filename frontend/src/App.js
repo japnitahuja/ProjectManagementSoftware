@@ -17,8 +17,8 @@ import projectSchedule from './pages/project-schedule/project-schedule';
 import ManageTeam from './components/manage-team/manage-team.component';
 import ProjectChangeOrders from './pages/project-change-orders/project-change-orders.page';
 import projectPunchList from './pages/project-punch-list/project-punch-list';
-import CreateTask from './pages/create-task/create-task'
 import createTask from './pages/create-task/create-task';
+import createPO from './pages/create-PO/create-PO'
 
 
 function App(props) {
@@ -42,6 +42,7 @@ function App(props) {
         <Route path='/projectChangeOrders/:projectId' exact component={ProjectChangeOrders} />
         <Route path='/punchList/:projectId' exact component={projectPunchList} />
         <Route path='/createTask/:projectId' exact component={createTask} />
+        <Route path='/createPO/:projectId' exact component={createPO} />
       </Switch>
     </BrowserRouter>
     
