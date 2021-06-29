@@ -23,7 +23,8 @@ const persistConfig = {
       'currentTask',
       'currentStep',
       'currentPurchaseOrder',
-      'currentChangeOrder'
+      'currentChangeOrder',
+      'costBookReducer'
     ],
   };
 
