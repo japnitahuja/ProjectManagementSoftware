@@ -15,6 +15,7 @@ import StepNav from '../../components/step-nav/step-nav.component'
 import StepLowerNav from '../../components/step-lower-nav/step-lower-nav.component';
 
 class Task extends Component {
+    
     componentDidMount(){
         const taskId = this.props.match.params.taskId
        this.props.fetchSteps(taskId)

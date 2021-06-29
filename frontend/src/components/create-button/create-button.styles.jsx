@@ -4,7 +4,7 @@ export const BigCircle = styled.div`
    height:3.5em;
    width:3.5em;
    border-radius:3.5em;
-   background-color:#6C7B8A;
+   background-color:#205284;
    box-sizing:border-box;
 
    bottom: 5em;

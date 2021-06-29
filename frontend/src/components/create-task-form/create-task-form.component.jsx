@@ -35,7 +35,7 @@ class CreateTaskForm extends Component {
     let taskDetails = this.state.taskDetails;
     console.log(taskDetails)
     await this.props.createTask(taskDetails);
-    this.props.history.push(`/project/${taskDetails.projectId}`)
+    this.props.history.goBack()
   };
 
   handleOnClick = (e) => {
