@@ -5,7 +5,7 @@ import { CostBookActionTypes } from "./costbook.types";
 export function* fetchCostBook({payload}){
   try {
     let costBook = yield fetch(`http://127.0.0.1:5000/costbook`)
-    costBook = yield tasks.json()
+    costBook = yield costBook.json()
 
     costBook.done
     ? yield put(fetchCostBookSuccess(costBook.costbook))
@@ -85,7 +85,7 @@ export function* createCostBookCostCodeItemStart({payload}){
 // }
 
 export function* onCostBookFetchStart(){
-  yield takeLatest(CostBookActionTypes.FETCH_TASKS_START, fetchTasks)
+  yield takeLatest(CostBookActionTypes.FETCH_COST_BOOK_START, fetchCostBook)
 }
 
 export function* onCreateCostCodeStart(){
