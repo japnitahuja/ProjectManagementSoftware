@@ -1,4 +1,4 @@
-import {createSelector} from "reselect";
+import { createSelector } from "reselect";
 
 const selectTask = (state) => state.task;
 
@@ -12,4 +12,9 @@ export const selectCreateTaskStart = createSelector(
 export const selectUserTasks = createSelector(
   [selectTaskDetails],
   (task) => task.tasks
-)
+);
+
+export const selectfetchTasksSuccess = createSelector(
+  [selectTaskDetails],
+  (task) => task.fetchTasksSuccess
+);

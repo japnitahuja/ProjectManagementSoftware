@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   fetchTaskFailure: false,
   errorMessage: undefined,
   message: null,
-  tasks: null
+  tasks: null,
 };
 
 const taskReducer = (state = INITIAL_STATE, action) => {
@@ -29,7 +29,7 @@ const taskReducer = (state = INITIAL_STATE, action) => {
         createTaskSuccessful: true,
         message: "TASK CREATED SUCCESSFULLY!",
       };
-   
+
     case TaskActionTypes.CREATE_TASK_FAILURE:
       return {
         ...state,
@@ -38,24 +38,26 @@ const taskReducer = (state = INITIAL_STATE, action) => {
         errorMessage: action.payload,
       };
     case TaskActionTypes.FETCH_TASKS_START:
-      return{
+      return {
         ...state,
-        fetchTaskStart: true
-      }
-      case TaskActionTypes.FETCH_TASKS_SUCCESS:
-        return{
-          ...state,
-          fetchTaskStart: false,
-          fetchTaskSuccess: true,
-          tasks: action.payload
-        }
-      case TaskActionTypes.FETCH_TASKS_START:
-          return{
-            ...state,
-            fetchTaskStart: false,
-            fetchTaskFailure: true,
-            errorMessage: action.payload
-          }
+        fetchTaskStart: true,
+        fetchTaskFailure: false,
+        fetchTaskSuccess: false,
+      };
+    case TaskActionTypes.FETCH_TASKS_SUCCESS:
+      return {
+        ...state,
+        fetchTaskStart: false,
+        fetchTaskSuccess: true,
+        tasks: action.payload,
+      };
+    case TaskActionTypes.FETCH_TASKS_START:
+      return {
+        ...state,
+        fetchTaskStart: false,
+        fetchTaskFailure: true,
+        errorMessage: action.payload,
+      };
     default:
       return state;
   }

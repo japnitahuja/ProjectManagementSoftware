@@ -1,6 +1,9 @@
 import { CurrentProjectActionTypes } from "./current-project.types";
 
 const INITIAL_STATE = {
+  currentProjectFetchStart: false,
+  currentProjectFetchSuccess: false,
+  currentProjectFetchFailure: false,
   isCurrentProjectFetching: false,
   currentProjectId: null,
   currentProjectName: null,
@@ -14,9 +17,9 @@ const INITIAL_STATE = {
   currentProjectType: null,
   currentPropertyType: null,
   currentProjectOwner: null,
-  currentProjectBudget:null, 
-  currentProjectPunchLists:null, 
-  currentProjectPublished:null,
+  currentProjectBudget: null,
+  currentProjectPunchLists: null,
+  currentProjectPublished: null,
   errorMessage: null,
   isCurrentProjectDeleting: false,
   deletionMessage: null,
@@ -39,6 +42,9 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isCurrentProjectFetching: true,
+        currentProjectFetchStart: true,
+        currentProjectFetchFailure: false,
+        currentProjectFetchSuccess: false,
       };
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_SUCCESS:
       const {
@@ -54,11 +60,14 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         projectRoles,
         projectBudget,
         published,
-        Users, 
-        punchList
+        Users,
+        punchList,
       } = action.payload;
       return {
         ...state,
+        currentProjectFetchSuccess: true,
+        currentProjectFetchStart: false,
+        currentProjectFetchFailure: false,
         isCurrentProjectFetching: false,
         currentProjectStatus: projectStatus,
         currentProjectName: projectName,
@@ -81,6 +90,9 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isCurrentProjectFetching: false,
+        currentProjectFetchStart: false,
+        currentProjectFetchFailure: true,
+        currentProjectFetchSuccess: false,
         errorMessage: action.payload,
       };
 
@@ -109,98 +121,98 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         isCurrentProjectDeleting: false,
         deletionError: action.payload,
       };
-      case CurrentProjectActionTypes.INVITE_USER_START:
-        return{
-          ...state,
-          inviteUserStart: true,
-          inviteUserMessage: null
-        }
-      case CurrentProjectActionTypes.INVITE_USER_SUCCESS:
-        return{
-          ...state,
-          inviteUserStart: false,
-          inviteUserMessage: action.payload
-        }
-      case CurrentProjectActionTypes.INVITE_USER_FAILURE:
-        return{
-          ...state,
-          inviteUserStart: false,
-          inviteUserMessage: action.payload
-        }
-        case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_START:
-          return{
-            ...state,
-            updateUserInProjectStart: true,
-            updateUserInProjectMessage: null
-          }
-        case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_SUCCESS:
-          return{
-            ...state,
-            updateUserInProjectStart: false,
-            updateUserInProjectMessage: action.payload
-          }
-        case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_FAILURE:
-          return{
-            ...state,
-            updateUserInProjectStart: false,
-            updateUserInProjectMessage: action.payload
-          }
-          case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_START:
-          return{
-            ...state,
-            updatePublishedInProjectStart: true,
-            updatePublishedInProjectMessage: null
-          }
-        case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_SUCCESS:
-          return{
-            ...state,
-            updatePublishedInProjectStart: false,
-            updatePublishedInProjectMessage: action.payload
-          }
-        case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_FAILURE:
-          return{
-            ...state,
-            updatePublishedInProjectStart: false,
-            updatePublishedInProjectMessage: action.payload
-          }
-        case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_START:
-          return{
-            ...state,
-            updateRolesInProjectStart: true
-          }
-        case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_SUCCESS:
-          return{
-            ...state,
-            updateRolesInProjectStart: false,
-            updateRolesInProjectMessage: action.payload
-          }
-        case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_FAILURE:
-          return{
-            ...state,
-            updateRolesInProjectStart: false,
-            updateRolesInProjectMessage: action.payload
-          }
+    case CurrentProjectActionTypes.INVITE_USER_START:
+      return {
+        ...state,
+        inviteUserStart: true,
+        inviteUserMessage: null,
+      };
+    case CurrentProjectActionTypes.INVITE_USER_SUCCESS:
+      return {
+        ...state,
+        inviteUserStart: false,
+        inviteUserMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.INVITE_USER_FAILURE:
+      return {
+        ...state,
+        inviteUserStart: false,
+        inviteUserMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_START:
+      return {
+        ...state,
+        updateUserInProjectStart: true,
+        updateUserInProjectMessage: null,
+      };
+    case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_SUCCESS:
+      return {
+        ...state,
+        updateUserInProjectStart: false,
+        updateUserInProjectMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.UPDATE_USER_IN_PROJECT_FAILURE:
+      return {
+        ...state,
+        updateUserInProjectStart: false,
+        updateUserInProjectMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_START:
+      return {
+        ...state,
+        updatePublishedInProjectStart: true,
+        updatePublishedInProjectMessage: null,
+      };
+    case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_SUCCESS:
+      return {
+        ...state,
+        updatePublishedInProjectStart: false,
+        updatePublishedInProjectMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.UPDATE_PUBLISHED_IN_PROJECT_FAILURE:
+      return {
+        ...state,
+        updatePublishedInProjectStart: false,
+        updatePublishedInProjectMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_START:
+      return {
+        ...state,
+        updateRolesInProjectStart: true,
+      };
+    case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_SUCCESS:
+      return {
+        ...state,
+        updateRolesInProjectStart: false,
+        updateRolesInProjectMessage: action.payload,
+      };
+    case CurrentProjectActionTypes.UPDATE_ROLES_IN_PROJECT_FAILURE:
+      return {
+        ...state,
+        updateRolesInProjectStart: false,
+        updateRolesInProjectMessage: action.payload,
+      };
 
-          case CurrentProjectActionTypes.DELETE_USER_START:
-            return {
-              ...state,
-              isuserDeleting: true,
-              userDeletionMessage: null,
-            };
+    case CurrentProjectActionTypes.DELETE_USER_START:
+      return {
+        ...state,
+        isuserDeleting: true,
+        userDeletionMessage: null,
+      };
 
-          case CurrentProjectActionTypes.DELETE_USER_SUCCESS:
-            return {
-              ...state,
-              isuserDeleting: false,
-              userDeletionMessage: action.payload,
-            };
+    case CurrentProjectActionTypes.DELETE_USER_SUCCESS:
+      return {
+        ...state,
+        isuserDeleting: false,
+        userDeletionMessage: action.payload,
+      };
 
-          case CurrentProjectActionTypes.DELETE_USER_FAILURE:
-            return {
-              ...state,
-              isuserDeleting: false,
-              userDeletionMessage: action.payload,
-            };
+    case CurrentProjectActionTypes.DELETE_USER_FAILURE:
+      return {
+        ...state,
+        isuserDeleting: false,
+        userDeletionMessage: action.payload,
+      };
     default:
       return state;
   }
