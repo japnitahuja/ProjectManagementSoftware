@@ -11,7 +11,6 @@ const INITIAL_STATE = {
   message: null,
   projects: null,
   isProjectTemplateBeingCreated: null,
-
 };
 
 const projectReducer = (state = INITIAL_STATE, action) => {
@@ -31,7 +30,7 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         createProjectSuccessful: true,
         message: "PROJECT CREATED SUCCESSFULLY!",
       };
-   
+
     case ProjectActionTypes.CREATE_PROJECT_FAILURE:
       return {
         ...state,
@@ -40,45 +39,49 @@ const projectReducer = (state = INITIAL_STATE, action) => {
         errorMessage: action.payload,
       };
     case ProjectActionTypes.FETCH_PROJECTS_START:
-      return{
+      return {
         ...state,
-        fetchProjectStart: true
-      }
-      case ProjectActionTypes.FETCH_PROJECTS_SUCCESS:
-        return{
-          ...state,
-          fetchProjectStart: false,
-          fetchProjectSuccess: true,
-          projects: action.payload
-        }
-      case ProjectActionTypes.FETCH_PROJECTS_START:
-          return{
-            ...state,
-            fetchProjectStart: false,
-            fetchProjectFailure: true,
-            errorMessage: action.payload
-          }
-      case ProjectActionTypes.DELETE_PROJECT:
-        let updatedProjects = state.projects.filter(project => project._id != action.payload)
-        return{
-          ...state,
-          projects: updatedProjects
-        }
-      case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_START:
-        return{
-          ...state,
-          isProjectTemplateBeingCreated: true,
-        }
-      case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_SUCCESS:
-        return{
-          ...state,
-          isProjectTemplateBeingCreated: false,
-        }
-      case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_FAILURE:
-        return{
-          ...state,
-          isProjectTemplateBeingCreated: false,
-        }
+        fetchProjectStart: true,
+        fetchProjectFailure: false,
+        fetchProjectSuccess: false,
+      };
+    case ProjectActionTypes.FETCH_PROJECTS_SUCCESS:
+      return {
+        ...state,
+        fetchProjectStart: false,
+        fetchProjectSuccess: true,
+        projects: action.payload,
+      };
+    case ProjectActionTypes.FETCH_PROJECTS_START:
+      return {
+        ...state,
+        fetchProjectStart: false,
+        fetchProjectFailure: true,
+        errorMessage: action.payload,
+      };
+    case ProjectActionTypes.DELETE_PROJECT:
+      let updatedProjects = state.projects.filter(
+        (project) => project._id != action.payload
+      );
+      return {
+        ...state,
+        projects: updatedProjects,
+      };
+    case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_START:
+      return {
+        ...state,
+        isProjectTemplateBeingCreated: true,
+      };
+    case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_SUCCESS:
+      return {
+        ...state,
+        isProjectTemplateBeingCreated: false,
+      };
+    case ProjectActionTypes.CREATE_PROJECT_TEMPLATE_FAILURE:
+      return {
+        ...state,
+        isProjectTemplateBeingCreated: false,
+      };
     default:
       return state;
   }

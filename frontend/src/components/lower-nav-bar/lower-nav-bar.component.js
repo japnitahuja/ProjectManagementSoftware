@@ -17,65 +17,75 @@ import Schedule from "../../assets/Schedule.png";
 import CreateButton from "../create-button/create-button.component";
 
 class LowerNavBar extends Component {
-    constructor(){
-      super()
-      this.state ={
-          navSwitch:true
-      }
-    }
+  constructor() {
+    super();
+    this.state = {
+      navSwitch: true,
+    };
+  }
 
   toggleNav = () => {
-      this.setState((prevState) => ({
-          navSwitch: !prevState.navSwitch
-      }));
-  }
+    this.setState((prevState) => ({
+      navSwitch: !prevState.navSwitch,
+    }));
+  };
 
   render() {
     const { projectId } = this.props;
     return (
       <div>
-        <CreateButton toggleNav ={this.toggleNav} projectId={projectId}/>
-        {
-          this.state.navSwitch?
+        <CreateButton toggleNav={this.toggleNav} projectId={projectId} />
+        {this.state.navSwitch ? (
           <LowerNav>
-          <Link to={`/project/${projectId}`} style={{textDecoration:"none"}}>
-            <LowerNavEntity>
+            <Link
+              to={`/project/${projectId}`}
+              style={{ textDecoration: "none" }}
+            >
+              <LowerNavEntity>
                 <LowerNavImage src={task} />
                 <LowerNavText>TASKS</LowerNavText>
-            </LowerNavEntity>
-          </Link>
-          <Link to={`/projectPurchaseOrders/${projectId}`} style={{textDecoration:"none"}}>
-            <LowerNavEntity>
+              </LowerNavEntity>
+            </Link>
+            <Link
+              to={`/projectPurchaseOrders/${projectId}`}
+              style={{ textDecoration: "none" }}
+            >
+              <LowerNavEntity>
                 <LowerNavImage src={PO} />
                 <LowerNavText>POs</LowerNavText>
-            </LowerNavEntity>
-          </Link>
-          <Link to={`/projectChangeOrders/${projectId}`} style={{textDecoration:"none"}}>
-            <LowerNavEntity>
+              </LowerNavEntity>
+            </Link>
+            <Link
+              to={`/projectChangeOrders/${projectId}`}
+              style={{ textDecoration: "none" }}
+            >
+              <LowerNavEntity>
                 <LowerNavImage src={VPO} />
                 <LowerNavText>VPOs</LowerNavText>
-            </LowerNavEntity>
-          </Link>
-          <Link to={`/punchList/${projectId}`} style={{textDecoration:"none"}} >
-            <LowerNavEntity >
+              </LowerNavEntity>
+            </Link>
+            <Link
+              to={`/punchList/${projectId}`}
+              style={{ textDecoration: "none" }}
+            >
+              <LowerNavEntity>
                 <LowerNavImage src={punch} />
                 <LowerNavText>PUNCH</LowerNavText>
-            </LowerNavEntity>
-          </Link>
-         
-          <Link to={`/schedule/${projectId}`} style={{textDecoration:"none"}}>
-            <LowerNavEntity>
+              </LowerNavEntity>
+            </Link>
+
+            <Link
+              to={`/schedule/${projectId}`}
+              style={{ textDecoration: "none" }}
+            >
+              <LowerNavEntity>
                 <LowerNavImage src={Schedule} />
                 <LowerNavText>SCHEDULE</LowerNavText>
-            </LowerNavEntity>
-          </Link>
-        </LowerNav>
-        :
-        null
-        }
-        
+              </LowerNavEntity>
+            </Link>
+          </LowerNav>
+        ) : null}
       </div>
-      
     );
   }
 }
