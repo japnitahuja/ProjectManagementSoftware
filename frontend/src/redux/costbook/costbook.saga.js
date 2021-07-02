@@ -16,6 +16,7 @@ export function* fetchCostBook({payload}){
 }
 
 export function* createCostBookCategory({payload}){
+    console.log('in saga', payload)
     let data = payload
     try {
         let costbookcategory = yield fetch(`http://127.0.0.1:5000/createCostBookCategory`, {
@@ -37,9 +38,10 @@ export function* createCostBookCategory({payload}){
 }
 
 export function* createCostBookCostCodeStart({payload}){
+  console.log('in saga', payload)
     let data = payload
     try {
-        let resp = yield fetch(`http://127.0.0.1:5000/createCostBookCategory/createCostCode`,{
+        let resp = yield fetch(`http://127.0.0.1:5000/createCostCode`,{
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -61,7 +63,7 @@ export function* createCostBookCostCodeStart({payload}){
 export function* createCostBookCostCodeItemStart({payload}){
     let data = payload
     try {
-        let resp = yield fetch(`http://127.0.0.1:5000/createCostBookCategory/createCostCodeItem`,{
+        let resp = yield fetch(`http://127.0.0.1:5000/createCostCodeItem`,{
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -80,10 +82,6 @@ export function* createCostBookCostCodeItemStart({payload}){
     }
 }
 
-// export function* onTaskCreateStart(){
-//   yield takeLatest(CostBookActionTypes.CREATE_TASK_START, createTask)
-// }
-
 export function* onCostBookFetchStart(){
   yield takeLatest(CostBookActionTypes.FETCH_COST_BOOK_START, fetchCostBook)
 }
@@ -96,10 +94,15 @@ export function* onCreateCostCodeItemStart(){
     yield takeLatest(CostBookActionTypes.CREATE_COST_BOOK_COSTCODEITEM_START, createCostBookCostCodeItemStart)
 }
 
+export function* onCreateCostCodeCategoryStart(){
+  yield takeLatest(CostBookActionTypes.CREATE_COST_BOOK_CATEGORY_START, createCostBookCategory)
+}
+
 export function* costBookSagas() {
   yield all([
     call(onCostBookFetchStart),
     call(onCreateCostCodeItemStart),
-    call(onCreateCostCodeStart)
+    call(onCreateCostCodeStart),
+    call(onCreateCostCodeCategoryStart)
   ]);
 }

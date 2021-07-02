@@ -15,9 +15,9 @@ export const createCostBookCategoryFail = (errorMessage) => ({
     payload: errorMessage
 })
 
-export const createCostCodeStart = (payload) => ({
+export const createCostCodeStart = (costCodeDetails) => ({
     type: CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_START,
-    payload: payload
+    payload: costCodeDetails
 })
 
 export const createCostCodeSuccess = (payload) => ({
@@ -45,15 +45,14 @@ export const createCostCodeItemFailure = (payload) => ({
     payload: payload
 })
 
-export const fetchCostBookStart = (projectId) => ({
+export const fetchCostBookStart = () => ({
     type: CostBookActionTypes.FETCH_COST_BOOK_START,
-    payload: projectId
     
 })
 
-export const fetchCostBookSuccess = (tasks) => ({
+export const fetchCostBookSuccess = (costbook) => ({
     type: CostBookActionTypes.FETCH_COST_BOOK_SUCCESS,
-    payload: tasks
+    payload: costbook
 })
 
 export const fetchCostBookFailure = (error) => ({

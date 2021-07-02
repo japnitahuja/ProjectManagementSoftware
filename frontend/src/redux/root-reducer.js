@@ -10,6 +10,7 @@ import currentTaskReducer from './current-task/current-task.reducer';
 import userReducer from './user/user.reducer';
 import currentPurchaseOrderReducer from './current-purchase-order/current-purchase-order.reducer'
 import currentChangeOrderReducer from './current-change-order/current-change-order.reducer';
+import costBookReducer from './costbook/costbook.reducer';
 
 const persistConfig = {
     key: 'root',
@@ -38,7 +39,8 @@ const rootReducer = combineReducers({
   currentTask: currentTaskReducer,
   currentStep: currentStepReducer,
   currentPurchaseOrder: currentPurchaseOrderReducer,
-  currentChangeOrder: currentChangeOrderReducer
+  currentChangeOrder: currentChangeOrderReducer,
+  costBook: costBookReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);

@@ -19,7 +19,9 @@ import ProjectChangeOrders from './pages/project-change-orders/project-change-or
 import projectPunchList from './pages/project-punch-list/project-punch-list';
 import createTask from './pages/create-task/create-task';
 import createPO from './pages/create-PO/create-PO'
-
+import CostBook from './pages/cost-book/cost-book.page'
+import costCode from './pages/cost-code/cost-code.page';
+import CostBookItem from './pages/cost-book-item/cost-book-item.page';
 
 function App(props) {
   return (
@@ -42,7 +44,10 @@ function App(props) {
         <Route path='/projectChangeOrders/:projectId' exact component={ProjectChangeOrders} />
         <Route path='/punchList/:projectId' exact component={projectPunchList} />
         <Route path='/createTask/:projectId' exact component={createTask} />
+        <Route path='/costbook' exact component={CostBook} />
+        <Route path='/cost-code/:categoryId/:costCodeId' exact component={costCode} />
         <Route path='/createPO/:projectId' exact component={createPO} />
+        <Route path='/cost-item/:categoryId/:costCodeId/:itemId' exact component={CostBookItem} />
       </Switch>
     </BrowserRouter>
     

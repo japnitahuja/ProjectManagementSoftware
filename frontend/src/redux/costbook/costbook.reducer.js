@@ -15,7 +15,7 @@ const INITIAL_STATE = {
   createCostCodeItemSuccess: false,
   errorMessage: undefined,
   message: null,
-  costBook: null
+  costBook: []
 };
 
 const costBookReducer = (state = INITIAL_STATE, action) => {
