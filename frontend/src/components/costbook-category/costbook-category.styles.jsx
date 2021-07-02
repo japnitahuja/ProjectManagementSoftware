@@ -7,4 +7,5 @@ export const CategoryDiv = styled.div`
   padding: 0.5em 1em;
   font-weight: 600;
   color: #616161;
+  box-sizing: border-box;
 `;

@@ -11,55 +11,19 @@ import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
 import ProjectsNav from "../../components/projects-nav/projects-nav.component";
 import { CostbookCategory } from "../../components/costbook-category/costbook-category.component";
 import { CostbookCostCode } from "../../components/costbook-costcode/costbook-costcode.component";
+import CostBookCreateButton from "../../components/costbook-createbutton/costbook-createbutton.component";
 
 class CostBook extends Component {
   constructor() {
     super();
-    this.state = {
-      category: {
-        categoryName: null,
-      },
-      costCode: {
-        costCodeTitle: null,
-        categoryId: null,
-      },
-    };
+    this.state = {};
   }
   componentDidMount() {
     this.props.fetchCostBook();
   }
-  categoryChange = (e) => {
-    const { name, value } = e.target;
-    //console.log(name, value)
-    let categoryName = this.state.category;
-    categoryName[name] = value;
-    this.setState({ category: categoryName }, () => {
-      console.log(this.state);
-    });
-  };
 
-  createCategory = (e) => {
-    e.preventDefault();
-    console.log("hi");
-    let costBookDetails = this.state.category;
-    this.props.createCategory(costBookDetails);
-  };
-
-  onCostCodeSubmit = (e) => {
-    e.preventDefault();
-    let costCodeDetails = this.state.costCode;
-    this.props.createCostCode(costCodeDetails);
-  };
-
-  onCostCodeChange = (e) => {
-    const { name, value } = e.target;
-    let costcodeinfo = this.state.costCode;
-    costcodeinfo[name] = value;
-    this.setState({ costCode: costcodeinfo });
-    console.log(this.state);
-  };
   render() {
-    //console.log(this.props.costbook);
+    console.log(this.props.costbook);
     return (
       <>
         <ProjectsNav title="Cost Book" toggleSearchBar={this.toggleSearchBar} />
@@ -86,40 +50,7 @@ class CostBook extends Component {
             </>
           );
         })}
-        <h3>CREATE CATEGORY FORM</h3>
-        <form
-          onSubmit={this.createCategory}
-          onChange={this.categoryChange}
-          style={{ border: "1px solid black" }}
-        >
-          <label name="categoryName" id="categoryName">
-            Category Name
-          </label>
-          <input type="text" name="categoryName" id="categoryName" />
-          <button type="submit">CREATE CATEGORY</button>
-        </form>
-
-        <h3>CREATE CATEGORY FORM</h3>
-        <form
-          style={{ border: "1px solid black" }}
-          onChange={this.onCostCodeChange}
-          onSubmit={this.onCostCodeSubmit}
-        >
-          <label name="costCodeTitle" id="costCodeTitle">
-            Title
-          </label>
-          <input type="text" name="costCodeTitle" id="costCodeTitle" />
-          <label name="categoryId" id="categoryId">
-            Category
-          </label>
-          <select id="categoryId" name="categoryId">
-            <option>none</option>
-            {this.props.costbook.map((cost) => {
-              return <option value={cost._id}>{cost.categoryName}</option>;
-            })}
-          </select>
-          <button type="submit">CREATE COST CODE</button>
-        </form>
+        <CostBookCreateButton />
       </>
     );
   }

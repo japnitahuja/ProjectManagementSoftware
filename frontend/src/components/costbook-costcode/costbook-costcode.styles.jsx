@@ -6,4 +6,5 @@ export const CostDiv = styled.div`
   padding: 1em;
   color: #616161;
   border-bottom: solid 1px #cacaca;
+  box-sizing: border-box;
 `;

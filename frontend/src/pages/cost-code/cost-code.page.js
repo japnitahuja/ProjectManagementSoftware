@@ -7,8 +7,11 @@ import {
 } from "../../redux/costbook/costbook.actions";
 import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
 import { Link } from "react-router-dom";
-import ProjectNav from "../../components/projects-nav/projects-nav.component";
-
+import { CostBookCostCodeNav } from "../../components/costbook-costcodenav/costbook-costcodenav.component";
+import { CostbookCategory } from "../../components/costbook-category/costbook-category.component";
+import { CostbookCostCode } from "../../components/costbook-costcode/costbook-costcode.component";
+import { ColumnDiv, CostCodeTitle } from "./cost-code.styles";
+import CostBookEditCostCode from "../../components/costbook-editcostcode/costbook-editcostcode";
 class CostCode extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +26,7 @@ class CostCode extends Component {
         costCodeId: this.props.match.params.costCodeId,
         categoryId: this.props.match.params.categoryId,
       },
+      showEdit: false,
     };
   }
 
@@ -30,6 +34,12 @@ class CostCode extends Component {
     this.props.fetchCostBook();
     console.log("component mounted", this.props.costbook);
   }
+
+  toggleEdit = () => {
+    this.setState((prevState) => ({
+      showEdit: !prevState.showEdit,
+    }));
+  };
 
   itemChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +58,7 @@ class CostCode extends Component {
   render() {
     // console.log(this.props.match.params.costCodeId, 'cost code')
     // console.log(this.props.match.params.categoryId, 'category id')
-    console.log(this.props.costbook, "hi");
+
     let category = this.props.costbook.find(
       (book) => book._id === this.props.match.params.categoryId
     );
@@ -56,21 +66,55 @@ class CostCode extends Component {
     let costCodeItem = category.costCodes.find(
       (id) => id._id === this.props.match.params.costCodeId
     );
-    //console.log(costCodeItem)
+    console.log("hello", costCodeItem, category);
     return (
       <>
-        <h3>Cost Code Title</h3>
-        <h4>{costCodeItem.costCodeTitle}</h4>
-        <h3>ITEMS</h3>
+        <CostBookCostCodeNav title={costCodeItem.costCodeTitle.slice(0, 4)} />
+        <CostbookCategory categoryName="Cost Code Info" />
+
+        <ColumnDiv>
+          <CostCodeTitle>
+            <div>Cost Code Title</div>
+            <button
+              style={{
+                background: "none",
+                border: "none",
+                color: "#205284",
+                fontSize: "0.9em",
+              }}
+              onClick={this.toggleEdit}
+            >
+              {this.state.showEdit ? `Cancel` : `Edit`}
+            </button>
+          </CostCodeTitle>
+          <div style={{ marginTop: "0.5em", color: "rgba(102,102,102,0.7)" }}>
+            {this.state.showEdit
+              ? `Cost codes help group specific set of items together.`
+              : costCodeItem.costCodeTitle}
+          </div>
+
+          {this.state.showEdit ? (
+            <CostBookEditCostCode
+              costCodeTitle={costCodeItem.costCodeTitle}
+              categoryId={category._id}
+              categoryName={category.categoryName}
+            />
+          ) : null}
+        </ColumnDiv>
+
+        <CostbookCategory categoryName="Items" />
         {costCodeItem.items.map((item) => {
           return (
             <Link
+              style={{ textDecoration: "none" }}
               to={`/cost-item/${this.props.match.params.categoryId}/${this.props.match.params.costCodeId}/${item._id}`}
             >
-              <h5>{item.itemName}</h5>
+              <CostbookCostCode title={item.itemName} />
             </Link>
           );
         })}
+        <br></br>
+        <br />
         <form onChange={this.itemChange} onSubmit={this.createItem}>
           <label for="itemName" name="itemName" id="itemName">
             Item Name
