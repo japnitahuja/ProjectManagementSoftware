@@ -19,8 +19,12 @@ import {
   fetchCostBookStart,
 } from "../../redux/costbook/costbook.actions";
 import { createStructuredSelector } from "reselect";
-import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
+import {
+  selectCostBookDetails,
+  selectCreateCostCodeSuccess,
+} from "../../redux/costbook/costbook.selectors";
 import DropDown from "./form-dropdown/form-dropdown.component";
+import Spinner from "../spinner/spinner.component";
 
 class CostBookCreateCostCode extends Component {
   constructor(props) {
@@ -30,6 +34,7 @@ class CostBookCreateCostCode extends Component {
         costCodeTitle: null,
         categoryId: null,
       },
+      create: false,
     };
   }
 
@@ -37,7 +42,7 @@ class CostBookCreateCostCode extends Component {
     e.preventDefault();
     let costCodeDetails = this.state.costCode;
     this.props.createCostCode(costCodeDetails);
-    this.exit();
+    this.setState({ create: true });
   };
 
   handleOnChange = (e) => {
@@ -53,6 +58,13 @@ class CostBookCreateCostCode extends Component {
   };
 
   render() {
+    console.log(this.props.createCostCodeSuccess, this.state);
+    if (this.state.create && !this.props.createCostCodeSuccess) {
+      return <Spinner />;
+    } else if (this.props.createCostCodeSuccess && this.state.create) {
+      this.exit();
+    }
+
     let categoryNames = ["None"];
 
     this.props.costbook.map((cost) => {
@@ -114,6 +126,7 @@ class CostBookCreateCostCode extends Component {
 
 const mapStateToProps = createStructuredSelector({
   costbook: selectCostBookDetails,
+  createCostCodeSuccess: selectCreateCostCodeSuccess,
 });
 
 const mapDispatchToProps = (dispatch) => ({

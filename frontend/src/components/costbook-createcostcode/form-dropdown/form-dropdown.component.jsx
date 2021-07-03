@@ -60,7 +60,7 @@ class DropDown extends Component {
     this.props.onChange({ target: { name: "categoryId", value: id } });
 
     this.setState((prevState) => ({
-      dropDownSwitch: !prevState.dropDownSwitch,
+      dropDownSwitch: false,
       selected: permission,
     }));
   };
@@ -76,7 +76,6 @@ class DropDown extends Component {
       }
     });
 
-    console.log(options);
     return (
       <DropDownDiv ref={this.dropdownContainer}>
         <DropDownButton onClick={this.DropDownToggle} img={DownArrow}>
@@ -87,6 +86,7 @@ class DropDown extends Component {
             data-permission={options[selectedIndex]}
             onClick={this.handleOptionClick}
             backgroundFlag={true}
+            key={options[selectedIndex]}
           >
             <DropDownOptionHeading
               data-permission={options[selectedIndex]}
@@ -108,6 +108,7 @@ class DropDown extends Component {
                   <DropDownOptionHeading
                     data-permission={option}
                     onClick={this.handleOptionClick}
+                    key={option}
                   >
                     {option}
                   </DropDownOptionHeading>

@@ -5,7 +5,10 @@ import {
   createCostCodeItemStart,
   fetchCostBookStart,
 } from "../../redux/costbook/costbook.actions";
-import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
+import {
+  selectCostBookDetails,
+  selectFetchCostBookSuccess,
+} from "../../redux/costbook/costbook.selectors";
 import { Link } from "react-router-dom";
 import { CostBookCostCodeNav } from "../../components/costbook-costcodenav/costbook-costcodenav.component";
 import { CostbookCategory } from "../../components/costbook-category/costbook-category.component";
@@ -13,6 +16,7 @@ import { CostbookCostCode } from "../../components/costbook-costcode/costbook-co
 import { ColumnDiv, CostCodeTitle } from "./cost-code.styles";
 import CostBookEditCostCode from "../../components/costbook-editcostcode/costbook-editcostcode";
 import CostCodeCreateButton from "../../components/costcode-createbutton/costcode-createbutton.component";
+import Spinner from "../../components/spinner/spinner.component";
 
 class CostCode extends Component {
   constructor(props) {
@@ -34,7 +38,6 @@ class CostCode extends Component {
 
   componentDidMount() {
     this.props.fetchCostBook();
-    console.log("component mounted", this.props.costbook);
   }
 
   toggleEdit = () => {
@@ -58,8 +61,9 @@ class CostCode extends Component {
   };
 
   render() {
-    // console.log(this.props.match.params.costCodeId, 'cost code')
-    // console.log(this.props.match.params.categoryId, 'category id')
+    if (!this.props.fetchCostBookSuccess) {
+      return <Spinner />;
+    }
 
     let category = this.props.costbook.find(
       (book) => book._id === this.props.match.params.categoryId
@@ -127,6 +131,7 @@ class CostCode extends Component {
 
 const mapStateToProps = createStructuredSelector({
   costbook: selectCostBookDetails,
+  fetchCostBookSuccess: selectFetchCostBookSuccess,
 });
 
 const mapDispatchToProps = (dispatch) => ({

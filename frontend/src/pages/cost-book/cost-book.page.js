@@ -7,11 +7,15 @@ import {
   createCostCodeStart,
   fetchCostBookStart,
 } from "../../redux/costbook/costbook.actions";
-import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
+import {
+  selectCostBookDetails,
+  selectFetchCostBookSuccess,
+} from "../../redux/costbook/costbook.selectors";
 import ProjectsNav from "../../components/projects-nav/projects-nav.component";
 import { CostbookCategory } from "../../components/costbook-category/costbook-category.component";
 import { CostbookCostCode } from "../../components/costbook-costcode/costbook-costcode.component";
 import CostBookCreateButton from "../../components/costbook-createbutton/costbook-createbutton.component";
+import Spinner from "../../components/spinner/spinner.component";
 
 class CostBook extends Component {
   constructor() {
@@ -24,6 +28,11 @@ class CostBook extends Component {
 
   render() {
     console.log(this.props.costbook);
+
+    if (!this.props.fetchCostBookSuccess) {
+      return <Spinner />;
+    }
+
     return (
       <>
         <ProjectsNav title="Cost Book" toggleSearchBar={this.toggleSearchBar} />
@@ -31,7 +40,6 @@ class CostBook extends Component {
           return (
             <>
               <CostbookCategory categoryName={cost.categoryName} />
-              {/* <h1>{cost.categoryName}</h1> */}
               {cost.costCodes.map((costcode) => {
                 return (
                   <>
@@ -39,11 +47,11 @@ class CostBook extends Component {
                       to={`/cost-code/${cost._id}/${costcode._id}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <CostbookCostCode title={costcode.costCodeTitle} />
+                      <CostbookCostCode
+                        key={costcode._id}
+                        title={costcode.costCodeTitle}
+                      />
                     </Link>
-                    {/* {costcode.items.map((item) => {
-                      return <h5>{item.itemName}</h5>;
-                    })} */}
                   </>
                 );
               })}
@@ -58,6 +66,7 @@ class CostBook extends Component {
 
 const mapStateToProps = createStructuredSelector({
   costbook: selectCostBookDetails,
+  fetchCostBookSuccess: selectFetchCostBookSuccess,
 });
 
 const mapDispatchToProps = (dispatch) => ({
