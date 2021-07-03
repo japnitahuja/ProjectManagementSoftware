@@ -18,6 +18,7 @@ import ToggleButton from "../../components/toggle-button/toggle-button.component
 import { Overlay } from "../../components/admin-panel-task-page/admin-panel-task-page.styles";
 import NoResult from "../../components/no-result/no-result.component";
 import TasksFilter from "../../components/tasks-filter/tasks-filter.component";
+import Spinner from "../../components/spinner/spinner.component";
 
 class Project extends Component {
   constructor() {
@@ -85,7 +86,7 @@ class Project extends Component {
     let { fetchTasksSuccess } = this.props;
     console.log("success", fetchTasksSuccess);
     if (!fetchTasksSuccess) {
-      return <div> Loading... </div>;
+      return <Spinner />;
     } else if (fetchTasksSuccess && this.state.setTasks == 0) {
       this.setTaskState();
     }

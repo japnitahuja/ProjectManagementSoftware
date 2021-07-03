@@ -116,37 +116,10 @@ class CostCode extends Component {
           );
         })}
 
-        <CostCodeCreateButton />
-        <br></br>
-        <br />
-        <form onChange={this.itemChange} onSubmit={this.createItem}>
-          <label for="itemName" name="itemName" id="itemName">
-            Item Name
-          </label>
-          <input name="itemName" id="itemName" type="text" />
-          <br />
-          <label for="partNo" name="partNo" id="partNo">
-            Part No.
-          </label>
-          <input name="partNo" id="partNo" type="number" />
-          <br />
-          <label for="cost" name="cost" id="cost">
-            Cost/part
-          </label>
-          <input name="cost" id="cost" type="number" />
-          <br />
-          <label for="itemLink" name="itemLink" id="itemLink">
-            Item Link
-          </label>
-          <input name="itemLink" id="itemLink" type="text" />
-          <br />
-          <label for="description" name="description" id="description">
-            Desciption
-          </label>
-          <input name="description" id="description" type="text" />
-          <br />
-          <button type="submit">CREATE ITEM</button>
-        </form>
+        <CostCodeCreateButton
+          categoryId={this.props.match.params.categoryId}
+          costCodeId={this.props.match.params.costCodeId}
+        />
       </>
     );
   }

@@ -43,7 +43,7 @@ class CostCodeCreateButton extends Component {
           >
             <CreateDiv>
               <Link
-                to="/costbook/costcode/createitem"
+                to={`/costbook/${this.props.categoryId}/${this.props.costCodeId}/createitem`}
                 style={{ textDecoration: "none" }}
               >
                 <CreateOptionsDiv justify={false}>Item</CreateOptionsDiv>

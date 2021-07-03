@@ -22,7 +22,8 @@ import SearchBar from "../../components/search-bar/search-bar.component";
 import NoResult from "../../components/no-result/no-result.component";
 import { Overlay } from "../../components/admin-panel-task-page/admin-panel-task-page.styles";
 import ProjectsFilter from "../../components/projects-filter/projects-filter.component";
-import { selectIsProjectFetching } from "../../redux/current-project/current-project.selectors";
+import Spinner from "../../components/spinner/spinner.component";
+
 class AllProjects extends Component {
   constructor(props) {
     super(props);
@@ -94,7 +95,7 @@ class AllProjects extends Component {
     let { projectsFetched } = this.props;
 
     if (!projectsFetched) {
-      return <div> Loading... </div>;
+      return <Spinner />;
     } else if (projectsFetched && this.state.setProjects == 0) {
       this.setProjectState();
     }
