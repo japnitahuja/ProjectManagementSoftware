@@ -12,6 +12,8 @@ import { CostbookCategory } from "../../components/costbook-category/costbook-ca
 import { CostbookCostCode } from "../../components/costbook-costcode/costbook-costcode.component";
 import { ColumnDiv, CostCodeTitle } from "./cost-code.styles";
 import CostBookEditCostCode from "../../components/costbook-editcostcode/costbook-editcostcode";
+import CostCodeCreateButton from "../../components/costcode-createbutton/costcode-createbutton.component";
+
 class CostCode extends Component {
   constructor(props) {
     super(props);
@@ -113,6 +115,8 @@ class CostCode extends Component {
             </Link>
           );
         })}
+
+        <CostCodeCreateButton />
         <br></br>
         <br />
         <form onChange={this.itemChange} onSubmit={this.createItem}>
