@@ -5,10 +5,14 @@ import {
   createCostCodeItemStart,
   fetchCostBookStart,
 } from "../../redux/costbook/costbook.actions";
-import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
+import {
+  selectCostBookDetails,
+  selectFetchCostBookSuccess,
+} from "../../redux/costbook/costbook.selectors";
 import { Link } from "react-router-dom";
 import CostCodeDisplayItem from "../../components/costcode-displayitem/costcode-displayitem.component";
 import CostCodeEditItem from "../../components/costcode-edititem/costcode-edititem.component";
+import Spinner from "../../components/spinner/spinner.component";
 
 class CostBookItem extends Component {
   constructor() {
@@ -16,12 +20,11 @@ class CostBookItem extends Component {
     this.state = {
       items: {},
       showEdit: false,
+      setItems: 0,
     };
   }
   componentDidMount() {
     this.props.fetchCostBook();
-    console.log("component mounted", this.props.costbook);
-    this.items();
   }
 
   toggleEdit = () => {
@@ -43,7 +46,7 @@ class CostBookItem extends Component {
       (id) => id._id === this.props.match.params.itemId
     );
 
-    this.setState({ items: item }, () => console.log(this.state));
+    this.setState({ items: item, setItems: 1 }, () => console.log(this.state));
   };
 
   itemOnChange = (e) => {
@@ -62,7 +65,13 @@ class CostBookItem extends Component {
 
   render() {
     const { items } = this.state;
-    console.log(items);
+
+    console.log(this.state, this.props.fetchCostBookSuccess);
+    if (!this.props.fetchCostBookSuccess) {
+      return <Spinner />;
+    } else if (this.props.fetchCostBookSuccess && this.state.setItems === 0) {
+      this.items();
+    }
     return (
       <>
         {this.state.showEdit ? (
@@ -114,6 +123,7 @@ class CostBookItem extends Component {
 
 const mapStateToProps = createStructuredSelector({
   costbook: selectCostBookDetails,
+  fetchCostBookSuccess: selectFetchCostBookSuccess,
 });
 
 const mapDispatchToProps = (dispatch) => ({

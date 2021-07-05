@@ -2,7 +2,7 @@ import { CostBookActionTypes } from "./costbook.types";
 
 const INITIAL_STATE = {
   createCostBookCategoryStart: false,
-  createCostBookCategorySucessful: false,
+  createCostBookCategorySuccessful: false,
   createCostBookCategoryFail: false,
   fetchCostBookStart: false,
   fetchCostBookSuccess: false,
@@ -31,7 +31,7 @@ const costBookReducer = (state = INITIAL_STATE, action) => {
         ...state,
         createCostBookCategoryStart: true,
         createCostBookCategoryFail: false,
-        createCostBookCategorySuccesful: false,
+        createCostBookCategorySuccessful: false,
         errorMessage: null,
       };
     case CostBookActionTypes.CREATE_COST_BOOK_CATEGORY_SUCCESS:
@@ -39,6 +39,7 @@ const costBookReducer = (state = INITIAL_STATE, action) => {
         ...state,
         createCostBookCategoryStart: false,
         createCostBookCategorySuccessful: true,
+        createCostBookCategoryFail: false,
         message: "TASK CREATED SUCCESSFULLY!",
       };
 
@@ -47,18 +48,22 @@ const costBookReducer = (state = INITIAL_STATE, action) => {
         ...state,
         createCostBookCategoryStart: false,
         createCostBookCategoryFail: true,
+        createCostBookCategorySuccessful: false,
         errorMessage: action.payload,
       };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_START:
       return {
         ...state,
         createCostCodeStart: true,
+        createCostCodeSuccess: false,
+        createCostCodeFailure: false,
       };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_SUCCESS:
       return {
         ...state,
         createCostCodeStart: false,
         createCostCodeSuccess: true,
+        createCostCodeFailure: false,
         message: "COST BOOK COST CODE CREATED",
       };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_FAILURE:
@@ -67,38 +72,46 @@ const costBookReducer = (state = INITIAL_STATE, action) => {
         createCostCodeStart: false,
         errorMessage: action.payload,
         createCostCodeFailure: true,
+        createCostCodeSuccess: false,
       };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODEITEM_START:
       return {
         ...state,
         createCostCodeItemStart: true,
+        createCostCodeItemSuccess: false,
+        createCostCodeItemFailure: false,
       };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODEITEM_SUCCESS:
       return {
         ...state,
         createCostCodeItemStart: false,
         createCostCodeItemSuccess: true,
+        createCostCodeItemFailure: false,
       };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_FAILURE:
       return {
         ...state,
         createCostCodeItemStart: false,
         createCostCodeItemFailure: true,
+        createCostCodeItemSuccess: false,
         errorMessage: action.payload,
       };
     case CostBookActionTypes.FETCH_COST_BOOK_START:
       return {
         ...state,
         fetchCostBookStart: true,
+        fetchCostBookSuccess: false,
+        fetchCostBookFailure: false,
       };
     case CostBookActionTypes.FETCH_COST_BOOK_SUCCESS:
       return {
         ...state,
         fetchCostBookStart: false,
         fetchCostBookSuccess: true,
+        fetchCostBookFailure: false,
         costBook: action.payload,
       };
-    case CostBookActionTypes.FETCH_COST_BOOK_START:
+    case CostBookActionTypes.FETCH_COST_BOOK_FAILURE:
       return {
         ...state,
         fetchCostBookStart: false,

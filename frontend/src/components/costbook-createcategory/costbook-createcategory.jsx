@@ -22,6 +22,9 @@ import {
   createCostCodeStart,
   fetchCostBookStart,
 } from "../../redux/costbook/costbook.actions";
+import { selectCreateCostBookCategorySuccess } from "../../redux/costbook/costbook.selectors";
+import Spinner from "../spinner/spinner.component";
+import { createStructuredSelector } from "reselect";
 
 class CostBookCreateCategory extends Component {
   constructor(props) {
@@ -30,6 +33,7 @@ class CostBookCreateCategory extends Component {
       category: {
         categoryName: "",
       },
+      create: false,
     };
   }
 
@@ -48,8 +52,8 @@ class CostBookCreateCategory extends Component {
     let costBookDetails = this.state.category;
     if (costBookDetails.categoryName != "") {
       this.props.createCategory(costBookDetails);
+      this.setState({ create: true });
     }
-    this.exit();
   };
 
   exit = () => {
@@ -57,6 +61,12 @@ class CostBookCreateCategory extends Component {
   };
 
   render() {
+    console.log(this.props.createCostBookCategory, this.state);
+    if (this.state.create && !this.props.createCostBookCategory) {
+      return <Spinner />;
+    } else if (this.props.createCostBookCategory && this.state.create) {
+      this.exit();
+    }
     return (
       <Overlay>
         <NavBar>
@@ -96,12 +106,16 @@ class CostBookCreateCategory extends Component {
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  createCostBookCategory: selectCreateCostBookCategorySuccess,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   createCategory: (costBookDetails) =>
     dispatch(createCostBookCategoryStart(costBookDetails)),
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(withRouter(CostBookCreateCategory));

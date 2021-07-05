@@ -14,11 +14,17 @@ import {
 } from "./costcode-createitem.styles";
 import { withRouter } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
-import { selectCostBookDetails } from "../../redux/costbook/costbook.selectors";
+import {
+  selectCostBookDetails,
+  selectCreateCostCodeItemStart,
+  selectCreateCostCodeItemSuccess,
+  selectCreateCostCodeSuccess,
+} from "../../redux/costbook/costbook.selectors";
 import {
   createCostCodeItemStart,
   fetchCostBookStart,
 } from "../../redux/costbook/costbook.actions";
+import Spinner from "../spinner/spinner.component";
 
 class CostCodeCreateItem extends Component {
   constructor(props) {
@@ -33,6 +39,7 @@ class CostCodeCreateItem extends Component {
         costCodeId: this.props.costCodeId,
         categoryId: this.props.categoryId,
       },
+      create: false,
     };
   }
 
@@ -40,7 +47,7 @@ class CostCodeCreateItem extends Component {
     e.preventDefault();
     let itemDetails = this.state.item;
     this.props.createItem(itemDetails);
-    this.exit();
+    this.setState({ create: true });
   };
 
   handleOnChange = (e) => {
@@ -56,6 +63,16 @@ class CostCodeCreateItem extends Component {
 
   render() {
     let categoryNames = [];
+    console.log(this.props.createCostCodeSuccess, this.state);
+    if (this.state.create && !this.props.createCostCodeSuccess) {
+      return <Spinner />;
+    } else if (
+      this.props.createCostCodeSuccess &&
+      this.state.create &&
+      this.props.createCostItemStart
+    ) {
+      this.exit();
+    }
 
     this.props.costbook.map((cost) => {
       return categoryNames.push(cost.categoryName);
@@ -71,7 +88,7 @@ class CostCodeCreateItem extends Component {
             align="center"
             style={{ fontWeight: "600", fontSize: "0.9em" }}
           >
-            New Cost Code
+            New Item
           </OneThirdDiv>
           <OneThirdDiv align="flex-end" color="#205284" onClick={this.onSubmit}>
             Save
@@ -167,6 +184,8 @@ class CostCodeCreateItem extends Component {
 
 const mapStateToProps = createStructuredSelector({
   costbook: selectCostBookDetails,
+  createCostCodeSuccess: selectCreateCostCodeSuccess,
+  createCostItemStart: selectCreateCostCodeItemStart,
 });
 
 const mapDispatchToProps = (dispatch) => ({
