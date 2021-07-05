@@ -2,10 +2,13 @@ import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
 import { createProjectSucessful, createProjectFail, fetchProjectsStart, fetchProjectsFailure, fetchProjectsSuccess, createProjectTemplateSuccess, createProjectTemplateFailure } from "./all-projects.actions";
 import { ProjectActionTypes } from "./all-projects.types";
 import { selectUserId } from "../user/user.selectors"
+import { selectCurrentOrganisationId } from "../orgnaisation/organisation.selectors";
 
 export function* createProject({payload}){
   try {
     let data = payload;
+    const orgId = yield select(selectCurrentOrganisationId)
+    data['organisationId'] = orgId
     let userId = yield select(selectUserId);
     console.log(userId);
     console.log(data);
@@ -30,14 +33,16 @@ export function* createProject({payload}){
   }
 }
 
-export function* fetchProjects(){
+export function* fetchProjects({payload}){
   try {
     // const token = yield JSON.parse(localStorage.getItem('token'))
     // console.log(token)
     const token =  localStorage.getItem('token')
     console.log(token)
+    let orgId = payload
+    console.log(orgId, 'saga org id')
     let userId = yield select(selectUserId);
-    let projects = yield fetch(`http://127.0.0.1:5000/all-projects/${userId}`, {
+    let projects = yield fetch(`http://127.0.0.1:5000/all-projects/${userId}/${orgId}`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
@@ -46,8 +51,9 @@ export function* fetchProjects(){
       }
     })
     projects = yield projects.json()
+    console.log(projects, 'saga projects')
     projects.done
-    ? yield put(fetchProjectsSuccess(projects.projects.projects))
+    ? yield put(fetchProjectsSuccess(projects.projects))
     : yield put(fetchProjectsFailure(projects.error))
   } catch (error) {
     fetchProjectsFailure(error)

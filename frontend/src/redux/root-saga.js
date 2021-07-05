@@ -9,6 +9,7 @@ import { currentStepSagas } from './current-step/current-step.sagas';
 import {currentPurchaseOrderSagas} from './current-purchase-order/current-purchase-order.saga'
 import { currentChangeOrderSagas } from './current-change-order/current-change-order.sagas';
 import { costBookSagas } from './costbook/costbook.saga';
+import { organisationSagas } from './orgnaisation/organisation.sagas';
 
 export default function* rootSaga(){
     yield all ([
@@ -21,6 +22,7 @@ export default function* rootSaga(){
         call(currentStepSagas),
         call(currentPurchaseOrderSagas),
         call(currentChangeOrderSagas),
-        call(costBookSagas)
+        call(costBookSagas),
+        call(organisationSagas)
     ]);
 }

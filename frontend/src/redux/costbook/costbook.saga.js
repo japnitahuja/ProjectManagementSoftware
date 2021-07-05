@@ -1,5 +1,5 @@
 import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
-    import { createCostBookCategoryFail, createCostBookCategorySucessful, createCostCodeFailute, createCostCodeItemFailure, createCostCodeItemSuccess, createCostCodeSuccess, fetchCostBookFailure, fetchCostBookSuccess } from "./costbook.actions";
+    import { createCostBookCategoryFail, createCostBookCategorySucessful, createCostCodeFailute, createCostCodeItemFailure, createCostCodeItemSuccess, createCostCodeSuccess, editCostBookCostCodeFailure, editCostBookCostCodeSucessful, editCostBookItemsFailure, editCostBookItemsSuccess, fetchCostBookFailure, fetchCostBookSuccess } from "./costbook.actions";
 import { CostBookActionTypes } from "./costbook.types";
 
 export function* fetchCostBook({payload}){
@@ -82,6 +82,50 @@ export function* createCostBookCostCodeItemStart({payload}){
     }
 }
 
+export function* editCostBookCostCodeStart({payload}){
+  const data = payload
+  try {
+    let resp = yield fetch(`http://127.0.0.1:5000/editCostCode`,{
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+         )
+         resp = yield resp.json()
+         if(resp.done){
+             yield put(editCostBookCostCodeSucessful(resp.message))
+         }else{
+             yield put(editCostBookCostCodeFailure('error'))
+         }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export function* editCostBookItemStart({payload}){
+  let data = payload
+  try {
+    let resp = yield fetch(`http://127.0.0.1:5000/editCostCodeItem`,{
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+         )
+         resp = yield resp.json()
+         if(resp.done){
+             yield put(editCostBookItemsSuccess(resp.message))
+         }else{
+             yield put(editCostBookItemsFailure('error'))
+         }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export function* onCostBookFetchStart(){
   yield takeLatest(CostBookActionTypes.FETCH_COST_BOOK_START, fetchCostBook)
 }
@@ -98,11 +142,21 @@ export function* onCreateCostCodeCategoryStart(){
   yield takeLatest(CostBookActionTypes.CREATE_COST_BOOK_CATEGORY_START, createCostBookCategory)
 }
 
+export function* onEditCostCodeStart(){
+ yield takeLatest(CostBookActionTypes.EDIT_COSTBOOK_COSTCODE_START, editCostBookCostCodeStart)
+}
+
+export function* onEditCostBookItemStart(){
+  yield takeLatest(CostBookActionTypes.EDIT_COSTBOOK_ITEM_START, editCostBookItemStart)
+}
+
 export function* costBookSagas() {
   yield all([
     call(onCostBookFetchStart),
     call(onCreateCostCodeItemStart),
     call(onCreateCostCodeStart),
-    call(onCreateCostCodeCategoryStart)
+    call(onCreateCostCodeCategoryStart),
+    call(onEditCostCodeStart),
+    call(onEditCostBookItemStart)
   ]);
 }

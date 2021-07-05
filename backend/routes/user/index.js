@@ -62,21 +62,34 @@ router.post("/create-organisation/:userId", async (req, res) => {
   }
 });
 
-//get all user org
-router.get('/organisation/:userId', async (req, res) => {
+//get organisation
+router.get('/org/:orgId', async (req, res) => {
   try {
-    const org = await User.findOne({_id: req.params.userId}).populate({
-      path: 'projects',
-      populate: {path: 'organisation'}
-    })
-    res.json({message: 'Orgs fetched', done: true, org})
+    const org = await Organisation.findById(req.params.orgId)
+    console.log(org)
+    res.status(200).json({message: 'org fetched', org, done: true})
   } catch (error) {
     console.log(error)
   }
 })
 
-//get orgainsation
-router.get("/organisation/:orgId", async (req, res) => {
+//get all user org
+router.get("/organisation/:userId", async (req, res) => {
+  try {
+    let org = await User.findOne({ _id: req.params.userId }).populate({
+      path: "projects",
+      populate: { path: "organisation" },
+      select: "projects",
+    });
+    org = org.projects;
+    res.json({ message: "Orgs fetched", done: true, org });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+//get orgainsation projects for a user
+router.get("/projects/:orgId", async (req, res) => {
   try {
     const org = await Organisation.findById(req.params.orgId).populate([
       {
@@ -89,7 +102,7 @@ router.get("/organisation/:orgId", async (req, res) => {
         path: "organisationMembers",
       },
     ]);
-    res.status(200).json({message: 'organisation fetched', done: true, org})
+    res.status(200).json({ message: "organisation fetched", done: true, org });
   } catch (error) {
     console.log(error);
   }
@@ -137,16 +150,17 @@ router.post("/create-project/:userId", async (req, res) => {
         projectLocation,
         projectRoles: ["Intern", "Constuction-worker"],
       });
-      var user = await User.findOne({ _id: req.params.userId });
+      let user = await User.findOne({ _id: req.params.userId });
       // API for organisation unomment this------>
-      // var organisation = await Organisation.findById(organisationId);
-      // organisation.projects.push(project._id);
-      // user.projects.map((pro) => {
-      //   if (pro.organisation == organisationId) {
-      //     pro.organisationProjects.push(project._id);
-      //   }
-      // });
-      // await organisation.save();
+      let organisation = await Organisation.findById(organisationId);
+      console.log(organisation)
+      organisation.projects.push(project._id);
+      user.projects.map((pro) => {
+        if (pro.organisation == organisationId) {
+          pro.organisationProjects.push(project._id);
+        }
+      });
+      await organisation.save();
       //--------->
       const userDetails = {
         user: userId,
@@ -154,7 +168,7 @@ router.post("/create-project/:userId", async (req, res) => {
         role: "GOD",
       };
       // delete this when changing to organisation ---->
-      project.Users.push(userDetails);
+      // project.Users.push(userDetails);
       // ------>
       await user.save();
       await project.save();
@@ -167,25 +181,25 @@ router.post("/create-project/:userId", async (req, res) => {
 });
 
 //all Projects List with the organisations
-// router.get("/all-projects/:userId/:orgId", async (req, res) => {
-//   try {
-//     const user = await User.findById(req.params.userId).populate({
-//       path: "projects",
-//       populate: { path: "organisationProjects" },
-//       // match: doc => ({published: {$ne: false}})
-//     });
-//     console.log(user);
-//     let projects = [];
-//     user.projects.map((project) => {
-//       if (project.organisation == req.params.orgId) {
-//         projects = project.organisationProjects;
-//       }
-//     });
-//     res.json({ message: "Projects", done: true, projects });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+router.get("/all-projects/:userId/:orgId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId).populate({
+      path: "projects",
+      populate: { path: "organisationProjects" },
+      // match: doc => ({published: {$ne: false}})
+    });
+    console.log(user);
+    let projects = [];
+    user.projects.map((project) => {
+      if (project.organisation == req.params.orgId) {
+        projects = project.organisationProjects;
+      }
+    });
+    res.json({ message: "Projects", done: true, projects });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 //all projects list without the organisations
 router.route("/all-projects/:userId").get(async (req, res) => {
@@ -373,6 +387,10 @@ router
           path: "changeOrders",
           populate: { path: "purchasedItems" },
         },
+        {
+          path: "taskOwner",
+          select: "firstName lastName",
+        },
       ]);
       res.status(200).json({ done: true, message: "task is fetched", task });
     } catch (error) {
@@ -539,7 +557,7 @@ router
   });
 
 //list of all the payees
-router.get("/payees/:projectId",async (req, res) => {
+router.get("/payees/:projectId", async (req, res) => {
   try {
     const project = await Project.findById(req.params.projectId).populate({
       path: "users",
@@ -611,17 +629,17 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
 //geting the purchase order for a task
 router.get("/task/:taskId/purchaseOrder", async (req, res) => {
   try {
-    var purchaseOrders = await Task.find({ _id: req.params.taskId })
-    .populate(
+    var purchaseOrders = await Task.find({ _id: req.params.taskId }).populate(
       {
-      path: "purchaseOrders",
+        path: "purchaseOrders",
       },
       {
-        path: 'PoCreatedBy'
+        path: "PoCreatedBy",
       },
       {
-        path: 'payee'
-      })
+        path: "payee",
+      }
+    );
     res.status(200).json({
       message: "All purchase orders linked to the task",
       done: true,
@@ -635,17 +653,19 @@ router.get("/task/:taskId/purchaseOrder", async (req, res) => {
 //getting puchase orders for a project
 router.get("/project/:projectId/purchaseOrders", async (req, res) => {
   try {
-    var purchaseOrder = await Project.findOne({ _id: req.params.projectId })
-      .populate(
-        {
+    var purchaseOrder = await Project.findOne({
+      _id: req.params.projectId,
+    }).populate(
+      {
         path: "purchaseOrders",
-        },
-        {
-          path: 'PoCreatedBy'
-        },
-        {
-          path: 'payee'
-        })
+      },
+      {
+        path: "PoCreatedBy",
+      },
+      {
+        path: "payee",
+      }
+    );
     res.status(200).json({
       message: "All purchase orders linked to the project",
       done: true,
@@ -660,12 +680,12 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 router.post(
   "/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
-      let {
-        itemName,
-        itemNumber, //item quantity
-        itemValue, //item rate
-        comment
-      } = req.body
+    let {
+      itemName,
+      itemNumber, //item quantity
+      itemValue, //item rate
+      comment,
+    } = req.body;
     if (!itemName) {
       res.status(422).json({ error: "Fill all the fields", done: false });
     } else {
@@ -677,7 +697,7 @@ router.post(
           itemName,
           itemNumber,
           itemValue,
-          comment
+          comment,
         });
         purchaseOrder.purchasedItems.push(purchaseOrderItem._id);
         await purchaseOrder.save();
@@ -707,14 +727,16 @@ router.get("/purchaseOrder/:purchaseOrderId", async (req, res) => {
 });
 
 //editing a purchase order
-router.put('/purchaseOrder/:purchaseOrderId', async(req, res) => {
+router.put("/purchaseOrder/:purchaseOrderId", async (req, res) => {
   const PO = await PurchaseOrder.findByIdAndUpdate(
-    req.params.purchaseOrderId, 
+    req.params.purchaseOrderId,
     {
-      $set: req.body
-    }, {new: true})
-    res.status(200).json({message: 'PO updated', done: true, PO})
-})
+      $set: req.body,
+    },
+    { new: true }
+  );
+  res.status(200).json({ message: "PO updated", done: true, PO });
+});
 
 //creating a change order
 router.post("/create-change-order/:taskId", async (req, res) => {
@@ -1087,107 +1109,117 @@ router.post("/test-template/:userId", async (req, res) => {
 });
 
 //send the request to trade partner
-// router.post("/inviteUser", async (req, res) => {
-//   const { email, permission, role, type, projectId, organisationId } = req.body;
-//   try {
-//     console.log(email, projectId);
-//     const savedUser = await User.findOne({ email: email });
-//     const project = await Project.findOne({ _id: projectId });
-//     let UserInProject = false;
-//     let organisationInUser = false, finalUserId, finalUser;
-//     if (savedUser) {
-//       savedUser.projects.map((project) => {
-//         console.log(project, "project id in array");
-//         if (project.organisation == organisationId) {
-//           organisationInUser = true;
-//           if (project.organisationProjects.includes(projectId)) {
-//             UserInProject = true;
-//           }
-//         }
-//       })
-//       console.log(UserInProject, organisationInUser);
-//       if (UserInProject === true) {
-//         console.log("user in project");
-//         res
-//           .status(422)
-//           .json({ message: "User already in the project team", done: false });
-//       } else {
-//         console.log("saved user not added in the project");
-//         finalUserId = await savedUser._id;
-//         finalUser = savedUser;
-//         console.log("user id in if else", finalUserId);
-//         let orgDetails = {
-//           organisation: organisationId,
-//         }
-//         console.log(orgDetails, 'org details')
-//         if (organisationInUser === false) {
-//           finalUser.projects.push(orgDetails);
-//           console.log("created org");
-//         }
-//       }
-//     } else {
-//       let user = await User.create({
-//         email: email,
-//         permission: permission,
-//         role: role,
-//       });
-//       finalUserId = user._id;
-//       finalUser = user;
-//       console.log("user id in if else", finalUserId);
-//       let orgDetails = {
-//         organisation: organisationId,
-//       };
+router.post("/inviteUser", async (req, res) => {
+  const { email, permission, role, type, projectId, organisationId } = req.body;
+  try {
+    console.log(email, projectId);
+    const savedUser = await User.findOne({ email: email });
+    const project = await Project.findOne({ _id: projectId });
+    const org = await Organisation.findOne({_id:organisationId})
+    let UserInProject = false, organisationInUser = false, finalUserId, finalUser;
+    if (savedUser) {
+      savedUser.projects.map((project) => {
+        if (project.organisation == organisationId) {
+          organisationInUser = true;
+          if (project.organisationProjects.includes(projectId)) {
+            UserInProject = true;
+          }
+        }
+      })
+      console.log(UserInProject, organisationInUser);
+      if (UserInProject === true) {
+        console.log("user in project");
+        res
+          .status(422)
+          .json({ message: "User already in the project team", done: false });
+          return;
+      } else {
+        console.log("saved user not added in the project");
+        finalUserId =  savedUser._id;
+        finalUser = savedUser;
+        console.log("user id in if else", finalUserId);
+        let orgDetails = {
+          organisation: organisationId,
+        }
+        console.log(orgDetails, 'org details')
+        if (organisationInUser === false) {
+          console.log('user not in organisation.')
+          finalUser.projects.push(orgDetails);
+          console.log(org)
+          // const orgUser = {
+          //   user: finalUserId,
+          //   permission: 'ORGANISATION-MEMBER'
+          // }
+          org.organisationMembers.push(finalUserId)
+        }
+      }
+    } else {
+      console.log('new user in the application.')
+      let user = await User.create({
+        email: email,
+        permission: permission,
+        role: role,
+      });
+      finalUserId = user._id;
+      finalUser = user;
+      console.log("user id in if else", finalUserId);
+      let orgDetails = {
+        organisation: organisationId,
+      };
 
-//       finalUser.projects.push(orgDetails);
-//     }
-//     console.log(finalUserId, "final user id");
-//     const userDetails = {
-//       user: finalUserId,
-//       permission: permission,
-//       role: role,
-//     };
-//     finalUser.projects.map((project) => {
-//       if (project.organisation == organisationId) {
-//         project.organisationProjects.push(projectId);
-//       }
-//     });
-//     project.Users.push(userDetails);
-//     finalUser.save();
-//     project.save();
-//     // console.log("projects for user", finalUser.projects);
-//     // console.log("users in a project", project.Users);
-//     console.log(finalUser);
-//     if (type == "saveandinvite") {
-//       let mailTransporter = nodemailer.createTransport({
-//         service: "gmail",
-//         auth: {
-//           user: "johnbanana12345john@gmail.com",
-//           pass: "Banana@123",
-//         },
-//       });
-//       let mailDetails = {
-//         from: "johnbanana12345john@gmail.com",
-//         to: email,
-//         subject: "Test mail",
-//         text: "hi! this mail has come from node js.",
-//       };
-//       mailTransporter.sendMail(mailDetails, function (err, data) {
-//         if (err) {
-//           console.log(err);
-//         } else {
-//           console.log("Email sent successfully");
-//         }
-//       });
-//       res.status(200).json({ done: true, message: "Invitation mail sent!" });
-//     } else {
-//       res
-//         .status(200)
-//         .json({ done: true, message: "User added to the project team" });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+      finalUser.projects.push(orgDetails);
+    }
+    console.log(finalUserId, "final user id");
+    const userDetails = {
+      user: finalUserId,
+      permission: permission,
+      role: role,
+    };
+    finalUser.projects.map((project) => {
+      if (project.organisation == organisationId) {
+        project.organisationProjects.push(projectId);
+      }
+    });
+    project.Users.push(userDetails);
+    finalUser.save();
+    project.save();
+    org.save()
+    // console.log("projects for user", finalUser.projects);
+    // console.log("users in a project", project.Users);
+    console.log(finalUser, 'final user after saving.');
+    if (type == "saveandinvite") {
+      let mailTransporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "johnbanana12345john@gmail.com",
+          pass: "Banana@123",
+        },
+      });
+      let mailDetails = {
+        from: "johnbanana12345john@gmail.com",
+        to: email,
+        subject: "Test mail",
+        text: "hi! this mail has come from node js.",
+      };
+      mailTransporter.sendMail(mailDetails, function (err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("Email sent successfully");
+        }
+      });
+      res.status(200).json({ done: true, message: "Invitation mail sent!" });
+    } else {
+      res
+        .status(200)
+        .json({ done: true, message: "User added to the project team" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 
 //update user permissions for project
 router.post("/updatePermissions/:projectId", async (req, res) => {
@@ -1199,7 +1231,7 @@ router.post("/updatePermissions/:projectId", async (req, res) => {
     await req.body.map(async (userDetail, index) => {
       await projectUsers.map(async (user) => {
         if (userDetail.id == user.user) {
-          user.permission =  userDetail.updatedPermission;
+          user.permission = userDetail.updatedPermission;
         }
       });
     });
@@ -1263,15 +1295,15 @@ router.post("/deleteUser/:projectId", async (req, res) => {
           let idToDelete = projectUsers.indexOf(projectUser);
           console.log(idToDelete);
           let updatedUser = projectUsers.filter((v, i) => i != idToDelete);
-          project.Users =  updatedUser;
+          project.Users = updatedUser;
           let user = await User.findOne({ _id: projectUser.user });
-          let userProjects =  user.projects;
+          let userProjects = user.projects;
           let projectToDelete = userProjects.indexOf(projectId);
           console.log(projectToDelete);
           let updatedProjects = userProjects.filter(
             (v, i) => i != projectToDelete
           );
-          userProjects =  updatedProjects;
+          userProjects = updatedProjects;
           user.projects = userProjects;
           console.log(userProjects, "final users projects");
           await user.save();

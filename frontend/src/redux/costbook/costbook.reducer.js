@@ -13,9 +13,15 @@ const INITIAL_STATE = {
   createCostCodeItemStart: false,
   createCostCodeItemFailure: false,
   createCostCodeItemSuccess: false,
+  editCostCodeStart: false,
+  editCostCodeSuccess: false,
+  editCostCodeFailure: false,
+  editCostItemStart: false,
+  editCostItemSuccess: false,
+  editCostItemFailure: false,
   errorMessage: undefined,
   message: null,
-  costBook: []
+  costBook: [],
 };
 
 const costBookReducer = (state = INITIAL_STATE, action) => {
@@ -35,7 +41,7 @@ const costBookReducer = (state = INITIAL_STATE, action) => {
         createCostBookCategorySuccessful: true,
         message: "TASK CREATED SUCCESSFULLY!",
       };
-   
+
     case CostBookActionTypes.CREATE_COST_BOOK_CATEGORY_FAILURE:
       return {
         ...state,
@@ -47,59 +53,96 @@ const costBookReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         createCostCodeStart: true,
-
-      }
+      };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_SUCCESS:
-      return{
+      return {
         ...state,
         createCostCodeStart: false,
         createCostCodeSuccess: true,
-        message: 'COST BOOK COST CODE CREATED'
-      }
+        message: "COST BOOK COST CODE CREATED",
+      };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_FAILURE:
-      return{
+      return {
         ...state,
         createCostCodeStart: false,
         errorMessage: action.payload,
-        createCostCodeFailure: true
-      }
+        createCostCodeFailure: true,
+      };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODEITEM_START:
-      return{
+      return {
         ...state,
-        createCostCodeItemStart: true
-      }
+        createCostCodeItemStart: true,
+      };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODEITEM_SUCCESS:
-      return{
+      return {
         ...state,
         createCostCodeItemStart: false,
-        createCostCodeItemSuccess: true
-      }
+        createCostCodeItemSuccess: true,
+      };
     case CostBookActionTypes.CREATE_COST_BOOK_COSTCODE_FAILURE:
-      return{
+      return {
         ...state,
         createCostCodeItemStart: false,
         createCostCodeItemFailure: true,
-        errorMessage: action.payload
-      }
+        errorMessage: action.payload,
+      };
     case CostBookActionTypes.FETCH_COST_BOOK_START:
-      return{
+      return {
         ...state,
-        fetchCostBookStart: true
-      }
-      case CostBookActionTypes.FETCH_COST_BOOK_SUCCESS:
-        return{
-          ...state,
-          fetchCostBookStart: false,
-          fetchCostBookSuccess: true,
-          costBook: action.payload
-        }
-      case CostBookActionTypes.FETCH_COST_BOOK_START:
-          return{
-            ...state,
-            fetchCostBookStart: false,
-            fetchCostBookFailure: true,
-            errorMessage: action.payload
-          }
+        fetchCostBookStart: true,
+      };
+    case CostBookActionTypes.FETCH_COST_BOOK_SUCCESS:
+      return {
+        ...state,
+        fetchCostBookStart: false,
+        fetchCostBookSuccess: true,
+        costBook: action.payload,
+      };
+    case CostBookActionTypes.FETCH_COST_BOOK_START:
+      return {
+        ...state,
+        fetchCostBookStart: false,
+        fetchCostBookFailure: true,
+        errorMessage: action.payload,
+      };
+    case CostBookActionTypes.EDIT_COSTBOOK_COSTCODE_START:
+      return {
+        ...state,
+        editCostCodeStart: true,
+      };
+    case CostBookActionTypes.EDIT_COSTBOOK_COSTCODE_SUCCESS:
+      return {
+        ...state,
+        editCostCodeStart: false,
+        editCostCodeSuccess: true,
+        message: action.payload,
+      };
+    case CostBookActionTypes.EDIT_COSTBOOK_COSTCODE_FAILURE:
+      return {
+        ...state,
+        editCostCodeStart: false,
+        editCostCodeFailure: true,
+        errorMessage: action.payload,
+      };
+    case CostBookActionTypes.EDIT_COSTBOOK_ITEM_START:
+      return {
+        ...state,
+        esitCostItemStart: true,
+      };
+    case CostBookActionTypes.EDIT_COSTBOOK_ITEM_SUCCESS:
+      return {
+        ...state,
+        esitCostItemStart: false,
+        esitCostItemSuccess: true,
+        message: action.payload
+      };
+    case CostBookActionTypes.EDIT_COSTBOOK_ITEM_START:
+      return {
+        ...state,
+        esitCostItemStart: false,
+        esitCostItemFailure: true,
+        errorMessage: action.payload,
+      };
     default:
       return state;
   }

@@ -29,9 +29,9 @@ export const createProjectTemplateFailure = (error) => ({
     payload: error
 })
 
-export const fetchProjectsStart = (userId) => ({
+export const fetchProjectsStart = (orgId) => ({
     type: ProjectActionTypes.FETCH_PROJECTS_START,
-    payload: userId
+    payload: orgId
 })
 
 export const fetchProjectsSuccess = (projects) => ({

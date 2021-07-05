@@ -36,22 +36,22 @@ const userSchema = new mongoose.Schema({
         default: true
     },
     // models for organisation --->
-    // projects: [{
-    //     organisation: {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: "Organisation"
-    //     },
-    //     organisationProjects: [{
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: "Project"
-    //     }]
-    // }],
+    projects: [{
+        organisation: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Organisation"
+        },
+        organisationProjects: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Project"
+        }]
+    }],
     // ---------->
     //comment this for organisation
-    projects:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Project"
-    }],
+    // projects:[{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Project"
+    // }],
     // ------------->
     createdAt: {type: Date, default: Date.now}
 })

@@ -28,6 +28,7 @@ import CostBookItem from "./pages/cost-book-item/cost-book-item.page";
 import createCostBookCategoryPage from "./pages/create-cost-book-category/create-cost-book-category.page";
 import createCostBookCostcodePage from "./pages/create-cost-book-costcode/create-cost-book-costcode.page";
 import createCostCodeItem from "./pages/create-cost-code-item/create-cost-code-item";
+import Organisation from "./pages/organisation/organisation.page";
 
 function App(props) {
   return (
@@ -38,13 +39,13 @@ function App(props) {
           exact
           render={() =>
             props.currentUser ? (
-              <Redirect to="/all-projects" />
+              <Redirect to="/organisations" />
             ) : (
               <SignInAndSignUpPage />
             )
           }
         />
-        <Route path="/all-projects" exact component={AllProjects} />
+        <Route path="/all-projects/:orgId" exact component={AllProjects} />
         <Route path="/project/:projectId" exact component={Project} />
         <Route path="/task/:taskId" exact component={Task} />
         {/* <Route path='/step/:stepId' exact component={Step} /> */}
@@ -105,6 +106,7 @@ function App(props) {
           exact
           component={createCostCodeItem}
         />
+        <Route path='/organisations' exact component={Organisation} />
       </Switch>
     </BrowserRouter>
   );
