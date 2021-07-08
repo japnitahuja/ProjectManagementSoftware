@@ -158,3 +158,43 @@ export const Overlay = styled.div`
     box-sizing: border-box;
   }
 `;
+
+export const AddLineItemDiv = styled.div`
+  @media screen and (min-width: 320px) {
+    width: 100%;
+    margin-top: 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+  }
+`;
+
+export const AmountDiv = styled.div`
+  @media screen and (min-width: 320px) {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    font-weight: 600;
+    margin-top: 1.5em;
+  }
+`;
+
+export const LongDiv = styled.div`
+  width: 100%;
+  height: 2.5em;
+  font-size: 1em;
+  border: none;
+  border-top: 1px solid #d3d3d3;
+  border-bottom: 1px solid #d3d3d3;
+  margin-top: 1em;
+  padding: 0em 1em;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:focus {
+    outline: none;
+  }
+`;

@@ -19,9 +19,15 @@ import {
   OneThirdDiv,
   POFormDiv,
   Overlay,
+  AddLineItemDiv,
+  AmountDiv,
+  LongDiv,
 } from "./create-purchase-order-form.styles";
 import { Link, withRouter } from "react-router-dom";
 import FormFullScreenSelection from "../form-fullscreen-selection/form-fullscreen-selection.component";
+import FormCostbookSelection from "../form-costbook-selection/form-costbook-selection.component";
+import add from "../../assets/add.png";
+import remove from "../../assets/minuscircle.png";
 
 class CreatePurchaseOrderForm extends Component {
   constructor(props) {
@@ -31,7 +37,7 @@ class CreatePurchaseOrderForm extends Component {
         PoTitle: "",
         userId: "",
         projectId: "",
-        purchasedItem: "",
+        purchasedItem: [],
         payee: "", //placeholder
         group: "",
         terms: "",
@@ -91,8 +97,30 @@ class CreatePurchaseOrderForm extends Component {
 
   select = ({ value, type }) => {
     let temp = this.state.purchaseOrderDetails;
-    temp[type] = value;
-    this.setState({ purchaseOrderDetails: temp }, console.log(this.state));
+    if (type === "purchasedItem") {
+      temp[type].push(value);
+    } else {
+      temp[type] = value;
+    }
+
+    this.setState({ purchaseOrderDetails: temp }, () => {
+      console.log(this.state);
+    });
+  };
+
+  itemRemove = (e) => {
+    let { itemid } = e.target.dataset;
+
+    let temp = this.state.purchaseOrderDetails;
+    let items = temp["purchasedItem"];
+    items = items.filter((item) => {
+      return item.itemId != itemid;
+    });
+    temp["purchasedItem"] = items;
+
+    this.setState({ purchaseOrderDetails: temp }, () => {
+      console.log(this.state);
+    });
   };
 
   render() {
@@ -145,9 +173,9 @@ class CreatePurchaseOrderForm extends Component {
             <div>
               <LongInput
                 type="text"
-                value={this.state.purchaseOrderDetails.purchasedItem}
-                name="purchasedItem"
-                id="purchasedItem"
+                value={this.state.purchaseOrderDetails.PoTitle}
+                name="PoTitle"
+                id="PoTitle"
                 placeholder="Purchase Order Title"
                 onChange={(e) => this.handleOnChange(e)}
                 required
@@ -229,7 +257,96 @@ class CreatePurchaseOrderForm extends Component {
             </Container>
           </form>
         ) : (
-          <div></div>
+          <div>
+            <form
+              style={{ display: "flex", flexDirection: "column" }}
+              onChange={(e) => this.handleOnChange(e)}
+            >
+              <div>
+                <LongInput
+                  type="text"
+                  value={this.state.purchaseOrderDetails.PoTitle}
+                  name="PoTitle"
+                  id="PoTitle"
+                  placeholder="Purchase Order Title"
+                  onChange={(e) => this.handleOnChange(e)}
+                  required
+                />
+              </div>
+            </form>
+            <Container>
+              {this.state.purchaseOrderDetails.purchasedItem.map(
+                ({ itemName, itemNumber, itemValue, itemId, comment }) => {
+                  return (
+                    <LongDiv data-id={itemId}>
+                      <div
+                        style={{
+                          width: "80%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            flex: 0.8,
+                          }}
+                        >
+                          <img
+                            src={remove}
+                            data-itemId={itemId}
+                            onClick={(e) => {
+                              this.itemRemove(e);
+                            }}
+                          />
+                          <div>{itemName}</div>
+                        </div>
+
+                        <div>${itemNumber * itemValue}</div>
+                      </div>
+                    </LongDiv>
+                  );
+                }
+              )}
+
+              <AddLineItemDiv
+                onClick={() => {
+                  console.log(this.state);
+                  this.toggleFormChoose("items");
+                }}
+              >
+                <div
+                  style={{
+                    flex: 0.2,
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <img src={add} />
+                </div>
+                <div style={{ flex: 0.8, borderBottom: "1px solid #d3d3d3" }}>
+                  Add Line Item
+                </div>
+              </AddLineItemDiv>
+
+              <AmountDiv>
+                <div>SubTotal</div>
+                <div>$0</div>
+              </AmountDiv>
+              <AmountDiv>
+                <div>SubTotal</div>
+                <div>$0</div>
+              </AmountDiv>
+              <AmountDiv>
+                <div>SubTotal</div>
+                <div>$0</div>
+              </AmountDiv>
+            </Container>
+          </div>
         )}
 
         {this.state.active === "Info" &&
@@ -277,6 +394,15 @@ class CreatePurchaseOrderForm extends Component {
               select={this.select}
               type={this.state.formChoose}
               selected={this.state.purchaseOrderDetails.group}
+            />
+          </Overlay>
+        ) : null}
+
+        {this.state.active === "Items" && this.state.formChoose === "items" ? (
+          <Overlay style={{ bottom: "0", height: "100%" }}>
+            <FormCostbookSelection
+              exit={this.toggleFormChoose}
+              submitItem={this.select}
             />
           </Overlay>
         ) : null}
