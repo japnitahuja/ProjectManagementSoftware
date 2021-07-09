@@ -23,7 +23,7 @@ import NoResult from "../../components/no-result/no-result.component";
 import { Overlay } from "../../components/admin-panel-task-page/admin-panel-task-page.styles";
 import ProjectsFilter from "../../components/projects-filter/projects-filter.component";
 import Spinner from "../../components/spinner/spinner.component";
-import { fetchOrganisationStart } from "../../redux/orgnaisation/organisation.actions";
+import { fetchOrganisationStart } from "../../redux/organisation/organisation.actions";
 
 class AllProjects extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class AllProjects extends Component {
 
   async componentDidMount() {
     const { fetchProjects, fetchOrg } = this.props;
-    const orgId = this.props.match.params.orgId
+    const orgId = this.props.match.params.orgId;
     fetchProjects(orgId);
     //fetchOrg(orgId)
     console.log('component mounted.')
@@ -162,7 +162,7 @@ const mapDispatchToProps = (dispatch) => ({
   createProject: (projectDetails) =>
     dispatch(createProjectStart(projectDetails)),
   fetchProjects: (orgId) => dispatch(fetchProjectsStart(orgId)),
-  fetchOrg: (orgId) => dispatch(fetchOrganisationStart(orgId))
+  fetchOrg: (orgId) => dispatch(fetchOrganisationStart(orgId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllProjects);

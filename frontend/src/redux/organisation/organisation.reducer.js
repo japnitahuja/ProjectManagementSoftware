@@ -55,8 +55,7 @@ const organisationReducer = (state = INITIAL_STATE, action) => {
         fetchOrganisationStart: false,
         fetchOrganisationSuccess: true,
         organisation: action.payload,
-        organisationId: action.payload._id
-        
+        organisationId: action.payload._id,
       };
     case OrganisationActionTypes.FETCH_ORGANISATION_FAILURE:
       return {

@@ -1,14 +1,22 @@
-import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
-import { createProjectSucessful, createProjectFail, fetchProjectsStart, fetchProjectsFailure, fetchProjectsSuccess, createProjectTemplateSuccess, createProjectTemplateFailure } from "./all-projects.actions";
+import { all, call, put, takeLatest, select, delay } from "redux-saga/effects";
+import {
+  createProjectSucessful,
+  createProjectFail,
+  fetchProjectsStart,
+  fetchProjectsFailure,
+  fetchProjectsSuccess,
+  createProjectTemplateSuccess,
+  createProjectTemplateFailure,
+} from "./all-projects.actions";
 import { ProjectActionTypes } from "./all-projects.types";
-import { selectUserId } from "../user/user.selectors"
-import { selectCurrentOrganisationId } from "../orgnaisation/organisation.selectors";
+import { selectUserId } from "../user/user.selectors";
+import { selectCurrentOrganisationId } from "../organisation/organisation.selectors";
 
-export function* createProject({payload}){
+export function* createProject({ payload }) {
   try {
     let data = payload;
-    const orgId = yield select(selectCurrentOrganisationId)
-    data['organisationId'] = orgId
+    const orgId = yield select(selectCurrentOrganisationId);
+    data["organisationId"] = orgId;
     let userId = yield select(selectUserId);
     console.log(userId);
     console.log(data);
@@ -20,47 +28,50 @@ export function* createProject({payload}){
       body: JSON.stringify(data),
     });
 
-    resp = yield resp.json()
-    if(resp.done){
+    resp = yield resp.json();
+    if (resp.done) {
       yield put(createProjectSucessful(resp.message));
-    }else{
-      yield put(createProjectFail(resp.error))
+    } else {
+      yield put(createProjectFail(resp.error));
     }
-    yield delay(500)
+    yield delay(500);
     yield put(fetchProjectsStart());
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
-export function* fetchProjects({payload}){
+export function* fetchProjects({ payload }) {
   try {
     // const token = yield JSON.parse(localStorage.getItem('token'))
     // console.log(token)
-    const token =  localStorage.getItem('token')
-    console.log(token)
-    let orgId = payload
-    console.log(orgId, 'saga org id')
+    const token = localStorage.getItem("token");
+    console.log(token);
+    let orgId = payload;
+    console.log(orgId, "saga org id");
     let userId = yield select(selectUserId);
-    let projects = yield fetch(`http://127.0.0.1:5000/all-projects/${userId}/${orgId}`, {
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json",
-        // "Authorization" : `Bearer ${token}`,
-        "UserPermission": 'ADMIN'
+    let projects = yield fetch(
+      `http://127.0.0.1:5000/all-projects/${userId}/${orgId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // "Authorization" : `Bearer ${token}`,
+          UserPermission: "ADMIN",
+        },
       }
-    })
-    projects = yield projects.json()
-    console.log(projects, 'saga projects')
+    );
+    projects = yield projects.json();
+    console.log(projects, "saga projects");
     projects.done
-    ? yield put(fetchProjectsSuccess(projects.projects))
-    : yield put(fetchProjectsFailure(projects.error))
+      ? yield put(fetchProjectsSuccess(projects.projects))
+      : yield put(fetchProjectsFailure(projects.error));
   } catch (error) {
-    fetchProjectsFailure(error)
+    fetchProjectsFailure(error);
   }
 }
 
-export function* createProjectTemplate({payload}){
+export function* createProjectTemplate({ payload }) {
   try {
     let data = payload;
     let userId = yield select(selectUserId);
@@ -74,36 +85,38 @@ export function* createProjectTemplate({payload}){
       body: JSON.stringify(data),
     });
 
-    resp = yield resp.json()
-    if(resp.done){
+    resp = yield resp.json();
+    if (resp.done) {
       yield put(createProjectTemplateSuccess(resp.message));
-    }else{
-      yield put(createProjectTemplateFailure(resp.error))
+    } else {
+      yield put(createProjectTemplateFailure(resp.error));
     }
-    yield delay(500)
+    yield delay(500);
     yield put(fetchProjectsStart());
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
-
-export function* onProjectCreateStart(){
-  yield takeLatest(ProjectActionTypes.CREATE_PROJECT_START, createProject)
+export function* onProjectCreateStart() {
+  yield takeLatest(ProjectActionTypes.CREATE_PROJECT_START, createProject);
 }
 
-export function* onProjectFetchStart(){
-  yield takeLatest(ProjectActionTypes.FETCH_PROJECTS_START, fetchProjects)
+export function* onProjectFetchStart() {
+  yield takeLatest(ProjectActionTypes.FETCH_PROJECTS_START, fetchProjects);
 }
 
-export function* OnProjectTemplateCreateStart(){
-  yield takeLatest(ProjectActionTypes.CREATE_PROJECT_TEMPLATE_START, createProjectTemplate)
+export function* OnProjectTemplateCreateStart() {
+  yield takeLatest(
+    ProjectActionTypes.CREATE_PROJECT_TEMPLATE_START,
+    createProjectTemplate
+  );
 }
 
 export function* projectSagas() {
   yield all([
     call(onProjectCreateStart),
     call(onProjectFetchStart),
-    call(OnProjectTemplateCreateStart)
+    call(OnProjectTemplateCreateStart),
   ]);
 }
