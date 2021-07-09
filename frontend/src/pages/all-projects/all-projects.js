@@ -41,8 +41,12 @@ class AllProjects extends Component {
     const { fetchProjects, fetchOrg } = this.props;
     const orgId = this.props.match.params.orgId
     fetchProjects(orgId);
-    fetchOrg(orgId)
+    //fetchOrg(orgId)
+    console.log('component mounted.')
+  }
 
+  componentDidUpdate(){
+    console.log('component updated.')
   }
 
   search = (searchedText) => {
@@ -108,6 +112,7 @@ class AllProjects extends Component {
       projectsList = [];
     }
     console.log(projectsList, this.state);
+    console.log('rendered.')
 
     return (
       <div>

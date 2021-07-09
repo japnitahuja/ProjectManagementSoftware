@@ -15,7 +15,7 @@ export const TaskNav = ({title, toggleSearch, orgId}) => {
         <NavBar>
             <OneThirdDiv align="flex-start">
             <Back>
-                <Link to ={`/all-projects/${org.organisationId}`} style={{textDecoration:'none', color:'black'}}> 
+                <Link to ={`/all-projects/60e076152c0d484438010fa3`} style={{textDecoration:'none', color:'black'}}> 
                     <Image src={backArrow}/> Projects
                 </Link>
             </Back>

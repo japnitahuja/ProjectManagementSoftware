@@ -19,6 +19,12 @@ const taskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  
+  isTaskCompletedOnFrontend: {
+    type: Boolean,
+    default: false,
+  },
+
   taskOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

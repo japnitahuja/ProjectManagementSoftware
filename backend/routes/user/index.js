@@ -458,7 +458,7 @@ router
 
 //create a step
 router.post("/create-step/:taskId", async (req, res) => {
-  var { stepName, questionStatement, questionType } = req.body;
+  var { stepName, questionStatement, questionType, projectId } = req.body;
   if (!stepName) {
     res.status(422).json({ error: " fill all the fields", done: false });
   } else {
@@ -471,18 +471,19 @@ router.post("/create-step/:taskId", async (req, res) => {
         questionType: questionType,
       });
       await task.steps.push(step._id);
+      if(task.isTaskDone === true){
+        var project = await Project.findOne({_id: req.body.projectId})
+        project.completedTasks = project.completedTasks - 1
+        await project.save()
+      }
       task.totalSteps = (await task.totalSteps) + 1;
       task.completionPercentage =
         ((await task.completedSteps) / task.totalSteps) * 100;
-      task.isTaskDone = await false;
-      task.save(function (err) {
-        if (err) {
-          console.log(err);
-          return;
-        } else {
-          console.log("Step related to task");
-        }
-      });
+      task.isTaskDone =  false;
+      if(task.isTaskDone === true){
+
+      }
+      await task.save();
       res
         .status(200)
         .json({ done: true, message: "Step for the task created", step });
@@ -600,16 +601,16 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
       let task = await Task.findOne({ _id: req.params.taskId });
       let project = await Project.findOne({ _id: projectId });
       let purchaseOrder = await PurchaseOrder.create({
-        Potitle,
-        payee,
-        group,
-        terms,
-        dueDate,
-        orderFrom,
-        totalOrderAmount,
-        totalPaidAmount,
+        PoTitle,
+        // payee,
+        // group,
+        // terms,
+        // dueDate,
+        // orderFrom,
+        // totalOrderAmount,
+        // totalPaidAmount,
         PoCreatedBy: userId,
-        purchasedItem,
+        // purchasedItem,
       });
       task.purchaseOrders.push(purchaseOrder._id);
       await task.save();
@@ -883,10 +884,16 @@ router.post("/complete-task/:taskId", async (req, res) => {
     var task = await Task.findOne({ _id: req.params.taskId });
     var project = await Project.findOne({ _id: projectId });
     if (task.completionPercentage === 100 || task.steps.length == 0) {
+      if(task.isTaskDone === true){
+        res.status(422).json({message: 'task already completed', done: false})
+        return;
+      }
       task.isTaskDone = true;
       task.completionPercentage === 100;
+      task.isTaskCompletedOnFrontend = true;
       task.save();
       project.completedTasks = project.completedTasks + 1;
+
       project.save();
       console.log("projectid", projectId);
       console.log(project.completedTasks, "completed tasks for project");
@@ -1284,42 +1291,67 @@ router.post("/updateRoles/:projectId", async (req, res) => {
 });
 
 //delete user from project
-router.post("/deleteUser/:projectId", async (req, res) => {
-  const { projectId } = req.params;
+router.post('/deleteUser/:projectId', async (req, res) => {
+  const {projectId} = req.params;
+  const {userId} = req.body;
+  const organisationId = '60e076152c0d484438010fa3'
+  console.log(req.body)
   try {
-    let project = await Project.findOne({ _id: projectId });
-    let projectUsers = await project.Users;
-    for (const user of req.body) {
-      for (const projectUser of projectUsers) {
-        if (user == projectUser.user) {
-          let idToDelete = projectUsers.indexOf(projectUser);
-          console.log(idToDelete);
-          let updatedUser = projectUsers.filter((v, i) => i != idToDelete);
-          project.Users = updatedUser;
-          let user = await User.findOne({ _id: projectUser.user });
-          let userProjects = user.projects;
-          let projectToDelete = userProjects.indexOf(projectId);
-          console.log(projectToDelete);
-          let updatedProjects = userProjects.filter(
-            (v, i) => i != projectToDelete
-          );
-          userProjects = updatedProjects;
-          user.projects = userProjects;
-          console.log(userProjects, "final users projects");
-          await user.save();
-        }
-      }
-    }
-    console.log(projectUsers, "final project users");
-    await project.save();
-
-    res
-      .status(200)
-      .json({ message: "User deleted from project!", done: true, project });
+    let project = await Project.findOne({_id: projectId})
+    let user = await User.findOne({_id: userId})
+    let projectUsers = project.Users
+    let projectsOfUsers = user.projects
+    let org = projectsOfUsers.find((org) => org.organisation == organisationId)
+    let idOfProject = org.organisationProjects.indexOf(projectId)
+    let updatedProjects = org.organisationProjects.filter((v, i) => i != idOfProject)
+    org.organisationProjects = updatedProjects
+    await user.save()
+    let updatedUsers = projectUsers.filter((user) => user.user != userId)
+    project.users = updatedUsers
+    await project.save()
+    console.log(updatedUsers, 'updated users', updatedProjects, 'updated projects')
+    res.status(200).json({message: "User Deleted", done: true, project, user})
+    //console.log( 'hi',projectUsers, projectsOfUsers, org)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-});
+})
+// router.post("/deleteUser/:projectId", async (req, res) => {
+//   const { projectId } = req.params;
+//   try {
+//     let project = await Project.findOne({ _id: projectId });
+//     let projectUsers = await project.Users;
+//     for (const user of req.body) {
+//       for (const projectUser of projectUsers) {
+//         if (user == projectUser.user) {
+//           let idToDelete = projectUsers.indexOf(projectUser);
+//           console.log(idToDelete);
+//           let updatedUser = projectUsers.filter((v, i) => i != idToDelete);
+//           project.Users = updatedUser;
+//           let user = await User.findOne({ _id: projectUser.user });
+//           let userProjects = user.projects;
+//           let projectToDelete = userProjects.indexOf(projectId);
+//           console.log(projectToDelete);
+//           let updatedProjects = userProjects.filter(
+//             (v, i) => i != projectToDelete
+//           );
+//           userProjects = updatedProjects;
+//           user.projects = userProjects;
+//           console.log(userProjects, "final users projects");
+//           await user.save();
+//         }
+//       }
+//     }
+//     console.log(projectUsers, "final project users");
+//     await project.save();
+
+//     res
+//       .status(200)
+//       .json({ message: "User deleted from project!", done: true, project });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 //create punch list
 router.post("/create-punch-list/:projectId", async (req, res) => {

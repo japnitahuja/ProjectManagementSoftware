@@ -66,7 +66,7 @@ class CreatePurchaseOrderForm extends Component {
 
     console.log(purchaseOrderDetails);
 
-    // this.props.createPurchaseOrder(purchaseOrderDetails);
+    this.props.createPurchaseOrder(purchaseOrderDetails);
   };
 
   handleOnClick = (e) => {
@@ -145,9 +145,9 @@ class CreatePurchaseOrderForm extends Component {
             <div>
               <LongInput
                 type="text"
-                value={this.state.purchaseOrderDetails.purchasedItem}
-                name="purchasedItem"
-                id="purchasedItem"
+                //value={this.state.purchaseOrderDetails.purchasedItem}
+                name="PoTitle"
+                id="PoTitle"
                 placeholder="Purchase Order Title"
                 onChange={(e) => this.handleOnChange(e)}
                 required

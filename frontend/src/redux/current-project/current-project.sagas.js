@@ -22,6 +22,7 @@ import { deleteProject } from "../all-projects/all-projects.actions";
 import { selectCurrentProjectId } from "./current-project.selectors";
 import currentProjectReducer from "./current-project.reducer";
 import { setUserPermission } from "../user/user.actions";
+import { selectCurrentOrganisationId } from "../orgnaisation/organisation.selectors";
 
 export function* fetchCurrentProject({ payload }) {
   try {
@@ -84,7 +85,11 @@ export function* deleteCurrentProject({ payload }) {
 export function* deleteUser({ payload }) {
   try {
     const {projectId, userId} = payload;
-    console.log(projectId, userId);
+    const orgId = yield select(selectCurrentOrganisationId)
+    let data = {
+      userId,
+      orgId
+    }
 
     let userDeletion = yield fetch(
       `http://127.0.0.1:5000/deleteUser/${projectId}`,
@@ -93,7 +98,7 @@ export function* deleteUser({ payload }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: userId,
+        body: JSON.stringify(data)
       }
     );
    
