@@ -1,15 +1,25 @@
-import { createSelector } from "reselect"
+import { createSelector } from "reselect";
 
-const selectOrg = (state) => state.organisation
+const selectOrg = (state) => state.organisation;
 
-export const selectCurrentOrg = createSelector([selectOrg], (org) => org)
+export const selectCurrentOrg = createSelector([selectOrg], (org) => org);
 
 export const selectAllOrganisations = createSelector(
-    [selectCurrentOrg],
-    (org) => org.allOrganisations
-)
+  [selectCurrentOrg],
+  (org) => org.allOrganisations
+);
 
 export const selectCurrentOrganisationId = createSelector(
-    [selectCurrentOrg],
-    (org) => org.organisationId
-)
+  [selectCurrentOrg],
+  (org) => org.organisationId
+);
+
+export const selectFetchAllOrganisationsSuccess = createSelector(
+  [selectCurrentOrg],
+  (org) => org.fetchAllOrganisationsSuccess
+);
+
+export const selectCreateOrganisationSucessful = createSelector(
+  [selectCurrentOrg],
+  (org) => org.createOrganisationSucessful
+);

@@ -29,6 +29,7 @@ import createCostBookCategoryPage from "./pages/create-cost-book-category/create
 import createCostBookCostcodePage from "./pages/create-cost-book-costcode/create-cost-book-costcode.page";
 import createCostCodeItem from "./pages/create-cost-code-item/create-cost-code-item";
 import Organisation from "./pages/organisation/organisation.page";
+import createOrganisationPage from "./pages/create-organisation/create-organisation.page";
 
 function App(props) {
   return (
@@ -106,7 +107,12 @@ function App(props) {
           exact
           component={createCostCodeItem}
         />
-        <Route path='/organisations' exact component={Organisation} />
+        <Route path="/organisations" exact component={Organisation} />
+        <Route
+          path="/createOrganisation"
+          exact
+          component={createOrganisationPage}
+        />
       </Switch>
     </BrowserRouter>
   );
