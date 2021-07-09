@@ -38,10 +38,11 @@ class AllProjects extends Component {
   }
 
   async componentDidMount() {
+    //window.location.reload() //remove this, just a juagad. 
     const { fetchProjects, fetchOrg } = this.props;
     const orgId = this.props.match.params.orgId;
     fetchProjects(orgId);
-    //fetchOrg(orgId)
+    fetchOrg(orgId)
     console.log('component mounted.')
   }
 
@@ -118,11 +119,12 @@ class AllProjects extends Component {
       <div>
         <ProjectsNav title="Projects" toggleSearchBar={this.toggleSearchBar} />
         {this.state.showSearch ? (
-          <SearchBar
-            placeholder="Search Projects..."
-            search={this.search}
-            toggleFilter={this.toggleFilter}
-          />
+          // <SearchBar
+          //   placeholder="Search Projects..."
+          //   search={this.search}
+          //   toggleFilter={this.toggleFilter}
+          // />
+          <CreateProjectForm />
         ) : null}
         {console.log(projectsList)}
         {projectsList.length === 0 ? (
@@ -144,6 +146,7 @@ class AllProjects extends Component {
             }}
           >
             <ProjectsFilter exit={this.toggleFilter} onSubmit={this.filter} />
+            {/* <CreateProjectForm /> */}
           </Overlay>
         ) : null}
       </div>

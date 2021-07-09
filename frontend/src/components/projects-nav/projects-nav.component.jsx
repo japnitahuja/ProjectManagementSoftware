@@ -40,8 +40,9 @@ export default class ProjectNav extends Component {
           <OneThirdDiv justify="center">
             <Heading> {title} </Heading>
           </OneThirdDiv>
-          <OneThirdDiv justify="end">
-            <SearchDiv onClick={toggleSearchBar} src={search} />
+          <OneThirdDiv justify="end" onClick={toggleSearchBar}>
+            {/* <SearchDiv onClick={toggleSearchBar} src={search} /> */}
+            ADD PROJECT
           </OneThirdDiv>
         </NavBar>
         {/* {

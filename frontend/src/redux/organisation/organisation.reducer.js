@@ -50,6 +50,7 @@ const organisationReducer = (state = INITIAL_STATE, action) => {
         fetchOrganisationSuccess: false,
       };
     case OrganisationActionTypes.FETCH_ORGANISATION_SUCCESS:
+      console.log(action.payload, 'payload in the reducer')
       return {
         ...state,
         fetchOrganisationStart: false,

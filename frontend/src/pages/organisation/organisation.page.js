@@ -5,6 +5,7 @@ import { createStructuredSelector } from "reselect";
 import {
   createOrganisationStart,
   fetchAllOrganisationsStart,
+  fetchOrganisationStart,
 } from "../../redux/organisation/organisation.actions";
 import {
   selectAllOrganisations,
@@ -32,6 +33,12 @@ class Organisation extends Component {
     this.props.fetchOrganisations();
   }
 
+  // fetchOrg = (e) => {
+  //   const orgId = e.target.key
+  //   console.log(orgId, 'org id in function')
+  //   //this.props.fetchOrganisation(orgId)
+  // }
+
   render() {
     console.log(this.props.organisations);
     let { organisationsFetched } = this.props;
@@ -47,12 +54,13 @@ class Organisation extends Component {
           toggleSearchBar={this.toggleSearchBar}
         />
         {this.props.organisations.map((org) => {
-          console.log(org.organisation._id);
+          console.log(org.organisation._id) 
           return (
             <Link
               key={org.organisation._id}
               to={`/all-projects/${org.organisation._id}`}
               style={{ textDecoration: "none", color: "rgba(0,0,0,0.8)" }}
+              //onClick={this.fetchOrg}
             >
               {" "}
               <CostbookCostCode
@@ -82,6 +90,8 @@ const mapDispatchToProps = (dispatch) => ({
   createOrganisation: (orgDetails) =>
     dispatch(createOrganisationStart(orgDetails)),
   fetchOrganisations: (userId) => dispatch(fetchAllOrganisationsStart(userId)),
+  fetchOrganisation: (orgId) => dispatch(fetchOrganisationStart(orgId))
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Organisation);
