@@ -30,6 +30,7 @@ import createCostBookCostcodePage from "./pages/create-cost-book-costcode/create
 import createCostCodeItem from "./pages/create-cost-code-item/create-cost-code-item";
 import Organisation from "./pages/organisation/organisation.page";
 import createOrganisationPage from "./pages/create-organisation/create-organisation.page";
+import hamburgerPage from "./pages/hamburger/hamburger.page";
 
 function App(props) {
   return (
@@ -113,6 +114,8 @@ function App(props) {
           exact
           component={createOrganisationPage}
         />
+
+        <Route path="/nav" exact component={hamburgerPage} />
       </Switch>
     </BrowserRouter>
   );
