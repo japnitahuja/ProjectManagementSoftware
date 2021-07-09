@@ -5,8 +5,10 @@ import { createStructuredSelector } from "reselect";
 import {
   createOrganisationStart,
   fetchAllOrganisationsStart,
-} from "../../redux/orgnaisation/organisation.actions";
-import { selectAllOrganisations } from "../../redux/orgnaisation/organisation.selectors";
+} from "../../redux/organisation/organisation.actions";
+import { selectAllOrganisations } from "../../redux/organisation/organisation.selectors";
+import ProjectsNav from "../../components/projects-nav/projects-nav.component";
+import { CostbookCostCode } from "../../components/costbook-costcode/costbook-costcode.component";
 
 class Organisation extends Component {
   constructor() {
@@ -42,18 +44,26 @@ class Organisation extends Component {
     console.log(this.props.organisations);
     return (
       <>
+        <ProjectsNav
+          title="Organisations"
+          toggleSearchBar={this.toggleSearchBar}
+        />
         {this.props.organisations.map((org) => {
-            console.log(org.organisation._id)
+          console.log(org.organisation._id);
           return (
-            <Link to={`/all-projects/${org.organisation._id}`}>
+            <Link
+              to={`/all-projects/${org.organisation._id}`}
+              style={{ textDecoration: "none", color: "rgba(0,0,0,0.8)" }}
+            >
               {" "}
-              <div key={org.organisation._id}>
-                {org.organisation.organisationName}
-              </div>
+              <CostbookCostCode
+                key={org.organisation._id}
+                title={org.organisation.organisationName}
+              />
             </Link>
           );
         })}
-
+        <br></br>
         <form onChange={this.organisationOnChange} onSubmit={this.createOrg}>
           <label
             htmlFor="organisationName"
