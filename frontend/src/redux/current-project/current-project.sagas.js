@@ -22,7 +22,7 @@ import { deleteProject } from "../all-projects/all-projects.actions";
 import { selectCurrentProjectId } from "./current-project.selectors";
 import currentProjectReducer from "./current-project.reducer";
 import { setUserPermission } from "../user/user.actions";
-import { selectCurrentOrganisationId } from "../orgnaisation/organisation.selectors";
+import { selectCurrentOrganisationId } from "../organisation/organisation.selectors";
 
 export function* fetchCurrentProject({ payload }) {
   try {
