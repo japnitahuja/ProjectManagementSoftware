@@ -24,6 +24,7 @@ import { Overlay } from "../../components/admin-panel-task-page/admin-panel-task
 import ProjectsFilter from "../../components/projects-filter/projects-filter.component";
 import Spinner from "../../components/spinner/spinner.component";
 import { fetchOrganisationStart } from "../../redux/organisation/organisation.actions";
+import { selectCurrentOrganisationId } from "./../../redux/organisation/organisation.selectors";
 
 class AllProjects extends Component {
   constructor(props) {
@@ -95,11 +96,15 @@ class AllProjects extends Component {
 
   render() {
     let { projectsList } = this.state;
-    let { projectsFetched } = this.props;
+    let { projectsFetched, organisationId } = this.props;
 
     if (!projectsFetched) {
       return <Spinner />;
-    } else if (projectsFetched && this.state.setProjects == 0) {
+    } else if (
+      projectsFetched &&
+      organisationId == this.props.match.params.orgId &&
+      this.state.setProjects == 0
+    ) {
       this.setProjectState();
     }
 
@@ -149,6 +154,7 @@ const mapStateToProps = createStructuredSelector({
   name: selectCurrentUserFirstName,
   projects: selectUserProjects,
   projectsFetched: selectProjectsFetched,
+  organisationId: selectCurrentOrganisationId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
