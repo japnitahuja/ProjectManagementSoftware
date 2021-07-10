@@ -40,6 +40,10 @@ class Project extends Component {
     this.setState({ tasksList: this.props.tasks });
   }
 
+  componentDidUpdate() {
+    console.log("component updated.");
+  }
+
   adminToggle = () => {
     this.setState((prevState) => ({
       adminSwitch: !prevState.adminSwitch,
@@ -79,9 +83,9 @@ class Project extends Component {
   };
 
   render() {
-    const { projectName, currentProjectId } = this.props;
+    const { projectName, projectId } = this.props;
     let { tasksList } = this.state;
-    console.log("project page");
+    console.log("project page rendered.");
     console.log(tasksList);
 
     let { fetchTasksSuccess } = this.props;
@@ -90,7 +94,7 @@ class Project extends Component {
       return <Spinner />;
     } else if (
       fetchTasksSuccess &&
-      currentProjectId == this.props.match.params.projectId &&
+      projectId == this.props.match.params.projectId &&
       this.state.setTasks == 0
     ) {
       this.setTaskState();
@@ -171,7 +175,7 @@ const mapStateToProps = createStructuredSelector({
   projectStatus: selectCurrentProjectStatus,
   tasks: selectCurrentProjectTasks,
   fetchTasksSuccess: selectCurrentProjectFetchSuccess,
-  currentProjectId: selectCurrentProjectId,
+  projectId: selectCurrentProjectId,
 });
 
 const mapDispatchToProps = (dispatch) => ({

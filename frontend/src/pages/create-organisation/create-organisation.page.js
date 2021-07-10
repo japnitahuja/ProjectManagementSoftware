@@ -49,15 +49,11 @@ class CreateOrganisation extends Component {
     this.props.history.push("/organisations");
   };
 
-  componentDidMount() {}
-
   componentWillUnmount() {
     this.props.clearAllOrganisationData();
   }
 
   render() {
-    console.log(this.props.createdOrganisation);
-
     if (this.props.createOrganisationStart && !this.props.createdOrganisation) {
       return <Spinner />;
     } else if (this.props.createdOrganisation) {

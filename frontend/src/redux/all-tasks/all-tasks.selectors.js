@@ -9,6 +9,11 @@ export const selectCreateTaskStart = createSelector(
   (task) => task.createTaskStart
 );
 
+export const selectCreateTaskSuccessful = createSelector(
+  [selectTaskDetails],
+  (task) => task.createTaskSuccessful
+);
+
 export const selectUserTasks = createSelector(
   [selectTaskDetails],
   (task) => task.tasks

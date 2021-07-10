@@ -1,4 +1,5 @@
 import { all, call, put, takeLatest, select, delay} from "redux-saga/effects";
+import { selectCurrentProjectId } from "../current-project/current-project.selectors";
 import { fetchCurrentTaskStart } from "../current-task/current-task.actions";
 import { completeStepQuestionFailure, completeStepQuestionSuccess, createStepFail, createStepSucessful, fetchStepsFailure, fetchStepsStart, fetchStepsSuccess } from "./all-steps.actions";
 import { StepActionTypes } from "./all-steps.types";
@@ -6,6 +7,8 @@ import { StepActionTypes } from "./all-steps.types";
 export function* createStep({payload}){
   try {
     let data = payload;
+    let projectId = yield select(selectCurrentProjectId)
+    data['projectId'] = projectId
     const taskId = data.taskId
     console.log(data);
     let resp = yield fetch(`http://127.0.0.1:5000/create-step/${taskId}`, {

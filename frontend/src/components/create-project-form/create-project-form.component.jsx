@@ -6,6 +6,7 @@ import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
 import {FormDiv, FormInput, FormLabel, FormSelect, FormButton, FormHeading} from "./create-project-form.styles"
 import downArrow from "../../assets/down-arrow.png"
+import { selectCurrentOrganisationId } from "../../redux/organisation/organisation.selectors";
 
 class CreateProjectForm extends Component {
   constructor() {
@@ -32,7 +33,7 @@ class CreateProjectForm extends Component {
     e.preventDefault();
     let projectDetails = this.state.projectDetails;
     this.props.createProject(projectDetails);
-    this.props.addProject();
+    window.location.reload()
   };
 
   createProjectTemplate = (e) => {
@@ -191,7 +192,8 @@ class CreateProjectForm extends Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  name: selectCurrentUserFirstName
+  name: selectCurrentUserFirstName,
+  orgId: selectCurrentOrganisationId
 });
 
 const mapDispatchToProps = (dispatch) => ({

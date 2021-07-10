@@ -72,7 +72,7 @@ class CreatePurchaseOrderForm extends Component {
 
     console.log(purchaseOrderDetails);
 
-    // this.props.createPurchaseOrder(purchaseOrderDetails);
+    this.props.createPurchaseOrder(purchaseOrderDetails);
   };
 
   handleOnClick = (e) => {

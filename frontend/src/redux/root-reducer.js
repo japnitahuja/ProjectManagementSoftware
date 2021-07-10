@@ -14,22 +14,22 @@ import costBookReducer from "./costbook/costbook.reducer";
 import organisationReducer from "./organisation/organisation.reducer";
 
 const persistConfig = {
-  key: "root",
-  storage,
-  whitelist: [
-    "user",
-    "project",
-    "task",
-    "step",
-    "currentProject",
-    "currentTask",
-    "currentStep",
-    "currentPurchaseOrder",
-    "currentChangeOrder",
-    "costBookReducer",
-    "organisationReducer",
-  ],
-};
+    key: 'root',
+    storage,
+    whitelist: [
+      'user',
+      'project',
+      'task',
+      'step',
+      'currentProject',
+      'currentTask',
+      'currentStep',
+      'currentPurchaseOrder',
+      'currentChangeOrder',
+      'costBook',
+      'organisation'
+    ],
+  };
 
 const rootReducer = combineReducers({
   user: userReducer,

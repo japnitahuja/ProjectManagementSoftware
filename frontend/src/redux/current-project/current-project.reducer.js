@@ -41,7 +41,7 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_START:
       return {
         ...state,
-        isCurrentProjectFetching: true,
+        //isCurrentProjectFetching: true,
         currentProjectFetchStart: true,
         currentProjectFetchFailure: false,
         currentProjectFetchSuccess: false,
@@ -68,7 +68,7 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
         currentProjectFetchSuccess: true,
         currentProjectFetchStart: false,
         currentProjectFetchFailure: false,
-        isCurrentProjectFetching: false,
+        //isCurrentProjectFetching: false,
         currentProjectStatus: projectStatus,
         currentProjectName: projectName,
         currentProjectTasks: tasks,
@@ -89,7 +89,7 @@ const currentProjectReducer = (state = INITIAL_STATE, action) => {
     case CurrentProjectActionTypes.FETCH_CURRENT_PROJECT_FAILURE:
       return {
         ...state,
-        isCurrentProjectFetching: false,
+        //isCurrentProjectFetching: false,
         currentProjectFetchStart: false,
         currentProjectFetchFailure: true,
         currentProjectFetchSuccess: false,

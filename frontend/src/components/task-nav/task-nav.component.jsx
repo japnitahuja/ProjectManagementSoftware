@@ -14,21 +14,17 @@ import {
 import backArrow from "../../assets/backArrowBlack.png";
 import search from "../../assets/navsearch.png";
 
-export const TaskNav = ({ title, toggleSearch, orgId }) => {
-  const org = useSelector((state) => state.organisation);
-  console.log(org.organisationId);
-  return (
-    <NavBar>
-      <OneThirdDiv align="flex-start">
-        <Back>
-          <Link
-            to={`/all-projects/${org.organisationId}`}
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <Image src={backArrow} /> Projects
-          </Link>
-        </Back>
-      </OneThirdDiv>
+export const TaskNav = ({title, toggleSearch, orgId}) => {
+    const org = useSelector(state => state.organisation)
+    console.log(org.organisationId)
+    return (
+        <NavBar>
+            <OneThirdDiv align="flex-start">
+            <Back>
+                <Link to ={`/all-projects/${org.organisationId}`} style={{textDecoration:'none', color:'black'}}> 
+                    <Image src={backArrow}/> Projects
+                </Link>
+            </Back>
 
       <OneThirdDiv align="center">
         <Heading> {title} </Heading>
@@ -36,6 +32,7 @@ export const TaskNav = ({ title, toggleSearch, orgId }) => {
 
       <OneThirdDiv align="flex-end" onClick={toggleSearch}>
         <SearchDiv src={search} />
+      </OneThirdDiv>
       </OneThirdDiv>
     </NavBar>
   );
