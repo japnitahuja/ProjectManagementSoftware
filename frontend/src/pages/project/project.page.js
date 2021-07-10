@@ -5,6 +5,7 @@ import CreateTaskForm from "../../components/create-task-form/create-task-form.c
 import { fetchCurrentProjectStart } from "../../redux/current-project/current-project.actions";
 import {
   selectCurrentProjectFetchSuccess,
+  selectCurrentProjectId,
   selectCurrentProjectName,
   selectCurrentProjectStatus,
   selectCurrentProjectTasks,
@@ -78,7 +79,7 @@ class Project extends Component {
   };
 
   render() {
-    const { projectName } = this.props;
+    const { projectName, currentProjectId } = this.props;
     let { tasksList } = this.state;
     console.log("project page");
     console.log(tasksList);
@@ -87,7 +88,11 @@ class Project extends Component {
     console.log("success", fetchTasksSuccess);
     if (!fetchTasksSuccess) {
       return <Spinner />;
-    } else if (fetchTasksSuccess && this.state.setTasks == 0) {
+    } else if (
+      fetchTasksSuccess &&
+      currentProjectId == this.props.match.params.projectId &&
+      this.state.setTasks == 0
+    ) {
       this.setTaskState();
     }
 
@@ -166,6 +171,7 @@ const mapStateToProps = createStructuredSelector({
   projectStatus: selectCurrentProjectStatus,
   tasks: selectCurrentProjectTasks,
   fetchTasksSuccess: selectCurrentProjectFetchSuccess,
+  currentProjectId: selectCurrentProjectId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
