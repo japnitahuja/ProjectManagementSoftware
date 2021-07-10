@@ -3,16 +3,19 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import {
+  clearAllOrganisationData,
   createOrganisationStart,
+  fetchAllOrganisationsClear,
   fetchAllOrganisationsStart,
 } from "../../redux/organisation/organisation.actions";
 import {
   selectAllOrganisations,
+  selectCreateOrganisationStart,
   selectFetchAllOrganisationsSuccess,
 } from "../../redux/organisation/organisation.selectors";
 import { NavBar, OneThirdDiv, LongInput } from "./create-organisation.styles";
 import Organisation from "./../organisation/organisation.page";
-import { selectCreateOrganisationSucessful } from "./../../redux/organisation/organisation.selectors";
+import { selectCreateOrganisationSuccessful } from "./../../redux/organisation/organisation.selectors";
 import Spinner from "../../components/spinner/spinner.component";
 
 class CreateOrganisation extends Component {
@@ -25,7 +28,6 @@ class CreateOrganisation extends Component {
         organisationNumber: null,
         organisationAddress: null,
       },
-      creation: false,
     };
   }
 
@@ -40,7 +42,6 @@ class CreateOrganisation extends Component {
     e.preventDefault();
     let orgDetails = this.state.organisationDetails;
     this.props.createOrganisation(orgDetails);
-    this.setState({ creation: true });
   };
 
   exit = () => {
@@ -48,19 +49,19 @@ class CreateOrganisation extends Component {
     this.props.history.push("/organisations");
   };
 
-  componentDidMount() {
-    this.props.fetchOrganisations();
+  componentDidMount() {}
+
+  componentWillUnmount() {
+    this.props.clearAllOrganisationData();
   }
 
   render() {
-    console.log(
-      this.props.organisations,
-      this.state.creation,
-      this.props.createdOrganisation
-    );
-    if (this.state.creation) {
-      console.log("exit");
-      this.props.history.push("/organisations");
+    console.log(this.props.createdOrganisation);
+
+    if (this.props.createOrganisationStart && !this.props.createdOrganisation) {
+      return <Spinner />;
+    } else if (this.props.createdOrganisation) {
+      this.exit();
     }
     return (
       <>
@@ -92,28 +93,28 @@ class CreateOrganisation extends Component {
               id="organisationName"
               name="organisationName"
               type="text"
-              placeholder="Enter Oganisation Name"
+              placeholder="Enter Organisation Name"
             />
 
             <LongInput
               id="organisationAddress"
               name="organisationAddress"
               type="text"
-              placeholder="Enter Oganisation Address"
+              placeholder="Enter Organisation Address"
             />
 
             <LongInput
               id="organisationNumber"
               name="organisationNumber"
               type="text"
-              placeholder="Enter Oganisation Number"
+              placeholder="Enter Organisation Number"
             />
 
             <LongInput
               id="organisationEmail"
               name="organisationEmail"
               type="text"
-              placeholder="Enter Oganisation Email"
+              placeholder="Enter Organisation Email"
             />
           </form>
         </div>
@@ -125,13 +126,15 @@ class CreateOrganisation extends Component {
 const mapStateToProps = createStructuredSelector({
   organisationsFetched: selectFetchAllOrganisationsSuccess,
   organisations: selectAllOrganisations,
-  createdOrganisation: selectCreateOrganisationSucessful,
+  createdOrganisation: selectCreateOrganisationSuccessful,
+  createOrganisationStart: selectCreateOrganisationStart,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   createOrganisation: (orgDetails) =>
     dispatch(createOrganisationStart(orgDetails)),
   fetchOrganisations: (userId) => dispatch(fetchAllOrganisationsStart(userId)),
+  clearAllOrganisationData: () => dispatch(clearAllOrganisationData()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateOrganisation);

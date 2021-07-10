@@ -31,6 +31,14 @@ class Hamburger extends Component {
           {" "}
           <CostbookCostCode key="org" title="Organisations" />
         </Link>
+        <Link
+          key="org"
+          to={`/costbook`}
+          style={{ textDecoration: "none", color: "rgba(0,0,0,0.8)" }}
+        >
+          {" "}
+          <CostbookCostCode key="org" title="Costbook" />
+        </Link>
       </div>
     );
   }

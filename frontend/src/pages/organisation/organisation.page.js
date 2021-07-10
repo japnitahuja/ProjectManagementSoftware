@@ -33,7 +33,6 @@ class Organisation extends Component {
   }
 
   render() {
-    console.log(this.props.organisations);
     let { organisationsFetched } = this.props;
 
     if (!organisationsFetched) {
@@ -47,7 +46,6 @@ class Organisation extends Component {
           toggleSearchBar={this.toggleSearchBar}
         />
         {this.props.organisations.map((org) => {
-          console.log(org.organisation._id);
           return (
             <Link
               key={org.organisation._id}

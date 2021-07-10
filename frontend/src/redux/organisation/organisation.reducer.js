@@ -2,7 +2,7 @@ import { OrganisationActionTypes } from "./organisation.types";
 
 const INITIAL_STATE = {
   createOrganisationStart: false,
-  createOrganisationSucessful: false,
+  createOrganisationSuccessful: false,
   createOrganisationFail: false,
   fetchOrganisationStart: false,
   fetchOrganisationSuccess: false,
@@ -19,12 +19,30 @@ const INITIAL_STATE = {
 
 const organisationReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case OrganisationActionTypes.CLEAR_ALL_ORGANISATION_DATA:
+      return {
+        createOrganisationStart: false,
+        createOrganisationSuccessful: false,
+        createOrganisationFail: false,
+        fetchOrganisationStart: false,
+        fetchOrganisationSuccess: false,
+        fetchOrganisationFailure: false,
+        fetchAllOrganisationsStart: false,
+        fetchAllOrganisationsSuccess: false,
+        fetchAllOrganisationsFailure: false,
+        organisation: null,
+        allOrganisations: [],
+        organisationId: null,
+        errorMessage: undefined,
+        message: null,
+      };
+
     case OrganisationActionTypes.CREATE_ORGANISATION_START:
       return {
         ...state,
         createOrganisationStart: true,
         createOrganisationFail: false,
-        createOrganisationSuccesful: false,
+        createOrganisationSuccessful: false,
         errorMessage: null,
       };
     case OrganisationActionTypes.CREATE_ORGANISATION_SUCCESS:
@@ -40,6 +58,7 @@ const organisationReducer = (state = INITIAL_STATE, action) => {
         ...state,
         createOrganisationStart: false,
         createOrganisationFail: true,
+        createOrganisationSuccessful: false,
         errorMessage: action.payload,
       };
     case OrganisationActionTypes.FETCH_ORGANISATION_START:
