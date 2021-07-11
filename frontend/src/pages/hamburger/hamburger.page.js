@@ -35,9 +35,14 @@ class Hamburger extends Component {
           {" "}
           <CostbookCostCode key="org" title="Organisations" />
         </Link>
-        <div onClick={this.signOut}>
-          <CostbookCostCode key='signout' title='SignOut' />
-        </div>
+        <Link
+          key="org"
+          to={`/costbook`}
+          style={{ textDecoration: "none", color: "rgba(0,0,0,0.8)" }}
+        >
+          {" "}
+          <CostbookCostCode key="org" title="Costbook" />
+        </Link>
       </div>
     );
   }

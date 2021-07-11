@@ -40,7 +40,6 @@ class Organisation extends Component {
   // }
 
   render() {
-    console.log(this.props.organisations);
     let { organisationsFetched } = this.props;
 
     if (!organisationsFetched) {
@@ -54,7 +53,6 @@ class Organisation extends Component {
           toggleSearchBar={this.toggleSearchBar}
         />
         {this.props.organisations.map((org) => {
-          console.log(org.organisation._id) 
           return (
             <Link
               key={org.organisation._id}
@@ -90,8 +88,7 @@ const mapDispatchToProps = (dispatch) => ({
   createOrganisation: (orgDetails) =>
     dispatch(createOrganisationStart(orgDetails)),
   fetchOrganisations: (userId) => dispatch(fetchAllOrganisationsStart(userId)),
-  fetchOrganisation: (orgId) => dispatch(fetchOrganisationStart(orgId))
-
+  fetchOrganisation: (orgId) => dispatch(fetchOrganisationStart(orgId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Organisation);

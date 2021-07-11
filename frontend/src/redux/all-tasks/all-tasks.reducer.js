@@ -2,7 +2,7 @@ import { TaskActionTypes } from "./all-tasks.types";
 
 const INITIAL_STATE = {
   createTaskStart: false,
-  createTaskSucessful: false,
+  createTaskSuccessful: false,
   createTaskFail: false,
   fetchTaskStart: false,
   fetchTaskSuccess: false,
@@ -14,12 +14,24 @@ const INITIAL_STATE = {
 
 const taskReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case TaskActionTypes.CLEAR_TASKS_DATA:
+      return {
+        createTaskStart: false,
+        createTaskSuccessful: false,
+        createTaskFail: false,
+        fetchTaskStart: false,
+        fetchTaskSuccess: false,
+        fetchTaskFailure: false,
+        errorMessage: undefined,
+        message: null,
+        tasks: null,
+      };
     case TaskActionTypes.CREATE_TASK_START:
       return {
         ...state,
         createTaskStart: true,
         createTaskFail: false,
-        createTaskSuccesful: false,
+        createTaskSuccessful: false,
         errorMessage: null,
       };
     case TaskActionTypes.CREATE_TASK_SUCCESS:
@@ -35,6 +47,7 @@ const taskReducer = (state = INITIAL_STATE, action) => {
         ...state,
         createTaskStart: false,
         createTaskFail: true,
+        createTaskSuccessful: false,
         errorMessage: action.payload,
       };
     case TaskActionTypes.FETCH_TASKS_START:

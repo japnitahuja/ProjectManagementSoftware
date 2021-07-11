@@ -44,3 +44,10 @@ export const fetchOrganisationFailure = (error) => ({
   type: OrganisationActionTypes.FETCH_ORGANISATION_FAILURE,
   payload: error,
 });
+
+export const clearAllOrganisationData = () => {
+  console.log("celar data action");
+  return {
+    type: OrganisationActionTypes.CLEAR_ALL_ORGANISATION_DATA,
+  };
+};

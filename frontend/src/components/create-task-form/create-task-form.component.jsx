@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { createTaskStart } from "../../redux/all-tasks/all-tasks.actions";
+import {
+  clearTaskData,
+  createTaskStart,
+} from "../../redux/all-tasks/all-tasks.actions";
 import { fetchCurrentProjectStart } from "../../redux/current-project/current-project.actions";
 import { signOut } from "../../redux/user/user.actions";
 import {
@@ -17,6 +20,10 @@ import {
   Overlay,
 } from "./create-task-form.styles";
 import { withRouter } from "react-router-dom";
+import { selectCreateTaskStart } from "../../redux/all-tasks/all-tasks.selectors";
+import { selectCreateTaskSuccessful } from "./../../redux/all-tasks/all-tasks.selectors";
+import { createStructuredSelector } from "reselect";
+import Spinner from "../spinner/spinner.component";
 
 class CreateTaskForm extends Component {
   constructor(props) {
@@ -46,7 +53,6 @@ class CreateTaskForm extends Component {
     let taskDetails = this.state.taskDetails;
     console.log(taskDetails);
     this.props.createTask(taskDetails);
-    this.props.history.goBack();
   };
 
   handleOnClick = (e) => {
@@ -57,9 +63,21 @@ class CreateTaskForm extends Component {
     });
   };
 
+  componentWillUnmount() {
+    this.props.clearTaskData();
+  }
+
   render() {
     let { active } = this.state;
     let { projectId } = this.state.taskDetails;
+
+    console.log(this.props.createTaskStart, this.props.createTaskSuccessful);
+
+    if (this.props.createTaskStart && !this.props.createTaskSuccessful) {
+      return <Spinner />;
+    } else if (this.props.createTaskSuccessful) {
+      this.props.history.push(`/project/${projectId}`);
+    }
 
     return (
       <Overlay>
@@ -151,10 +169,19 @@ class CreateTaskForm extends Component {
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  createTaskStart: selectCreateTaskStart,
+  createTaskSuccessful: selectCreateTaskSuccessful,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
   createTask: (taskDetails) => dispatch(createTaskStart(taskDetails)),
   fetchProject: (projectId) => dispatch(fetchCurrentProjectStart(projectId)),
+  clearTaskData: () => dispatch(clearTaskData()),
 });
 
-export default connect(null, mapDispatchToProps)(withRouter(CreateTaskForm));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(CreateTaskForm));
