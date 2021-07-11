@@ -583,7 +583,7 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
     userId,
     projectId,
     purchasedItem,
-    payee, //send payee id here
+    //payee, //send payee id here
     group,
     terms,
     dueDate,
@@ -598,20 +598,34 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
     try {
+      let payee = '60e31b215a1cde542465c9b5'
       let task = await Task.findOne({ _id: req.params.taskId });
       let project = await Project.findOne({ _id: projectId });
       let purchaseOrder = await PurchaseOrder.create({
         PoTitle,
-        // payee,
-        // group,
-        // terms,
-        // dueDate,
-        // orderFrom,
+        payee,
+        group,
+        terms,
+        dueDate,
+        payee,
         // totalOrderAmount,
         // totalPaidAmount,
         PoCreatedBy: userId,
         // purchasedItem,
       });
+      if(purchasedItem != []){
+          purchasedItem.map(async(po) => {
+          let name = po.itemName, value = po.itemValue, number = po.itemNumber, comment = po.comment
+          let POItem = await PurchaseOrderItem.create({
+            name,
+            value,
+            number,
+            comment
+          })
+          purchaseOrder.purchasedItems.push(POItem._id);
+        await purchaseOrder.save();
+        })
+      }
       task.purchaseOrders.push(purchaseOrder._id);
       await task.save();
       console.log("project po", project);
@@ -694,14 +708,19 @@ router.post(
         let purchaseOrder = await PurchaseOrder.findOne({
           _id: req.params.purchaseOrderId,
         });
-        let purchaseOrderItem = await PurchaseOrderItem.create({
-          itemName,
-          itemNumber,
-          itemValue,
-          comment,
-        });
-        purchaseOrder.purchasedItems.push(purchaseOrderItem._id);
+        if(purchasedItem != []){
+          purchasedItem.map(async(po) => {
+          let name = po.itemName, value = po.itemValue, number = po.itemNumber, comment = po.comment
+          let POItem = await PurchaseOrderItem.create({
+            name,
+            value,
+            number,
+            comment
+          })
+          purchaseOrder.purchasedItems.push(POItem._id);
         await purchaseOrder.save();
+        })
+      }
         res.status(200).json({
           message: "Purchase order items created and linked to the order",
           done: true,
@@ -1294,11 +1313,12 @@ router.post("/updateRoles/:projectId", async (req, res) => {
 router.post('/deleteUser/:projectId', async (req, res) => {
   const {projectId} = req.params;
   const {userId} = req.body;
-  const organisationId = '60e076152c0d484438010fa3'
+  const {organisationId} = req.body
   console.log(req.body)
   try {
     let project = await Project.findOne({_id: projectId})
     let user = await User.findOne({_id: userId})
+    console.log(user)
     let projectUsers = project.Users
     let projectsOfUsers = user.projects
     let org = projectsOfUsers.find((org) => org.organisation == organisationId)

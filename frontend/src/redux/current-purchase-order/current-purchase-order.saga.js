@@ -28,8 +28,8 @@ export function* createPurchaseOrderStart({payload}){
       purchaseOrderCreation.done ? 
       yield put(createPurchaseOrderSuccess(purchaseOrderCreation.message)):
       yield put(createPurchaseOrderFailure('ERROR'))
-      yield delay(500)
-      yield put(fetchCurrentTaskStart(taskId))
+      // yield delay(500)
+      // yield put(fetchCurrentTaskStart(taskId)) 
   } catch (error) {
       console.log(error)
   }

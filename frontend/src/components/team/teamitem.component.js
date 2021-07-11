@@ -49,7 +49,7 @@ class TeamItem extends Component {
       e.preventDefault()
       let {id} = e.target.dataset;
       let payload = {
-        userId: [id],
+        userId: id,
         projectId: this.props.projectId
       }
       console.log(payload);

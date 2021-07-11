@@ -85,11 +85,12 @@ export function* deleteCurrentProject({ payload }) {
 export function* deleteUser({ payload }) {
   try {
     const {projectId, userId} = payload;
-    const orgId = yield select(selectCurrentOrganisationId)
+    const organisationId = yield select(selectCurrentOrganisationId)
     let data = {
       userId,
-      orgId
+      organisationId
     }
+    console.log(data, payload)
 
     let userDeletion = yield fetch(
       `http://127.0.0.1:5000/deleteUser/${projectId}`,

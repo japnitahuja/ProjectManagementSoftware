@@ -38,7 +38,7 @@ class CreatePurchaseOrderForm extends Component {
         userId: "",
         projectId: "",
         purchasedItem: [],
-        payee: "", //placeholder
+        orderFrom: "", //placeholder
         group: "",
         terms: "",
         dueDate: "",

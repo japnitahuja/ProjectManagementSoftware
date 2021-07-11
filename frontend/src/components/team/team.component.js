@@ -71,11 +71,11 @@ class Team extends Component {
       <>
         <TeamDiv>
           {users.map((user, index) => {
-
+            console.log(user)
             let unnamed = user.user.email.slice(0,user.user.email.indexOf('@'));
             
             return (
-              <TeamItem key = {user._id} projectId = {this.props.projectId} user = {user} unnamed={unnamed} id={user._id}></TeamItem>
+              <TeamItem key = {user.user._id} projectId = {this.props.projectId} user = {user} unnamed={unnamed} id={user.user._id}></TeamItem>
             );
           })}
         </TeamDiv>

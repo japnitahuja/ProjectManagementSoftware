@@ -20,6 +20,10 @@ class Hamburger extends Component {
     super();
   }
 
+  signOut = () => {
+    
+  }
+
   render() {
     return (
       <div style={{ padding: "2em 0" }}>
@@ -31,6 +35,9 @@ class Hamburger extends Component {
           {" "}
           <CostbookCostCode key="org" title="Organisations" />
         </Link>
+        <div onClick={this.signOut}>
+          <CostbookCostCode key='signout' title='SignOut' />
+        </div>
       </div>
     );
   }
