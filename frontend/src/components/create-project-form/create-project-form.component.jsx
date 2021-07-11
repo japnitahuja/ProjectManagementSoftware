@@ -1,12 +1,26 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { createProjectStart, createProjectTemplateStart, fetchProjectsStart} from "../../redux/all-projects/all-projects.actions";
+import {
+  createProjectStart,
+  createProjectTemplateStart,
+  fetchProjectsStart,
+} from "../../redux/all-projects/all-projects.actions";
 import { signOut } from "../../redux/user/user.actions";
 import { selectCurrentUserFirstName } from "../../redux/user/user.selectors";
-import {FormDiv, FormInput, FormLabel, FormSelect, FormButton, FormHeading} from "./create-project-form.styles"
-import downArrow from "../../assets/down-arrow.png"
+import {
+  FormDiv,
+  FormInput,
+  FormLabel,
+  FormSelect,
+  FormButton,
+  FormHeading,
+  NavBar,
+  OneThirdDiv,
+} from "./create-project-form.styles";
+import downArrow from "../../assets/down-arrow.png";
 import { selectCurrentOrganisationId } from "../../redux/organisation/organisation.selectors";
+import { Link } from "react-router-dom";
 
 class CreateProjectForm extends Component {
   constructor() {
@@ -16,11 +30,11 @@ class CreateProjectForm extends Component {
         projectName: "",
         projectStatus: "",
         projectBudget: 0,
-        projectLocation: ""
+        projectLocation: "",
       },
     };
   }
-  
+
   handleOnChange = (e) => {
     const { name, value } = e.target;
     let project = this.state.projectDetails;
@@ -33,69 +47,93 @@ class CreateProjectForm extends Component {
     e.preventDefault();
     let projectDetails = this.state.projectDetails;
     this.props.createProject(projectDetails);
-    window.location.reload()
+    window.location.reload();
   };
 
   createProjectTemplate = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     let projectDetails = this.state.projectDetails;
     console.log(projectDetails);
     this.props.createProjectTemplate(projectDetails);
     this.props.addProject();
-    
-  }
-
-  
+  };
 
   render() {
-    const { name, projects } = this.props;
-    
+    const { orgId } = this.props;
+
     return (
       <div>
-        <FormHeading>
-            Create a Project
-            <button  onClick={this.props.addProject} style={{textDecoration:'none', 
-                            background: 'none', 
-                            border: 'none', 
-                            fontSize:'1.4em', 
-                            color:'rgba(102,102,102,0.6)'}}> &times;</button>
-        </FormHeading>
-        <FormDiv onChange={(e) => this.handleOnChange(e)}>
+        <NavBar>
+          <OneThirdDiv align="flex-start" color="#205284" onClick={this.exit}>
+            <Link
+              to={`/all-projects/${orgId}`}
+              style={{ textDecoration: "none", color: "#205284" }}
+            >
+              Cancel
+            </Link>
+          </OneThirdDiv>
+          <OneThirdDiv align="center" style={{ fontWeight: "600" }}>
+            New Project
+          </OneThirdDiv>
+          <OneThirdDiv
+            align="flex-end"
+            color="#205284"
+            onClick={this.createProject}
+          >
+            Save
+          </OneThirdDiv>
+        </NavBar>
+        <FormDiv
+          onChange={(e) => this.handleOnChange(e)}
+          style={{ padding: "1em", boxSizing: "border-box" }}
+        >
           <div>
-            <FormLabel htmlFor="projectName"> What is the name of the Project? </FormLabel>
-            <br/>
+            <FormLabel htmlFor="projectName">
+              {" "}
+              What is the name of the Project?{" "}
+            </FormLabel>
+            <br />
             <FormInput
               type="text"
-              placeholder = "Project Name"
+              placeholder="Project Name"
               value={this.state.projectDetails.projectName}
               name="projectName"
               id="projectName"
               onChange={(e) => this.handleOnChange(e)}
-              required/>
+              required
+            />
           </div>
 
           <div>
-            <FormLabel htmlFor="projectStatus"> What is the project status? </FormLabel>
-            <br/>
-            <FormSelect 
-              style={{backgroundImage: `url(${downArrow})` }}
+            <FormLabel htmlFor="projectStatus">
+              {" "}
+              What is the project status?{" "}
+            </FormLabel>
+            <br />
+            <FormSelect
+              style={{ backgroundImage: `url(${downArrow})` }}
               value={this.state.projectDetails.projectStatus}
               name="projectStatus"
               id="projectStatus"
               onChange={(e) => this.handleOnChange(e)}
               required
             >
-              <option style={{color: '#666666'}} value="">Select Status</option>
+              <option style={{ color: "#666666" }} value="">
+                Select Status
+              </option>
               <option value="ACTIVE">Active</option>
               <option value="PLANNED">Planned</option>
               <option value="COMPLETED">Completed</option>
             </FormSelect>
           </div>
           <div>
-            <FormLabel htmlFor="projectType"> What type of project is this? </FormLabel>
-            <br/>
+            <FormLabel htmlFor="projectType">
+              {" "}
+              What type of project is this?{" "}
+            </FormLabel>
+            <br />
             <FormSelect
-              style={{backgroundImage: `url(${downArrow})` }}
+              style={{ backgroundImage: `url(${downArrow})` }}
               value={this.state.projectDetails.projectType}
               name="projectType"
               id="projectType"
@@ -109,10 +147,13 @@ class CreateProjectForm extends Component {
             </FormSelect>
           </div>
           <div>
-            <FormLabel htmlFor="propertyType"> What is the type of property? </FormLabel>
-            <br/>
+            <FormLabel htmlFor="propertyType">
+              {" "}
+              What is the type of property?{" "}
+            </FormLabel>
+            <br />
             <FormSelect
-              style={{backgroundImage: `url(${downArrow})` }}
+              style={{ backgroundImage: `url(${downArrow})` }}
               value={this.state.projectDetails.propertyType}
               name="propertyType"
               id="propertyType"
@@ -131,61 +172,63 @@ class CreateProjectForm extends Component {
             </FormSelect>
           </div>
           <div>
-            <FormLabel htmlFor="projectName"> What is the name of the project? </FormLabel>
-            <br/>
+            <FormLabel htmlFor="projectName">
+              {" "}
+              What is the name of the project?{" "}
+            </FormLabel>
+            <br />
             <FormInput
               type="text"
-              placeholder = "Project Name"
+              placeholder="Project Name"
               value={this.state.projectDetails.projectName}
               name="projectName"
               id="projectName"
               onChange={(e) => this.handleOnChange(e)}
-              required/>
+              required
+            />
           </div>
           <div>
             <FormLabel htmlFor="projectLocation"> Location </FormLabel>
-            <br/>
+            <br />
             <FormInput
               type="text"
-              placeholder = "Street Address"
+              placeholder="Street Address"
               value={this.state.projectDetails.projectLocation}
               name="projectLocation"
               id="projectLocation"
               onChange={(e) => this.handleOnChange(e)}
-              required/>
+              required
+            />
           </div>
           <div>
             <FormLabel htmlFor="projectBudget"> Project Budget </FormLabel>
-            <br/>
+            <br />
             <FormInput
               type="number"
               value={this.state.projectDetails.projectBudget}
               name="projectBudget"
               id="projectBudget"
               onChange={(e) => this.handleOnChange(e)}
-              required/>
+              required
+            />
           </div>
           <div>
-            <FormLabel htmlFor="projectFinishDate"> Estimated Finish Date  </FormLabel>
-            <br/>
+            <FormLabel htmlFor="projectFinishDate">
+              {" "}
+              Estimated Finish Date{" "}
+            </FormLabel>
+            <br />
             <FormInput
               type="date"
-              placeholder = "Finish Date"
+              placeholder="Finish Date"
               value={this.state.projectDetails.projectFinishDate}
               name="projectFinishDate"
               id="projectFinishDate"
               onChange={(e) => this.handleOnChange(e)}
-              required/>
-          </div>
-
-          <div>
-            <FormButton onClick={this.createProject}>Create Project</FormButton>
-            <FormButton onClick={this.createProjectTemplate}>Create Project Template</FormButton>
+              required
+            />
           </div>
         </FormDiv>
-
-        
-
       </div>
     );
   }
@@ -193,14 +236,16 @@ class CreateProjectForm extends Component {
 
 const mapStateToProps = createStructuredSelector({
   name: selectCurrentUserFirstName,
-  orgId: selectCurrentOrganisationId
+  orgId: selectCurrentOrganisationId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   signOut: () => dispatch(signOut()),
-  createProject: (projectDetails) => dispatch(createProjectStart(projectDetails)),
-  createProjectTemplate: (projectDetails) => dispatch(createProjectTemplateStart(projectDetails)),
-  fetchProjects: () => dispatch(fetchProjectsStart())
+  createProject: (projectDetails) =>
+    dispatch(createProjectStart(projectDetails)),
+  createProjectTemplate: (projectDetails) =>
+    dispatch(createProjectTemplateStart(projectDetails)),
+  fetchProjects: () => dispatch(fetchProjectsStart()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm);

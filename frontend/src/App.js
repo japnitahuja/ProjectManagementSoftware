@@ -31,6 +31,8 @@ import createCostCodeItem from "./pages/create-cost-code-item/create-cost-code-i
 import Organisation from "./pages/organisation/organisation.page";
 import createOrganisationPage from "./pages/create-organisation/create-organisation.page";
 import hamburgerPage from "./pages/hamburger/hamburger.page";
+import CreateProject from "./pages/create-project/create-project.page";
+import createProjectScratchPage from "./pages/create-project-scratch/create-project-scratch.page";
 
 function App(props) {
   return (
@@ -48,6 +50,12 @@ function App(props) {
           }
         />
         <Route path="/all-projects/:orgId" exact component={AllProjects} />
+        <Route path="/createProject/:orgId" exact component={CreateProject} />
+        <Route
+          path="/createProject/FromScratch/:orgId"
+          exact
+          component={createProjectScratchPage}
+        />
         <Route path="/project/:projectId" exact component={Project} />
         <Route path="/task/:taskId" exact component={Task} />
         {/* <Route path='/step/:stepId' exact component={Step} /> */}

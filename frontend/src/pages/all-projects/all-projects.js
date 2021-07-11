@@ -25,6 +25,7 @@ import ProjectsFilter from "../../components/projects-filter/projects-filter.com
 import Spinner from "../../components/spinner/spinner.component";
 import { fetchOrganisationStart } from "../../redux/organisation/organisation.actions";
 import { selectCurrentOrganisationId } from "./../../redux/organisation/organisation.selectors";
+import ProjectCreateButton from "../../components/project-createbutton/project-createbutton.component";
 
 class AllProjects extends Component {
   constructor(props) {
@@ -39,16 +40,11 @@ class AllProjects extends Component {
   }
 
   async componentDidMount() {
-    //window.location.reload() //remove this, just a juagad. 
+    //window.location.reload() //remove this, just a juagad.
     const { fetchProjects, fetchOrg } = this.props;
     const orgId = this.props.match.params.orgId;
     fetchProjects(orgId);
-    fetchOrg(orgId)
-    console.log('component mounted.')
-  }
-
-  componentDidUpdate(){
-    console.log('component updated.')
+    fetchOrg(orgId);
   }
 
   search = (searchedText) => {
@@ -81,19 +77,29 @@ class AllProjects extends Component {
   };
 
   toggleSearchBar = () => {
-    this.setState((prevState) => ({
-      showSearch: !prevState.showSearch,
-    }));
+    console.log("search");
+    this.setState(
+      (prevState) => ({
+        showSearch: !prevState.showSearch,
+      }),
+      () => {
+        console.log(this.state);
+      }
+    );
   };
 
   toggleFilter = () => {
-    this.setState((prevState) => ({
-      showFilter: !prevState.showFilter,
-    }));
+    this.setState(
+      (prevState) => ({
+        showFilter: !prevState.showFilter,
+      }),
+      () => {
+        console.log(this.state);
+      }
+    );
   };
 
   setProjectState = () => {
-    console.log("set projects state", this.props.projects);
     this.setState({
       projectsList: this.props.projects,
       setProjects: 1,
@@ -103,12 +109,13 @@ class AllProjects extends Component {
   render() {
     let { projectsList } = this.state;
     let { projectsFetched, organisationId } = this.props;
+    let { orgId } = this.props.match.params;
 
     if (!projectsFetched) {
       return <Spinner />;
     } else if (
       projectsFetched &&
-      organisationId == this.props.match.params.orgId &&
+      organisationId == orgId &&
       this.state.setProjects == 0
     ) {
       this.setProjectState();
@@ -117,21 +124,18 @@ class AllProjects extends Component {
     if (!projectsList) {
       projectsList = [];
     }
-    console.log(projectsList, this.state);
-    console.log('rendered.')
 
     return (
       <div>
         <ProjectsNav title="Projects" toggleSearchBar={this.toggleSearchBar} />
         {this.state.showSearch ? (
-          // <SearchBar
-          //   placeholder="Search Projects..."
-          //   search={this.search}
-          //   toggleFilter={this.toggleFilter}
-          // />
-          <CreateProjectForm />
+          <SearchBar
+            placeholder="Search Projects..."
+            search={this.search}
+            toggleFilter={this.toggleFilter}
+          />
         ) : null}
-        {console.log(projectsList)}
+
         {projectsList.length === 0 ? (
           <NoResult />
         ) : (
@@ -151,9 +155,10 @@ class AllProjects extends Component {
             }}
           >
             <ProjectsFilter exit={this.toggleFilter} onSubmit={this.filter} />
-            {/* <CreateProjectForm /> */}
           </Overlay>
         ) : null}
+
+        <ProjectCreateButton orgId={orgId} />
       </div>
     );
   }
