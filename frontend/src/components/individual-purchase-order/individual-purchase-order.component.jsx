@@ -1,76 +1,107 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { createStructuredSelector } from 'reselect'
-import { selectCurrentPOItem, selectCurrentPOorderFrom, selectCurrentPOPaidAmount, selectCurrentPOPurchasedItems, selectCurrentPOTotalAmount } from '../../redux/current-purchase-order/current-purchase-order.selector'
-import { BigText, SmallText } from '../project-item/project-item.styles'
-import { ItemsTableDiv, ItemsTableHeading, ItemsTableRow, ItemsTableRowData, POItemAttribute, POItemValue, PurchaseOrderDetailsDiv, PurchaseOrderFrom, PurchaseOrderPaidAmount, PurchaseOrderTotalAmount } from './individual-purchase-order.component.styles'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import {
+  selectCurrentPOItem,
+  selectCurrentPOorderFrom,
+  selectCurrentPOPaidAmount,
+  selectCurrentPOPurchasedItems,
+  selectCurrentPOTotalAmount,
+} from "../../redux/current-purchase-order/current-purchase-order.selector";
+import {
+  Container,
+  Row,
+  ItemValue,
+  ItemDescription,
+  ItemName,
+  ItemTotalValue,
+} from "./individual-purchase-order.component.styles";
 
 class IndividualPurchaseOrderComponent extends Component {
-    render() {
-        const {orderFrom, POItem, POItems, totalAmount, paidAmount, itemsShipped} = this.props
-        console.log(POItems)
-        return (
-            <div>
-                <PurchaseOrderDetailsDiv>
-                    <PurchaseOrderFrom>
-                        <BigText>Purchase Order #1001/ {orderFrom}</BigText>
-                    </PurchaseOrderFrom>
-                    <PurchaseOrderTotalAmount>
-                        <POItemAttribute>TOTAL</POItemAttribute>
-                        <POItemValue>${totalAmount}</POItemValue>
-                    </PurchaseOrderTotalAmount>
-                    <PurchaseOrderPaidAmount>
-                    <POItemAttribute>PAID</POItemAttribute>
-                    <POItemValue>${paidAmount}</POItemValue> 
-                    </PurchaseOrderPaidAmount>
-                </PurchaseOrderDetailsDiv>
-                
-                
-                    
-                        {/* //<div key={index}>
-                        //<div>ITEM: {item.itemName}</div>
-                        //<div>ORDER: {item.itemNumber}</div>
-                        //<div>SHIP: {item.itemsShipped}</div>
-                        //<div>UNIT: {item.itemValue}</div>
-                        //<div>TOTAL: {item.itemsShipped*item.itemValue}</div> */}
+  render() {
+    let { purchasedItems, paid } = this.props.purchaseOrder[0];
+    let totalItems = purchasedItems.length;
+    let totalAmount = 0;
 
-                        <ItemsTableDiv>
-                            <ItemsTableRow>
-                                <ItemsTableHeading>ITEM</ItemsTableHeading>
-                                <ItemsTableHeading>ORDER</ItemsTableHeading>
-                                <ItemsTableHeading>SHIP</ItemsTableHeading>
-                                <ItemsTableHeading>UNIT</ItemsTableHeading>
-                                <ItemsTableHeading>TOTAL</ItemsTableHeading>
-                            </ItemsTableRow>
-                            {
-                                POItems? POItems.map((item, index) => {
-                                    return(
-                                        <ItemsTableRow key={index}>
-                                            <ItemsTableRowData>{item.itemName}</ItemsTableRowData>
-                                            <ItemsTableRowData>{item.itemNumber}</ItemsTableRowData>
-                                            <ItemsTableRowData>{item.itemsShipped}</ItemsTableRowData>
-                                            <ItemsTableRowData>${item.itemValue}</ItemsTableRowData>
-                                            <ItemsTableRowData>${item.itemNumber*item.itemValue}</ItemsTableRowData>
-                                        </ItemsTableRow>
-                                    )
-                                }): null
-                            }
-                        </ItemsTableDiv>
-                        
-                     
-                
-            </div>
-        )
-    }
+    return (
+      <div style={{ marginBottom: "3em" }}>
+        <ItemValue style={{ padding: "0.5em 1em" }}>
+          {totalItems} ITEMS
+        </ItemValue>
+        <Container>
+          {purchasedItems
+            ? purchasedItems.map(
+                ({ comment, itemName, itemNumber, itemValue, _id }) => {
+                  totalAmount += itemNumber * itemValue;
+                  return (
+                    <Row key={_id}>
+                      <ItemDescription>
+                        <ItemName>
+                          {itemNumber} - {itemName}
+                        </ItemName>
+                        <ItemValue>
+                          {itemNumber} x {itemValue} EACH
+                        </ItemValue>
+                      </ItemDescription>
+                      <ItemTotalValue>${itemNumber * itemValue}</ItemTotalValue>
+                    </Row>
+                  );
+                }
+              )
+            : null}
+        </Container>
+        <Row
+          style={{ border: "none", fontWeight: "600", padding: "0.2em 1em" }}
+        >
+          <div style={{ flex: "0.25" }}></div>
+          <ItemTotalValue style={{ flex: "0.35" }}>TOTAL</ItemTotalValue>
+          <ItemTotalValue
+            style={{
+              flex: "0.25",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            ${totalAmount}
+          </ItemTotalValue>
+        </Row>
+        <Row style={{ border: "none", padding: "0.2em 1em" }}>
+          <div style={{ flex: "0.25" }}></div>
+          <ItemTotalValue style={{ flex: "0.35" }}>PAYMENT</ItemTotalValue>
+          <ItemTotalValue
+            style={{
+              flex: "0.25",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            ${paid ? totalAmount : 0}
+          </ItemTotalValue>
+        </Row>
+        <Row style={{ border: "none", padding: "0.2em 1em" }}>
+          <div style={{ flex: "0.25" }}></div>
+          <ItemTotalValue style={{ flex: "0.35" }}>BALANCE DUE </ItemTotalValue>
+          <ItemTotalValue
+            style={{
+              flex: "0.25",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            ${paid ? 0 : totalAmount}
+          </ItemTotalValue>
+        </Row>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = createStructuredSelector({
-    orderFrom: selectCurrentPOorderFrom,
-    POItem: selectCurrentPOItem,
-    totalAmount: selectCurrentPOTotalAmount,
-    paidAmount: selectCurrentPOPaidAmount,
-    POItems: selectCurrentPOPurchasedItems,
+  orderFrom: selectCurrentPOorderFrom,
+  POItem: selectCurrentPOItem,
+  totalAmount: selectCurrentPOTotalAmount,
+  paidAmount: selectCurrentPOPaidAmount,
+  POItems: selectCurrentPOPurchasedItems,
+});
 
-})
-
-export default connect(mapStateToProps, null)(IndividualPurchaseOrderComponent)
+export default connect(mapStateToProps, null)(IndividualPurchaseOrderComponent);

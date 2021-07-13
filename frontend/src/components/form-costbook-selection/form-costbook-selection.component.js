@@ -74,6 +74,7 @@ class FormCostbookSelection extends Component {
 
   changeItemNumber = (e) => {
     let { value } = e.target;
+    value = parseInt(value);
     console.log("item number", value);
     let { itemName, itemNumber, itemValue, comment, itemId } =
       this.state.itemDetails;

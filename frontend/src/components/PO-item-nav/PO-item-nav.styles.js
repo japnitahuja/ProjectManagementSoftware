@@ -1,21 +1,22 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
 export const POItemNavDiv = styled.div`
-@media screen and (min-width: 320px) {
+  @media screen and (min-width: 320px) {
     display: flex;
     flex-direction: row;
-    padding: 10px;
-    border-bottom: 1px solid black; 
+    border-bottom: 0.5px solid #d3d3d3;
     justify-content: space-between;
-}
-`
+    align-items: center;
+    padding: 0.5em 1em;
+    font-weight: 600;
+  }
+`;
 
 export const POName = styled.div`
-@media screen and (min-width: 320px) {
-}
+  @media screen and (min-width: 320px) {
+  }
 `;
 
 export const POItemNavBackButton = styled.div`
-@media screen and (min-width: 320px) {
-}
+  font-size: 2em;
 `;
