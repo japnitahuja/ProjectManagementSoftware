@@ -63,15 +63,15 @@ router.post("/create-organisation/:userId", async (req, res) => {
 });
 
 //get organisation
-router.get('/org/:orgId', async (req, res) => {
+router.get("/org/:orgId", async (req, res) => {
   try {
-    const org = await Organisation.findById(req.params.orgId)
-    console.log(org)
-    res.status(200).json({message: 'org fetched', org, done: true})
+    const org = await Organisation.findById(req.params.orgId);
+    console.log(org);
+    res.status(200).json({ message: "org fetched", org, done: true });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 
 //get all user org
 router.get("/organisation/:userId", async (req, res) => {
@@ -153,7 +153,7 @@ router.post("/create-project/:userId", async (req, res) => {
       let user = await User.findOne({ _id: req.params.userId });
       // API for organisation unomment this------>
       let organisation = await Organisation.findById(organisationId);
-      console.log(organisation)
+      console.log(organisation);
       organisation.projects.push(project._id);
       user.projects.map((pro) => {
         if (pro.organisation == organisationId) {
@@ -471,17 +471,16 @@ router.post("/create-step/:taskId", async (req, res) => {
         questionType: questionType,
       });
       await task.steps.push(step._id);
-      if(task.isTaskDone === true){
-        var project = await Project.findOne({_id: req.body.projectId})
-        project.completedTasks = project.completedTasks - 1
-        await project.save()
+      if (task.isTaskDone === true) {
+        var project = await Project.findOne({ _id: req.body.projectId });
+        project.completedTasks = project.completedTasks - 1;
+        await project.save();
       }
       task.totalSteps = (await task.totalSteps) + 1;
       task.completionPercentage =
         ((await task.completedSteps) / task.totalSteps) * 100;
-      task.isTaskDone =  false;
-      if(task.isTaskDone === true){
-
+      task.isTaskDone = false;
+      if (task.isTaskDone === true) {
       }
       await task.save();
       res
@@ -598,7 +597,7 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
     try {
-      let payee = '60e31b215a1cde542465c9b5'
+      let payee = "60e31b215a1cde542465c9b5";
       let task = await Task.findOne({ _id: req.params.taskId });
       let project = await Project.findOne({ _id: projectId });
       let purchaseOrder = await PurchaseOrder.create({
@@ -613,20 +612,23 @@ router.post("/create-purchase-order/:taskId", async (req, res) => {
         PoCreatedBy: userId,
         // purchasedItem,
       });
-      if(purchasedItem != []){
-          purchasedItem.map(async(po) => {
-          let name = po.itemName, value = po.itemValue, number = po.itemNumber, comment = po.comment
+      if (purchasedItem != []) {
+        for (const po of purchasedItem) {
+          let itemName = po.itemName,
+            itemValue = po.itemValue,
+            itemNumber = po.itemNumber,
+            comment = po.comment;
           let POItem = await PurchaseOrderItem.create({
-            name,
-            value,
-            number,
-            comment
-          })
+            itemName,
+            itemValue,
+            itemNumber,
+            comment,
+          });
           purchaseOrder.purchasedItems.push(POItem._id);
+        }
         await purchaseOrder.save();
-        })
       }
-      task.purchaseOrders.push(purchaseOrder._id);
+      await task.purchaseOrders.push(purchaseOrder._id);
       await task.save();
       console.log("project po", project);
       project.purchaseOrders.push(purchaseOrder._id);
@@ -695,39 +697,57 @@ router.get("/project/:projectId/purchaseOrders", async (req, res) => {
 router.post(
   "/create-purchase-order-items/:purchaseOrderId",
   async (req, res) => {
-    let {
-      itemName,
-      itemNumber, //item quantity
-      itemValue, //item rate
-      comment,
-    } = req.body;
-    if (!itemName) {
-      res.status(422).json({ error: "Fill all the fields", done: false });
-    } else {
-      try {
-        let purchaseOrder = await PurchaseOrder.findOne({
-          _id: req.params.purchaseOrderId,
+    // let {
+    //   itemName,
+    //   itemNumber, //item quantity
+    //   itemValue, //item rate
+    //   comment,
+    // } = req.body;
+    try {
+      let purchaseOrder = await PurchaseOrder.findOne({
+        _id: req.params.purchaseOrderId,
+      });
+      let items = req.body;
+      let poitems = purchaseOrder.purchasedItems;
+      for (const po of items) {
+        console.log("creation");
+        let itemName = po.itemName,
+          itemValue = po.itemValue,
+          itemNumber = po.itemNumber,
+          comment = po.comment;
+        let POItem = await PurchaseOrderItem.create({
+          itemName,
+          itemValue,
+          itemNumber,
+          comment,
         });
-        if(purchasedItem != []){
-          purchasedItem.map(async(po) => {
-          let name = po.itemName, value = po.itemValue, number = po.itemNumber, comment = po.comment
-          let POItem = await PurchaseOrderItem.create({
-            name,
-            value,
-            number,
-            comment
-          })
-          purchaseOrder.purchasedItems.push(POItem._id);
-        await purchaseOrder.save();
-        })
+        console.log(POItem._id);
+        //await poitems.push(POItem._id);
+        await purchaseOrder.purchasedItems.push(POItem._id);
+        console.log(poitems, "po items");
       }
-        res.status(200).json({
-          message: "Purchase order items created and linked to the order",
-          done: true,
-        });
-      } catch (error) {
-        console.log(error);
-      }
+      // items.map(async (po) => {
+      //   console.log("creation");
+      //   let itemName = po.itemName, itemValue = po.itemValue,  itemNumber = po.itemNumber, comment = po.comment;
+      //   let POItem = await PurchaseOrderItem.create({
+      //     itemName,
+      //     itemValue,
+      //     itemNumber,
+      //     comment,
+      //   });
+      //   console.log(POItem._id);
+      //   //await poitems.push(POItem._id);
+      //   await purchaseOrder.purchasedItems.push(POItem._id)
+      //   console.log(poitems, 'po items');
+      // })
+      await purchaseOrder.save();
+      // purchaseOrder.purchasedItems = poitems;
+      res.status(200).json({
+        message: "Purchase order items created and linked to the order",
+        done: true,
+      });
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -761,33 +781,59 @@ router.put("/purchaseOrder/:purchaseOrderId", async (req, res) => {
 //creating a change order
 router.post("/create-change-order/:taskId", async (req, res) => {
   var {
-    orderFrom,
-    totalOrderAmount,
-    totalPaidAmount,
+    CoTitle,
     userId,
     projectId,
     purchasedItem,
+    //payee, //send payee id here
+    group,
+    terms,
+    dueDate,
   } = req.body;
   if (
-    !orderFrom ||
-    !totalOrderAmount ||
-    !purchasedItem ||
-    !totalPaidAmount ||
-    !userId ||
-    !projectId
+    !CoTitle
+    // !totalOrderAmount ||
+    // !purchasedItem ||
+    // !totalPaidAmount ||
+    // !userId ||
+    // !projectId
   ) {
     res.status(422).json({ error: "Fill all the fields", done: false });
   } else {
     try {
+      let payee = "60e31b215a1cde542465c9b5";
       let task = await Task.findOne({ _id: req.params.taskId });
       let project = await Project.findOne({ _id: projectId });
       let changeOrder = await ChangeOrder.create({
-        orderFrom,
-        totalOrderAmount,
-        totalPaidAmount,
-        user: userId,
-        purchasedItem,
+        CoTitle,
+        payee,
+        group,
+        terms,
+        dueDate,
+        payee,
+        // totalOrderAmount,
+        // totalPaidAmount,
+        CoCreatedBy: userId,
+        // purchasedItem,
       });
+      const purchasedItem = req.body.purchasedItems;
+      if (purchasedItem != []) {
+        for (const po of purchasedItem) {
+          let itemName = po.itemName,
+            itemValue = po.itemValue,
+            itemNumber = po.itemNumber,
+            comment = po.comment;
+          let POItem = await ChangeOrderItem.create({
+            itemName,
+            itemValue,
+            itemNumber,
+            comment,
+          });
+          changeOrder.purchasedItems.push(POItem._id);
+        }
+        await changeOrder.save();
+      }
+
       await task.changeOrders.push(changeOrder._id);
       task.save(function (err) {
         if (err) {
@@ -851,21 +897,29 @@ router.get("/project/:projectId/changeOrders", async (req, res) => {
 
 //creating change order items
 router.post("/create-change-order-items/:changeOrderId", async (req, res) => {
-  var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
-  if (!itemName || !itemNumber || !itemsShipped || !itemValue) {
-    res.status(422).json({ error: "Fill all the fields", done: false });
-  } else {
+  //var { itemName, itemNumber, itemsShipped, itemValue } = req.body;
     try {
       let changeOrder = await ChangeOrder.findOne({
         _id: req.params.changeOrderId,
       });
-      let changeOrderItem = await ChangeOrderItem.create({
-        itemName,
-        itemNumber,
-        itemsShipped,
-        itemValue,
-      });
-      await changeOrder.purchasedItems.push(changeOrderItem._id);
+      let items = req.body
+      for (const po of items) {
+        let itemName = po.itemName,
+          itemValue = po.itemValue,
+          itemNumber = po.itemNumber,
+          comment = po.comment;
+        let COItem = await ChangeOrderItem.create({
+          itemName,
+          itemValue,
+          itemNumber,
+          comment,
+        });
+        console.log(COItem._id);
+        //await poitems.push(POItem._id);
+        await changeOrder.purchasedItems.push(COItem._id);
+        //console.log(poitems, "po items");
+      }
+      //await changeOrder.purchasedItems.push(changeOrderItem._id);
       changeOrder.save(function (err) {
         if (err) {
           console.log(err);
@@ -879,7 +933,7 @@ router.post("/create-change-order-items/:changeOrderId", async (req, res) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  
 });
 
 //geting change order
@@ -903,8 +957,10 @@ router.post("/complete-task/:taskId", async (req, res) => {
     var task = await Task.findOne({ _id: req.params.taskId });
     var project = await Project.findOne({ _id: projectId });
     if (task.completionPercentage === 100 || task.steps.length == 0) {
-      if(task.isTaskDone === true){
-        res.status(422).json({message: 'task already completed', done: false})
+      if (task.isTaskDone === true) {
+        res
+          .status(422)
+          .json({ message: "task already completed", done: false });
         return;
       }
       task.isTaskDone = true;
@@ -1141,8 +1197,11 @@ router.post("/inviteUser", async (req, res) => {
     console.log(email, projectId);
     const savedUser = await User.findOne({ email: email });
     const project = await Project.findOne({ _id: projectId });
-    const org = await Organisation.findOne({_id:organisationId})
-    let UserInProject = false, organisationInUser = false, finalUserId, finalUser;
+    const org = await Organisation.findOne({ _id: organisationId });
+    let UserInProject = false,
+      organisationInUser = false,
+      finalUserId,
+      finalUser;
     if (savedUser) {
       savedUser.projects.map((project) => {
         if (project.organisation == organisationId) {
@@ -1151,36 +1210,36 @@ router.post("/inviteUser", async (req, res) => {
             UserInProject = true;
           }
         }
-      })
+      });
       console.log(UserInProject, organisationInUser);
       if (UserInProject === true) {
         console.log("user in project");
         res
           .status(422)
           .json({ message: "User already in the project team", done: false });
-          return;
+        return;
       } else {
         console.log("saved user not added in the project");
-        finalUserId =  savedUser._id;
+        finalUserId = savedUser._id;
         finalUser = savedUser;
         console.log("user id in if else", finalUserId);
         let orgDetails = {
           organisation: organisationId,
-        }
-        console.log(orgDetails, 'org details')
+        };
+        console.log(orgDetails, "org details");
         if (organisationInUser === false) {
-          console.log('user not in organisation.')
+          console.log("user not in organisation.");
           finalUser.projects.push(orgDetails);
-          console.log(org)
+          console.log(org);
           // const orgUser = {
           //   user: finalUserId,
           //   permission: 'ORGANISATION-MEMBER'
           // }
-          org.organisationMembers.push(finalUserId)
+          org.organisationMembers.push(finalUserId);
         }
       }
     } else {
-      console.log('new user in the application.')
+      console.log("new user in the application.");
       let user = await User.create({
         email: email,
         permission: permission,
@@ -1209,10 +1268,10 @@ router.post("/inviteUser", async (req, res) => {
     project.Users.push(userDetails);
     finalUser.save();
     project.save();
-    org.save()
+    org.save();
     // console.log("projects for user", finalUser.projects);
     // console.log("users in a project", project.Users);
-    console.log(finalUser, 'final user after saving.');
+    console.log(finalUser, "final user after saving.");
     if (type == "saveandinvite") {
       let mailTransporter = nodemailer.createTransport({
         service: "gmail",
@@ -1244,8 +1303,6 @@ router.post("/inviteUser", async (req, res) => {
     console.log(error);
   }
 });
-
-
 
 //update user permissions for project
 router.post("/updatePermissions/:projectId", async (req, res) => {
@@ -1310,32 +1367,41 @@ router.post("/updateRoles/:projectId", async (req, res) => {
 });
 
 //delete user from project
-router.post('/deleteUser/:projectId', async (req, res) => {
-  const {projectId} = req.params;
-  const {userId} = req.body;
-  const {organisationId} = req.body
-  console.log(req.body)
+router.post("/deleteUser/:projectId", async (req, res) => {
+  const { projectId } = req.params;
+  const { userId } = req.body;
+  const { organisationId } = req.body;
+  console.log(req.body);
   try {
-    let project = await Project.findOne({_id: projectId})
-    let user = await User.findOne({_id: userId})
-    console.log(user)
-    let projectUsers = project.Users
-    let projectsOfUsers = user.projects
-    let org = projectsOfUsers.find((org) => org.organisation == organisationId)
-    let idOfProject = org.organisationProjects.indexOf(projectId)
-    let updatedProjects = org.organisationProjects.filter((v, i) => i != idOfProject)
-    org.organisationProjects = updatedProjects
-    await user.save()
-    let updatedUsers = projectUsers.filter((user) => user.user != userId)
-    project.users = updatedUsers
-    await project.save()
-    console.log(updatedUsers, 'updated users', updatedProjects, 'updated projects')
-    res.status(200).json({message: "User Deleted", done: true, project, user})
+    let project = await Project.findOne({ _id: projectId });
+    let user = await User.findOne({ _id: userId });
+    console.log(user);
+    let projectUsers = project.Users;
+    let projectsOfUsers = user.projects;
+    let org = projectsOfUsers.find((org) => org.organisation == organisationId);
+    let idOfProject = org.organisationProjects.indexOf(projectId);
+    let updatedProjects = org.organisationProjects.filter(
+      (v, i) => i != idOfProject
+    );
+    org.organisationProjects = updatedProjects;
+    await user.save();
+    let updatedUsers = projectUsers.filter((user) => user.user != userId);
+    project.users = updatedUsers;
+    await project.save();
+    console.log(
+      updatedUsers,
+      "updated users",
+      updatedProjects,
+      "updated projects"
+    );
+    res
+      .status(200)
+      .json({ message: "User Deleted", done: true, project, user });
     //console.log( 'hi',projectUsers, projectsOfUsers, org)
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
 // router.post("/deleteUser/:projectId", async (req, res) => {
 //   const { projectId } = req.params;
 //   try {

@@ -1,29 +1,49 @@
 const mongoose = require('mongoose')
 const changeOrderSchema = new mongoose.Schema({
-    orderFrom:{
+    CoTitle:{
         type: String,
         required: [true, 'Please enter the company from which the order was purcased']
     },
     totalOrderAmount:{
         type:Number,
-        required: [true, 'Please enter the total order amount']
+       
     },
     purchasedItem:{
         type: String,
-        required: [true, 'Please enter the item purchased']
     },
     totalPaidAmount:{
         type:Number,
-        required: [true, 'Please enter the total paid amount']
     },
     purchasedItems:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "changeOrderItem"
     }],
-    user:[{
+    COCreatedBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }]
+    },  
+    paid: {
+        type: Boolean,
+        default: false
+    },
+    payee: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    group: {
+        type: String
+    },
+    PoDate: {
+        type: Date,
+        default: Date.now()
+    },
+    terms: {
+        type: String
+    },
+    DueDate: {
+        type: Date
+    }
+
 })
 
 mongoose.model('changeOrder', changeOrderSchema)
