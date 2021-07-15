@@ -49,17 +49,21 @@ class PurchaseOrderListAdmin extends React.Component {
           <div>OPEN: ${openAmount}</div>
           <div>STATUS</div>
         </POGreyHeading>
-        {purchaseOrders.map(({ PoDate, _id, PoTitle }, index) => {
+        {purchaseOrders.map(({ PoDate, _id, PoTitle, CoTitle }, index) => {
           let date = new Date(PoDate);
           return (
             <Link
-              to={`/purchaseOrder/${_id}`}
+              to={
+                this.props.VPO ? `/changeOrder/${_id}` : `/purchaseOrder/${_id}`
+              }
               style={{ textDecoration: "none" }}
             >
               <PODiv key={_id}>
                 <PONameDiv>
-                  <BigText weight="600">{PoTitle}</BigText>
-                  <BigText>{PoTitle}</BigText>
+                  <BigText weight="600">
+                    {this.props.VPO ? CoTitle : PoTitle}
+                  </BigText>
+                  <BigText>{this.props.VPO ? CoTitle : PoTitle}</BigText>
                   <TinyText>
                     {purchasedItemsAmounts[index] ===
                     purchasedItemPaid[index] ? (

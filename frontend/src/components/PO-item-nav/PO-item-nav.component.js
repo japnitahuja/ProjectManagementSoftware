@@ -24,7 +24,7 @@ class POItemNav extends Component {
         >
           <POItemNavBackButton>&times;</POItemNavBackButton>
         </Link>
-        <POName>{POItem.PoTitle}</POName>
+        <POName> {this.props.VPO ? POItem.CoTitle : POItem.PoTitle}</POName>
         <POName></POName>
       </POItemNavDiv>
     );

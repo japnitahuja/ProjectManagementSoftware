@@ -21,3 +21,17 @@ export const Text = styled.p`
     color: ${(props) => props.color};
   }
 `;
+
+export const Button = styled.button`
+  @media screen and (min-width: 320px) {
+    width: 90%;
+    padding: 0.5em;
+    font-size: 1.2em;
+    background-color: ${(props) => (props.paid ? "green" : "#205284")};
+    border: none;
+    color: white;
+    border-radius: 5px;
+    box-shadow: none;
+    margin: 1em 0em;
+  }
+`;

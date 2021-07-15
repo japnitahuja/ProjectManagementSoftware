@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { createStructuredSelector } from "reselect";
 import { BigText, SmallText } from "../project-item/project-item.styles";
 import SearchBar from "../search-bar/search-bar.component";
-import { POSummaryDiv, Text } from "./purchase-orders-summary.styles";
+import { POSummaryDiv, Text, Button } from "./purchase-orders-summary.styles";
 
 class PurchaseOrdersSummary extends React.Component {
   render() {
@@ -13,7 +13,12 @@ class PurchaseOrdersSummary extends React.Component {
 
     let sumAmount = 0;
     let unpaidAmount = 0;
-    purchaseOrder.purchasedItems.map(({ items }) => {});
+    purchaseOrder.purchasedItems.map(({ itemNumber, itemValue, paid }) => {
+      sumAmount += itemNumber * itemValue;
+      if (!paid) {
+        unpaidAmount += itemNumber * itemValue;
+      }
+    });
     return (
       <POSummaryDiv>
         <Text color="#727272" fontSize="1em">
@@ -25,6 +30,9 @@ class PurchaseOrdersSummary extends React.Component {
         <Text color="#434343" fontSize="1em">
           Open Balance: ${unpaidAmount}
         </Text>
+        <Button paid={unpaidAmount > 0 ? false : true}>
+          {unpaidAmount > 0 ? `Pay` : `Paid`}
+        </Button>
       </POSummaryDiv>
     );
   }

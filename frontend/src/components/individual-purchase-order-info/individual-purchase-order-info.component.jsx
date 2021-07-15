@@ -41,23 +41,23 @@ class IndividualPurchaseOrderInfo extends Component {
     return (
       <Container>
         <InfoDiv>
-          <InfoTitle>PO Title</InfoTitle>
-          <InfoInputDiv id="PoTitle">{purchaseOrder.PoTitle}</InfoInputDiv>
+          <InfoTitle>Title</InfoTitle>
+          <InfoInputDiv id="Title">{purchaseOrder.PoTitle}</InfoInputDiv>
         </InfoDiv>
 
         <InfoDiv>
           <InfoTitle>Group</InfoTitle>
-          <InfoInputDiv id="PoTitle">{purchaseOrder.group}</InfoInputDiv>
+          <InfoInputDiv id="Group">{purchaseOrder.group}</InfoInputDiv>
         </InfoDiv>
 
         <InfoDiv>
-          <InfoTitle>PO Date</InfoTitle>
-          <InfoInputDiv id="PoTitle">{purchaseOrder.PoDate}</InfoInputDiv>
+          <InfoTitle>Date</InfoTitle>
+          <InfoInputDiv id="Date">{purchaseOrder.PoDate}</InfoInputDiv>
         </InfoDiv>
 
         <InfoDiv>
           <InfoTitle>Terms</InfoTitle>
-          <InfoInputDiv id="PoTitle">{purchaseOrder.terms}</InfoInputDiv>
+          <InfoInputDiv id="Terms">{purchaseOrder.terms}</InfoInputDiv>
         </InfoDiv>
       </Container>
     );

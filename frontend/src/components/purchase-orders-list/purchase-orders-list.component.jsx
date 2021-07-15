@@ -51,18 +51,31 @@ class PurchaseOrderList extends React.Component {
         </POGreyHeading>
         {purchaseOrders.map(
           (
-            { orderFrom, totalOrderAmount, totalPaidAmount, _id, PoTitle },
+            {
+              orderFrom,
+              totalOrderAmount,
+              totalPaidAmount,
+              _id,
+              PoTitle,
+              CoTitle,
+            },
             index
           ) => {
             return (
               <Link
-                to={`/purchaseOrder/${_id}`}
+                to={
+                  this.props.VPO
+                    ? `/changeOrder/${_id}`
+                    : `/purchaseOrder/${_id}`
+                }
                 style={{ textDecoration: "none" }}
               >
                 <PODiv key={_id}>
                   <PONameDiv>
-                    <TinyText>PO #{index + 1000}</TinyText>
-                    <BigText>{PoTitle}</BigText>
+                    <TinyText>
+                      {this.props.VPO ? `VPO` : `PO`} #{index + 1000}
+                    </TinyText>
+                    <BigText>{this.props.VPO ? CoTitle : PoTitle}</BigText>
                   </PONameDiv>
                   <PODetailsDiv>
                     <BigText>
