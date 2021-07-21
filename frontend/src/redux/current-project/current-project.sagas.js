@@ -120,7 +120,9 @@ export function* inviteUser({ payload }) {
   try {
     let data = payload;
     let projectId = yield select(selectCurrentProjectId);
+    let organisationId = yield select(selectCurrentOrganisationId)
     data["projectId"] = projectId;
+    data['organisationId'] = organisationId
     let resp = yield fetch("http://127.0.0.1:5000/inviteUser", {
       method: "POST",
       headers: {

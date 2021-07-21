@@ -90,7 +90,7 @@ class AddUserForm extends Component {
               {/* <DropDown options = {this.state.permissions}/> */}
             </div>
             
-            {/* <select
+            <select
               value={this.state.userDetails.permission}
               name="permission"
               id="permission"
@@ -103,7 +103,7 @@ class AddUserForm extends Component {
               <option value="MANAGER">Manager</option>
               <option value="AUTHOR">Author</option>
               <option value="CONTRIBUTOR">Contributor</option>
-            </select> */}
+            </select>
           </div>
 
           <div>

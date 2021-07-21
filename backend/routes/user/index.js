@@ -331,7 +331,7 @@ router
 
 //create a new task
 router.post("/create-task/:projectId", async (req, res) => {
-  var { taskName, taskStartDate, taskEndDate, userId } = req.body;
+  var { taskName, taskStartDate, taskEndDate, userId, steps } = req.body;
   if (!taskName || !taskStartDate || !taskEndDate || !userId) {
     res.status(422).json({ error: " fill all the fields", done: false });
   } else {
@@ -343,6 +343,25 @@ router.post("/create-task/:projectId", async (req, res) => {
         taskEndDate,
         taskOwner: userId,
       });
+      if(steps){
+        for (const step of steps) {
+          let stepName = step.stepName,
+              questionStatement = step.questionStatement,
+              questionType = step.questionType
+          
+          let NewStep = await Step.create({
+            stepName,
+            questionStatement,
+            questionType,
+            relatedTask: task._id
+          })
+          task.totalSteps = (await task.totalSteps) + 1;
+          console.log('step created', NewStep)
+          await task.steps.push(NewStep._id)
+          console.log(task)
+        }
+        await task.save()
+      }
       await project.tasks.push(task._id);
       project.totalTasks = await project.tasks.length;
       console.log("total tasks", project.totalTasks);
@@ -1378,25 +1397,41 @@ router.post("/deleteUser/:projectId", async (req, res) => {
     console.log(user);
     let projectUsers = project.Users;
     let projectsOfUsers = user.projects;
-    let org = projectsOfUsers.find((org) => org.organisation == organisationId);
-    let idOfProject = org.organisationProjects.indexOf(projectId);
-    let updatedProjects = org.organisationProjects.filter(
-      (v, i) => i != idOfProject
-    );
-    org.organisationProjects = updatedProjects;
-    await user.save();
-    let updatedUsers = projectUsers.filter((user) => user.user != userId);
-    project.users = updatedUsers;
-    await project.save();
-    console.log(
-      updatedUsers,
-      "updated users",
-      updatedProjects,
-      "updated projects"
-    );
+    for (const user of projectUsers) {
+      if(user.user == userId){
+        const idOfUser = projectUsers.indexOf(user)
+        let updatedUsers = projectUsers.filter((v, i) => i != idOfUser)
+        console.log(updatedUsers, 'updated users in if else')
+        project.Users = updatedUsers
+        await project.save()
+      }
+    }
+    for (const project of projectsOfUsers) {
+      if(project.organisation == organisationId){
+        let updatedProjects = project.organisationProjects.filter((v, i) => i != projectId)
+        user.projects = updatedProjects
+        await user.save()
+      }
+    }
     res
       .status(200)
       .json({ message: "User Deleted", done: true, project, user });
+    // let org = projectsOfUsers.find((org) => org.organisation == organisationId);
+    // let idOfProject = org.organisationProjects.indexOf(projectId);
+    // let updatedProjects = org.organisationProjects.filter(
+    //   (v, i) => i != idOfProject
+    // );
+    // org.organisationProjects = updatedProjects;
+    // await user.save();
+    // let updatedUsers = projectUsers.filter((user) => user.user != userId);
+    // project.users = updatedUsers;
+    // await project.save();
+    // console.log(
+    //   updatedUsers,
+    //   "updated users",
+    //   updatedProjects,
+    //   "updated projects"
+    // );
     //console.log( 'hi',projectUsers, projectsOfUsers, org)
   } catch (error) {
     console.log(error);

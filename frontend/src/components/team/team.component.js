@@ -88,7 +88,10 @@ class Team extends Component {
           </Overlay> : null
       }
           <Text style={{fontSize:"0.9em",color:"#666666", margin:"1.5em 0em"}}>Need to add additional users not in Dig?</Text>
-          <Text style={{fontSize:"0.9em",color:"#6C7B8A"}} onClick={this.invite}>
+          <Text
+           style={{fontSize:"0.9em",color:"#6C7B8A"}}
+           onClick={this.invite}
+           >
             <u>Invite now</u>
           </Text>
 
