@@ -1,4 +1,4 @@
-  import React, { Component } from "react";
+import React, { Component } from "react";
 import { LongButton } from "../long-button/long-button.styles";
 import { AddUserDiv } from "./adduser-form.styles";
 import { SmallText } from "../project-item/project-item.styles";
@@ -6,32 +6,39 @@ import { connect } from "react-redux";
 import { inviteUserStart } from "../../redux/current-project/current-project.actions";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentProjectRoles } from "../../redux/current-project/current-project.selectors";
-import {FormHeading, FormLabel, FormInput, FormDiv} from "../create-project-form/create-project-form.styles"
-import DropDown from "../form-dropdown/form-dropdown.component"
+import {
+  FormHeading,
+  FormLabel,
+  FormInput,
+  FormDiv,
+} from "../create-project-form/create-project-form.styles";
+import DropDown from "../form-dropdown/form-dropdown.component";
 
 class AddUserForm extends Component {
   constructor() {
     super();
     this.state = {
       userDetails: {
-        email: '',
-        permission: '',
-        role: ''
+        email: "",
+        permission: "",
+        role: "",
       },
-      permissions:[
+      permissions: [
         ["BILLINGADMIN", "Billing Admin", "Can lorem ipsum dolor"],
         ["ADMIN", "Admin", "Can lorem ipsum dolor"],
         ["AUTHOR", "Author", "Can lorem ipsum dolor"],
-        ["CONTRIBUTER", "Contributer", "Can lorem ipsum dolor"]
-      ]
+        ["CONTRIBUTER", "Contributer", "Can lorem ipsum dolor"],
+      ],
     };
   }
+
   handleOnChange = (e) => {
     let userDetails = this.state.userDetails;
     const { name, value } = e.target;
     userDetails[name] = value;
     this.setState({ userDetails: userDetails }, () => console.log(userDetails));
   };
+
   addUser = (e) => {
     e.preventDefault();
     let userDetails = this.state.userDetails;
@@ -47,49 +54,59 @@ class AddUserForm extends Component {
     this.props.inviteUser(userDetails);
   };
 
-  advanceSettings = (e) => {
-    e.preventDefault();
-    if (this.state.advance === false) {
-      this.setState({ advance: true }, () => console.log(this.state));
-    } else {
-      this.setState({ advance: false }, () => console.log(this.state));
-    }
-  };
   render() {
-    const {projectRoles} = this.props
-    console.log('project roles', projectRoles)
+    const { projectRoles } = this.props;
+
+    console.log("project roles", projectRoles);
     return (
       <AddUserDiv>
-        <FormHeading>
-            Add a User
-            <button  onClick={this.props.exit} style={{textDecoration:'none', 
-                            background: 'none', 
-                            border: 'none', 
-                            fontSize:'1.4em', 
-                            color:'rgba(102,102,102,0.6)'}}> &times;</button>
+        <FormHeading style={{ marginBottom: "1em" }}>
+          Add a User
+          <button
+            onClick={this.props.exit}
+            style={{
+              textDecoration: "none",
+              background: "none",
+              border: "none",
+              fontSize: "1.4em",
+              color: "rgba(102,102,102,0.6)",
+            }}
+          >
+            {" "}
+            &times;
+          </button>
         </FormHeading>
 
-        <FormDiv onChange={(e) => this.handleOnChange(e)} >
-          <div>
-            <FormLabel htmlFor="email" style={{textAlign:"left"}}> Email </FormLabel>
-            <br/>
-            <FormInput
-              type="text"
-              value={this.state.userDetails.email}
-              name="email"
-              id="email"
-              onChange={(e) => this.handleOnChange(e)}
-              placeholder = "Email address"
-              required />
+        <FormDiv onChange={(e) => this.handleOnChange(e)}>
+          <div style={{ width: "100%", textAlign: "left" }}>
+            <FormLabel htmlFor="email" style={{ fontSize: "1em" }}>
+              Email
+            </FormLabel>
           </div>
-          
-          <div>
-            <FormLabel htmlFor="permission" style={{textAlign:"left"}}> Permission Level: </FormLabel>
-            <br/>
-            <div style={{width:"100%"}}>
-              {/* <DropDown options = {this.state.permissions}/> */}
+          <input
+            type="text"
+            value="88"
+            onChange={(e) => this.handleOnChange(e)}
+          />
+          <FormInput
+            type="text"
+            name="email"
+            id="email"
+            value={this.state.userDetails.email}
+            onChange={(e) => this.handleOnChange(e)}
+            required
+          />
+
+          {/* <div>
+            <FormLabel htmlFor="permission" style={{ textAlign: "left" }}>
+              {" "}
+              Permission Level:{" "}
+            </FormLabel>
+            <br />
+            <div style={{ width: "100%" }}>
+              <DropDown options = {this.state.permissions}/>
             </div>
-            
+
             <select
               value={this.state.userDetails.permission}
               name="permission"
@@ -107,7 +124,8 @@ class AddUserForm extends Component {
           </div>
 
           <div>
-            <FormLabel htmlFor="role"> Role(optional): </FormLabel><br/>
+            <FormLabel htmlFor="role"> Role(optional): </FormLabel>
+            <br />
             <select
               value={this.state.userDetails.role}
               name="role"
@@ -117,26 +135,17 @@ class AddUserForm extends Component {
             >
               <option value="">Please choose an option</option>
               {projectRoles.map((role, index) => {
-                return(
-                  <option key={index} value={role.toUpperCase()}>{role}</option>
-                )
+                return (
+                  <option key={index} value={role.toUpperCase()}>
+                    {role}
+                  </option>
+                );
               })}
             </select>
           </div>
           <div>
-            <button
-              style={{
-                textDecoration: "none",
-                background: "none",
-                border: "none",
-                left: "0",
-              }}
-              onClick={this.addUser}
-            >
-              <SmallText>Add User, send invite later</SmallText>
-            </button>
             <LongButton onClick={this.inviteUser}>Invite</LongButton>
-          </div>
+          </div> */}
         </FormDiv>
       </AddUserDiv>
     );
@@ -147,7 +156,6 @@ const mapStateToProps = createStructuredSelector({
   // name: selectCurrentUserFirstName,
   // projects: selectUserProjects
   projectRoles: selectCurrentProjectRoles,
-
 });
 
 const mapDispatchToProps = (dispatch) => ({

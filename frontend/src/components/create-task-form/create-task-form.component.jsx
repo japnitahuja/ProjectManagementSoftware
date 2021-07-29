@@ -18,12 +18,16 @@ import {
   NavBar,
   OneThirdDiv,
   Overlay,
+  GreenButton,
+  StepDiv,
+  SmallCircle,
 } from "./create-task-form.styles";
 import { withRouter } from "react-router-dom";
 import { selectCreateTaskStart } from "../../redux/all-tasks/all-tasks.selectors";
 import { selectCreateTaskSuccessful } from "./../../redux/all-tasks/all-tasks.selectors";
 import { createStructuredSelector } from "reselect";
 import Spinner from "../spinner/spinner.component";
+import dustbin from "../../assets/dustbin.png";
 
 class CreateTaskForm extends Component {
   constructor(props) {
@@ -34,14 +38,13 @@ class CreateTaskForm extends Component {
         taskStartDate: "",
         taskEndDate: "",
         projectId: this.props.match.params.projectId.toString(),
-        
       },
       stepDetails: {
-        stepName: '',
-        questionStatement: ''
+        stepName: "",
+        questionStatement: "",
       },
-      active: "Info",
-      steps: []
+      active: "Steps",
+      steps: [],
     };
   }
 
@@ -55,26 +58,34 @@ class CreateTaskForm extends Component {
   };
 
   handleOnStepChange = (e) => {
-    const {name, value} = e.target;
-    let step = this.state.stepDetails
-    step[name] = value
-    console.log(this.state)
-    this.setState({stepDetails: step}, () => {console.log(this.state)})
-  }
+    const { name, value } = e.target;
+    let step = this.state.stepDetails;
+    step[name] = value;
+    console.log(this.state);
+    this.setState({ stepDetails: step }, () => {
+      console.log(this.state);
+    });
+  };
 
   handleOnStepSubmit = (e) => {
-    console.log('step submit')
+    console.log("step submit");
     e.preventDefault();
-    const step = this.state.stepDetails
-    this.state.steps.push(step)
-    console.log(this.state.steps)
-  }
+    let steps = this.state.steps;
+    let step = this.state.stepDetails;
+    steps.push(step);
+    this.setState(
+      { steps: steps, stepDetails: { stepName: "", questionStatement: "" } },
+      () => {
+        console.log(this.state);
+      }
+    );
+  };
 
   createTask = async (e) => {
     e.preventDefault();
     let taskDetails = this.state.taskDetails;
-    taskDetails['steps'] = this.state.steps
-    console.log(taskDetails)
+    taskDetails["steps"] = this.state.steps;
+    console.log(taskDetails);
     console.log(taskDetails);
     this.props.createTask(taskDetails);
   };
@@ -84,6 +95,16 @@ class CreateTaskForm extends Component {
 
     this.setState({
       active: key,
+    });
+  };
+
+  removeStep = (index) => {
+    console.log("remove", index, this.state.steps[index]);
+    let steps = this.state.steps;
+    steps.splice(index, 1);
+
+    this.setState({ steps: steps }, () => {
+      console.log(this.state);
     });
   };
 
@@ -188,25 +209,28 @@ class CreateTaskForm extends Component {
         ) : (
           <div>
             <div>
-              {
-                this.state.steps.map((step) => {
-                  console.log(step, 'hi')
-                  return(
-                    <>
-                    <div>{step.stepName}</div>
-                    <div>{step.questionStatement}</div>
-                    </>
-                  )
-                })
-              }
+              <LongInput
+                type="text"
+                value={this.state.taskDetails.taskName}
+                name="taskName"
+                id="taskName"
+                placeholder="Task Title"
+                onChange={(e) => this.handleOnChange(e)}
+                required
+              />
             </div>
+
+            <div style={{ width: "100%", padding: "1em 0em 0em 1em" }}>
+              <InfoTitle style={{ fontSize: "1em" }}>Add Step</InfoTitle>
+            </div>
+
             <div>
               <LongInput
                 type="text"
                 value={this.state.stepDetails.stepName}
                 name="stepName"
                 id="stepName"
-                placeholder="Step Tite"
+                placeholder="Step Title"
                 onChange={(e) => this.handleOnStepChange(e)}
                 required
               />
@@ -220,8 +244,58 @@ class CreateTaskForm extends Component {
                 required
               />
             </div>
-            <button onClick={this.handleOnStepSubmit}>Create Step</button>
+
+            <div
+              style={{
+                width: "100%",
+
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <GreenButton onClick={this.handleOnStepSubmit}>
+                Add Step
+              </GreenButton>
             </div>
+
+            <div style={{ width: "100%", padding: "1em 0em 0em 1em" }}>
+              <InfoTitle style={{ fontSize: "1em" }}>Steps</InfoTitle>
+            </div>
+
+            <div style={{ marginTop: "1em" }}>
+              {this.state.steps.map((step, index) => {
+                console.log(step, "hi");
+                return (
+                  <>
+                    <StepDiv>
+                      <div>
+                        <InfoTitle style={{ fontSize: "1em" }}>
+                          {step.stepName}
+                        </InfoTitle>
+                        <InfoTitle
+                          style={{ fontSize: "1em", fontWeight: "300" }}
+                        >
+                          {step.questionStatement}
+                        </InfoTitle>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                        }}
+                        onClick={() => {
+                          this.removeStep(index);
+                        }}
+                      >
+                        <img src={dustbin} />
+                      </div>
+                    </StepDiv>
+                  </>
+                );
+              })}
+            </div>
+          </div>
         )}
       </Overlay>
     );
