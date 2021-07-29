@@ -34,6 +34,7 @@ import hamburgerPage from "./pages/hamburger/hamburger.page";
 import CreateProject from "./pages/create-project/create-project.page";
 import createProjectScratchPage from "./pages/create-project-scratch/create-project-scratch.page";
 import CreateCO from "./pages/create-CO/create-CO";
+import Invite from "./pages/invite/invite";
 
 function App(props) {
   return (
@@ -58,6 +59,7 @@ function App(props) {
           component={createProjectScratchPage}
         />
         <Route path="/project/:projectId" exact component={Project} />
+        <Route path="/project/:projectId/invite" exact component={Invite} />
         <Route path="/task/:taskId" exact component={Task} />
         {/* <Route path='/step/:stepId' exact component={Step} /> */}
         <Route path="/purchaseOrders/:taskId" exact component={PurchaseOrder} />
@@ -123,7 +125,7 @@ function App(props) {
           exact
           component={createOrganisationPage}
         />
-        <Route path='/createCO/:projectId' exact component={CreateCO} />
+        <Route path="/createCO/:projectId" exact component={CreateCO} />
 
         <Route path="/nav" exact component={hamburgerPage} />
       </Switch>

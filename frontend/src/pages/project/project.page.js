@@ -20,6 +20,7 @@ import { Overlay } from "../../components/admin-panel-task-page/admin-panel-task
 import NoResult from "../../components/no-result/no-result.component";
 import TasksFilter from "../../components/tasks-filter/tasks-filter.component";
 import Spinner from "../../components/spinner/spinner.component";
+import adduserFormComponent from "../../components/adduser-form/adduser-form.component";
 
 class Project extends Component {
   constructor() {
@@ -141,7 +142,9 @@ class Project extends Component {
           </p>
         </div>
 
-        {this.state.adminSwitch ? <AdminPanelTaskPage /> : null}
+        {this.state.adminSwitch ? (
+          <AdminPanelTaskPage projectId={projectId} />
+        ) : null}
         {tasksList.length === 0 ? (
           <NoResult />
         ) : (

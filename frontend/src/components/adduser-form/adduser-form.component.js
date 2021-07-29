@@ -12,7 +12,8 @@ import {
   FormInput,
   FormDiv,
 } from "../create-project-form/create-project-form.styles";
-import DropDown from "../form-dropdown/form-dropdown.component";
+import DropDown from "./form-dropdown.component";
+import { Link } from "react-router-dom";
 
 class AddUserForm extends Component {
   constructor() {
@@ -20,8 +21,8 @@ class AddUserForm extends Component {
     this.state = {
       userDetails: {
         email: "",
-        permission: "",
-        role: "",
+        permission: " ",
+        role: " ",
       },
       permissions: [
         ["BILLINGADMIN", "Billing Admin", "Can lorem ipsum dolor"],
@@ -34,9 +35,18 @@ class AddUserForm extends Component {
 
   handleOnChange = (e) => {
     let userDetails = this.state.userDetails;
+    console.log(e);
     const { name, value } = e.target;
     userDetails[name] = value;
     this.setState({ userDetails: userDetails }, () => console.log(userDetails));
+  };
+
+  handleOnOptionChange = (type, option) => {
+    let temp = this.state.userDetails;
+    temp[type] = option;
+    this.setState({ userDetails: temp }, () =>
+      console.log(this.state.userDetails)
+    );
   };
 
   addUser = (e) => {
@@ -56,14 +66,23 @@ class AddUserForm extends Component {
 
   render() {
     const { projectRoles } = this.props;
+    let roles = [];
+
+    projectRoles.map((role) => {
+      let temp = [];
+      temp.push(role);
+      temp.push(role);
+      temp.push("");
+      roles.push(temp);
+    });
 
     console.log("project roles", projectRoles);
     return (
       <AddUserDiv>
         <FormHeading style={{ marginBottom: "1em" }}>
           Add a User
-          <button
-            onClick={this.props.exit}
+          <Link
+            to={`/project/${this.props.projectId}`}
             style={{
               textDecoration: "none",
               background: "none",
@@ -74,7 +93,7 @@ class AddUserForm extends Component {
           >
             {" "}
             &times;
-          </button>
+          </Link>
         </FormHeading>
 
         <FormDiv onChange={(e) => this.handleOnChange(e)}>
@@ -83,69 +102,58 @@ class AddUserForm extends Component {
               Email
             </FormLabel>
           </div>
-          <input
-            type="text"
-            value="88"
-            onChange={(e) => this.handleOnChange(e)}
-          />
+
           <FormInput
             type="text"
             name="email"
             id="email"
+            placeholder="Enter email"
             value={this.state.userDetails.email}
             onChange={(e) => this.handleOnChange(e)}
             required
           />
 
-          {/* <div>
-            <FormLabel htmlFor="permission" style={{ textAlign: "left" }}>
-              {" "}
-              Permission Level:{" "}
+          <div>
+            <FormLabel
+              htmlFor="permission"
+              style={{ textAlign: "left", fontSize: "1em" }}
+            >
+              Permission Level:
             </FormLabel>
             <br />
             <div style={{ width: "100%" }}>
-              <DropDown options = {this.state.permissions}/>
+              <DropDown
+                options={this.state.permissions}
+                selected={this.state.userDetails.permission}
+                onChangePermission={this.handleOnOptionChange}
+                type="permission"
+              />
             </div>
-
-            <select
-              value={this.state.userDetails.permission}
-              name="permission"
-              id="permission"
-              onChange={(e) => this.handleOnChange(e)}
-              required
-            >
-              <option value="">Please choose an option</option>
-              <option value="BILLINGADMIN">Billing Admin</option>
-              <option value="ADMIN">Admin</option>
-              <option value="MANAGER">Manager</option>
-              <option value="AUTHOR">Author</option>
-              <option value="CONTRIBUTOR">Contributor</option>
-            </select>
           </div>
 
           <div>
-            <FormLabel htmlFor="role"> Role(optional): </FormLabel>
-            <br />
-            <select
-              value={this.state.userDetails.role}
-              name="role"
-              id="role"
-              onChange={(e) => this.handleOnChange(e)}
-              required
+            <FormLabel
+              htmlFor="role"
+              style={{ textAlign: "left", fontSize: "1em" }}
             >
-              <option value="">Please choose an option</option>
-              {projectRoles.map((role, index) => {
-                return (
-                  <option key={index} value={role.toUpperCase()}>
-                    {role}
-                  </option>
-                );
-              })}
-            </select>
+              Role(optional):
+            </FormLabel>
           </div>
-          <div>
+
+          <div style={{ width: "100%" }}>
+            <DropDown
+              options={roles}
+              onChangePermission={this.handleOnOptionChange}
+              selected={this.state.userDetails.role}
+              type="role"
+            />
+          </div>
+
+          <div
+            style={{ width: "100%", display: "flex", justifyContent: "center" }}
+          >
             <LongButton onClick={this.inviteUser}>Invite</LongButton>
-          </div> */}
+          </div>
         </FormDiv>
       </AddUserDiv>
     );
