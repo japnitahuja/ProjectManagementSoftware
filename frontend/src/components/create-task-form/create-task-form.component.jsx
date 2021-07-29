@@ -43,7 +43,7 @@ class CreateTaskForm extends Component {
         stepName: "",
         questionStatement: "",
       },
-      active: "Steps",
+      active: "Info",
       steps: [],
     };
   }
