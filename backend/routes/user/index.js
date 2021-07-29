@@ -835,7 +835,6 @@ router.post("/create-change-order/:taskId", async (req, res) => {
         CoCreatedBy: userId,
         // purchasedItem,
       });
-      const purchasedItem = req.body.purchasedItems;
       if (purchasedItem != []) {
         for (const po of purchasedItem) {
           let itemName = po.itemName,

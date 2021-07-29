@@ -47,10 +47,10 @@ class CreateButton extends Component {
                             </CreateOptionsDiv>
                         </Link>
 
-                        <Link style={{textDecoration:"none"}}>
+                        <Link to={`/createCO/${projectId}`} style={{textDecoration:"none"}}>
                             <CreateOptionsDiv justify={false}>
                                 <CreateOptionsImg src={VPO}/>
-                                VPO
+                                CO
                             </CreateOptionsDiv>
                         </Link>
 

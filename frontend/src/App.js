@@ -33,6 +33,7 @@ import createOrganisationPage from "./pages/create-organisation/create-organisat
 import hamburgerPage from "./pages/hamburger/hamburger.page";
 import CreateProject from "./pages/create-project/create-project.page";
 import createProjectScratchPage from "./pages/create-project-scratch/create-project-scratch.page";
+import CreateCO from "./pages/create-CO/create-CO";
 
 function App(props) {
   return (
@@ -122,6 +123,7 @@ function App(props) {
           exact
           component={createOrganisationPage}
         />
+        <Route path='/createCO/:projectId' exact component={CreateCO} />
 
         <Route path="/nav" exact component={hamburgerPage} />
       </Switch>

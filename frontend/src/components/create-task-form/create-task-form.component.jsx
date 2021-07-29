@@ -34,8 +34,14 @@ class CreateTaskForm extends Component {
         taskStartDate: "",
         taskEndDate: "",
         projectId: this.props.match.params.projectId.toString(),
+        
+      },
+      stepDetails: {
+        stepName: '',
+        questionStatement: ''
       },
       active: "Info",
+      steps: []
     };
   }
 
@@ -48,9 +54,27 @@ class CreateTaskForm extends Component {
     console.log(this.state);
   };
 
+  handleOnStepChange = (e) => {
+    const {name, value} = e.target;
+    let step = this.state.stepDetails
+    step[name] = value
+    console.log(this.state)
+    this.setState({stepDetails: step}, () => {console.log(this.state)})
+  }
+
+  handleOnStepSubmit = (e) => {
+    console.log('step submit')
+    e.preventDefault();
+    const step = this.state.stepDetails
+    this.state.steps.push(step)
+    console.log(this.state.steps)
+  }
+
   createTask = async (e) => {
     e.preventDefault();
     let taskDetails = this.state.taskDetails;
+    taskDetails['steps'] = this.state.steps
+    console.log(taskDetails)
     console.log(taskDetails);
     this.props.createTask(taskDetails);
   };
@@ -162,7 +186,42 @@ class CreateTaskForm extends Component {
             </Container>
           </form>
         ) : (
-          <div></div>
+          <div>
+            <div>
+              {
+                this.state.steps.map((step) => {
+                  console.log(step, 'hi')
+                  return(
+                    <>
+                    <div>{step.stepName}</div>
+                    <div>{step.questionStatement}</div>
+                    </>
+                  )
+                })
+              }
+            </div>
+            <div>
+              <LongInput
+                type="text"
+                value={this.state.stepDetails.stepName}
+                name="stepName"
+                id="stepName"
+                placeholder="Step Tite"
+                onChange={(e) => this.handleOnStepChange(e)}
+                required
+              />
+              <LongInput
+                type="text"
+                value={this.state.stepDetails.questionStatement}
+                name="questionStatement"
+                id="questionStatement"
+                placeholder="Step Description"
+                onChange={(e) => this.handleOnStepChange(e)}
+                required
+              />
+            </div>
+            <button onClick={this.handleOnStepSubmit}>Create Step</button>
+            </div>
         )}
       </Overlay>
     );
