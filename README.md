@@ -44,14 +44,17 @@ Clone the project.
 
 Frontend:
 
+```
 $ cd frontend
 $ npm install
 $ npm run
+```
 
 Backend:
+```
 $ cd backend
-
 $ node index.js
+```
 
 <a name="dev"></a>
 ## 5. Development/Contribution
