@@ -21,7 +21,7 @@ import {
 import downArrow from "../../assets/down-arrow.png";
 import { selectCurrentOrganisationId } from "../../redux/organisation/organisation.selectors";
 import { Link } from "react-router-dom";
-
+import { withRouter } from "react-router-dom";
 class CreateProjectForm extends Component {
   constructor() {
     super();
@@ -47,7 +47,7 @@ class CreateProjectForm extends Component {
     e.preventDefault();
     let projectDetails = this.state.projectDetails;
     this.props.createProject(projectDetails);
-    window.location.reload();
+    this.props.history.push(`/all-projects/${this.props.orgId}`);
   };
 
   createProjectTemplate = (e) => {
@@ -248,4 +248,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchProjects: () => dispatch(fetchProjectsStart()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateProjectForm);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(CreateProjectForm));
